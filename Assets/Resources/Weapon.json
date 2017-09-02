@@ -1,0 +1,10 @@
+[{"Wep_ID":1,"Wep_Name":"숲 단검","Wep_ImgName":"shortsword","Wep_Level":1,"Wep_Attack":90,"Wep_AttackSec":9,"Wep_Stuff":"구리|10|자수정|5|철조각|20|골드|30|제조법1"},
+{"Wep_ID":2,"Wep_Name":"명인의 더크","Wep_ImgName":"masterdirk","Wep_Level":2,"Wep_Attack":140,"Wep_AttackSec":14,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법2"},
+{"Wep_ID":3,"Wep_Name":"전사의 스텔레토","Wep_ImgName":"","Wep_Level":3,"Wep_Attack":190,"Wep_AttackSec":19,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법3"},
+{"Wep_ID":4,"Wep_Name":"기사의 장검","Wep_ImgName":"","Wep_Level":4,"Wep_Attack":240,"Wep_AttackSec":24,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법4"},
+{"Wep_ID":5,"Wep_Name":"미스릴 장검","Wep_ImgName":"","Wep_Level":5,"Wep_Attack":290,"Wep_AttackSec":29,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법5"},
+{"Wep_ID":6,"Wep_Name":"바람칼날 장검","Wep_ImgName":"","Wep_Level":6,"Wep_Attack":340,"Wep_AttackSec":34,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법6"},
+{"Wep_ID":7,"Wep_Name":"사냥꾼 도끼","Wep_ImgName":"","Wep_Level":7,"Wep_Attack":390,"Wep_AttackSec":39,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법7"},
+{"Wep_ID":8,"Wep_Name":"강철 도끼","Wep_ImgName":"","Wep_Level":8,"Wep_Attack":440,"Wep_AttackSec":44,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법8"},
+{"Wep_ID":9,"Wep_Name":"바람신 도끼","Wep_ImgName":"","Wep_Level":9,"Wep_Attack":490,"Wep_AttackSec":49,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법9"},
+{"Wep_ID":10,"Wep_Name":"대지의 장검","Wep_ImgName":"","Wep_Level":10,"Wep_Attack":540,"Wep_AttackSec":54,"Wep_Stuff":"주석|10|자수정|5||철조각|30|골드|50|제조법10"}]

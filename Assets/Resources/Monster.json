@@ -1,0 +1,2 @@
+[{"Mon_ID":1,"Mon_Level":1,"Mon_Name":"배고픈 해골","Mon_ImgName":"skeleton","Mon_HP":500,"Mon_AttackSec":5,"Mon_ReturnExp":10,"Mon_FieldLevel":1,"Mon_DropItem":"구리|자수정|철조각|재료상자|골드"},
+{"Mon_ID":2,"Mon_Level":1,"Mon_Name":"연약한 유령","Mon_ImgName":"ghost","Mon_HP":500,"Mon_AttackSec":5,"Mon_ReturnExp":10,"Mon_FieldLevel":1,"Mon_DropItem":"구리|자수정|철조각|재료상자|골드"}]
