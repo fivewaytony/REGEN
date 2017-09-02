@@ -20,13 +20,12 @@ public class GameController : MonoBehaviour {
     protected int Wep_Attack; //무기공격력
     protected int PC_STR;       // 플레이어 힘
 
-    //public static GameController Instance
-    //{
-    //    get 
-    //}
+    public static GameController Instance;
+
     // Use this for initialization
     void Start ()
     {
+        Instance = this;  //GameController 접근하기 위해
         //JsonDataLoad();
         //PlayerStateLoad();//플레이어 상태 로드
         //DataController.Instance.GetStatList();
