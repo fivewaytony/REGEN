@@ -1243,7 +1243,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 19}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1041200480
@@ -2005,22 +2005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c793dac4e1c96445b278533532b3ab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BarColor:
-    serializedVersion: 2
-    rgba: 4278190335
-  BackgroundColor:
-    serializedVersion: 2
-    rgba: 4286545791
-  OutlineColor:
-    serializedVersion: 2
-    rgba: 4278190080
-  OutlineSize: 0
-  TextFontSize: 0
-  TextColor:
-    serializedVersion: 2
-    rgba: 4278190080
-  BarSize: {x: 100, y: 100}
-  PercentageRoundingToNearest: 0
 --- !u!1 &2070443125
 GameObject:
   m_ObjectHideFlags: 0

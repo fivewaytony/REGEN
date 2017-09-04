@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using System;
 
 [Serializable]
-public class GameData
+public class PlayerStat
 {
     public int PC_ID = 0;
     public int PC_Level;
@@ -17,4 +18,10 @@ public class GameData
     public int PC_FieldLevel;
     public string PC_Type;
     public string PC_Name;
+}
+
+[Serializable]
+public class PlayerStatList
+{
+    public List<PlayerStat> StatList;
 }

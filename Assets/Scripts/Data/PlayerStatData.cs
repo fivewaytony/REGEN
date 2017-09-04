@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System;
 
-public class Quest
+[Serializable]
+public class PlayerStatData
 {
-
+    public List<PlayerStat> StatList;
 }
