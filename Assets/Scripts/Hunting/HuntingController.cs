@@ -36,18 +36,18 @@ public class HuntingController : GameController
     {
         //base.JsonDataLoad(); //DataLoad()
 
-        //FieldBGLoad(); //사냥터 배경로드
+        FieldBGLoad(); //사냥터 배경로드
         //MonsterLoad();//몹로드
         //PlayerLoad(); //플레이어
         //StartCoroutine(AttackToPlayer()); //몬스터가 공격
     }
 
     ////필드 로딩
-    //private void FieldBGLoad()
-    //{
-    //    FieldImge.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + DataController.Instance.Field_ImgName + "");
-    //}
-    
+    private void FieldBGLoad()
+    {
+        //FieldImge.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + DataController.Instance.Field_ImgName + "");
+    }
+
     ////플레이어 로딩
     //private void PlayerLoad()
     //{
@@ -56,7 +56,7 @@ public class HuntingController : GameController
     //    PC_STR = DataController.Instance.PC_STR;                        //플레이어의 현재 힘
     //    PlayerHPUpdate(0);                                                   // 플레이어 HPUpdate       
     //}
-    
+
     ////몬스터 로딩
     //private void MonsterLoad()
     //{
@@ -72,9 +72,9 @@ public class HuntingController : GameController
     //    {
     //        isMonOnLoad = false;
     //    }
-       
+
     //}
-    
+
     ////몬스터 HP Update
     //private void MonsterHPUpdate(int hitdamage)
     //{
@@ -87,7 +87,7 @@ public class HuntingController : GameController
     //    {
     //        Mon_CurHP = Mon_CurHP - hitdamage;
     //    }
-   
+
     //    if (Mon_CurHP <= 0) //현재 몹의 HP가 0
     //    {
     //       // MonDestory();
@@ -105,7 +105,7 @@ public class HuntingController : GameController
     //// Update is called once per frame
     //void Update()
     //{
-      
+
     //}
 
     //IEnumerator AttackToPlayer() //몬스터가 공격
@@ -114,7 +114,7 @@ public class HuntingController : GameController
     //    if (isMonOnLoad == true)
     //    {
     //        StartCoroutine("AttackToPlayer");
-        
+
     //        float timeStart = Time.time;
     //        float timePassed = Time.time - timeStart;
     //        float rate = timePassed / 0.5f;
@@ -151,12 +151,12 @@ public class HuntingController : GameController
     //    }
     //    if (Player_CurHP <= 0) //플레이어 죽음
     //    {
-            
+
     //        Player_CurHP = 0;
     //        Debug.Log("플레이어 다이");
     //    }
     //    //P Bar Update
-   
+
     //    PlayerHPBarNum = (Player_CurHP * 100) / (float)Player_HP;    // MonHP --> %로 표시
     //    PlayerHPBarText.text = String.Format("{0}", Math.Round(PlayerHPBarNum, 1)) + "%";
     //    PlayerHPBarFill.gameObject.GetComponent<Image>().fillAmount = Player_CurHP / (float)Player_HP; //현재 HP
@@ -171,7 +171,7 @@ public class HuntingController : GameController
     //    Color wcolor = WeaponPanel.color;
     //    wcolor.a = 0.5f;
     //    WeaponPanel.color = wcolor;
-        
+
     //    StartCoroutine(StartMonsterHit());  //hit 이미지 안보이게
     //}
 
@@ -192,7 +192,7 @@ public class HuntingController : GameController
     //    //isMonOnLoad = false;
     //}
 
-    
+
 
 
 }

@@ -211,7 +211,7 @@ public class DataController : MonoBehaviour {
     //    GetStatList();
     //}
 
-    public PlayerStatList statData;   //플레리어 데이터 -- 최초 한번 --> 저장된 게임 데이터가 없을때
+    public PlayerStatList statData;   //플레이어 데이터 -- 최초 한번 --> 저장된 게임 데이터가 없을때
     public PlayerStatList PlayerStatLoad()
     {
         if (statData == null)
@@ -223,8 +223,8 @@ public class DataController : MonoBehaviour {
     }
     
     public string gameDataProjectFilePath = "/game.json";  //저장된 테이터 파일
+    GameData _gameData;     // 저장된 데이터
 
-    GameData _gameData;         // 저장된 데이터
     public GameData gameData
     {
         get
@@ -249,31 +249,50 @@ public class DataController : MonoBehaviour {
         }
         else
         {
-             Debug.Log("Create new");
-          
+            Debug.Log("Create new");
             _gameData = new GameData();
-         //   _gameData.PC_Con = statData.
-
-
-
+            List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
+            foreach (PlayerStat item in statList)
+            {
+                _gameData.PC_ID = item.PC_ID;
+                _gameData.PC_Level = item.PC_Level;
+                _gameData.PC_Str = item.PC_Str;
+                _gameData.PC_Con = item.PC_Con;
+                _gameData.PC_Exp = item.PC_Exp;
+                _gameData.PC_UpExp = item.PC_UpExp;
+                _gameData.PC_Gold = item.PC_Gold;
+                _gameData.PC_WpnID = item.PC_WpnID;
+                _gameData.PC_WpnEct = item.PC_WpnEct;
+                _gameData.PC_FieldLevel = item.PC_FieldLevel;
+                _gameData.PC_Type = item.PC_Type;
+                _gameData.PC_Name = item.PC_Name;
+            }
+            SaveGameData();
         }
     }
-        
-
-    
-
+  
     public void SaveGameData()
     {
-
         string dataAsJson = JsonUtility.ToJson(gameData);
 
         string filePath = Application.persistentDataPath + gameDataProjectFilePath;
         File.WriteAllText(filePath, dataAsJson);
-
     }
 
+    //
+    public FieldChoiceList fieldchoicelist;   //레벨별 사냥터 선택
+    public FieldChoiceList GetFieldChoiceList()
+    {
+        if (fieldchoicelist == null)
+       {
+            TextAsset fieldDataJson = Resources.Load("MetaData/FieldChoice") as TextAsset;
+            fieldchoicelist = JsonUtility.FromJson<FieldChoiceList>(fieldDataJson.text);
+        }
+            
+        return fieldchoicelist;
+    }
 
-
+   
 }
 
 

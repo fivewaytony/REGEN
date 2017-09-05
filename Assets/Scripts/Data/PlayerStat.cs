@@ -1,12 +1,11 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System;
 
 [Serializable]
 public class PlayerStat
 {
-    public int PC_ID = 0;
+    public int PC_ID=1;
     public int PC_Level;
     public int PC_Str;
     public int PC_Con;
