@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class HuntingController : GameController
 {
     //Huting Scene
@@ -34,8 +35,7 @@ public class HuntingController : GameController
 
     void Start()
     {
-        //base.JsonDataLoad(); //DataLoad()
-
+        PlayerStatLoad();
         FieldBGLoad(); //사냥터 배경로드
         //MonsterLoad();//몹로드
         //PlayerLoad(); //플레이어
@@ -45,8 +45,19 @@ public class HuntingController : GameController
     ////필드 로딩
     private void FieldBGLoad()
     {
-        //FieldImge.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + DataController.Instance.Field_ImgName + "");
+        List<FieldInfo> fieldchoices = DataController.Instance.GetFieldInfo().FieldList;
+        int bgNum = Instance.CommonRnd(1, 4);
+        Debug.Log(bgNum);
+        foreach (FieldInfo fielditem in fieldchoices)
+        {
+           if (Instance.ChoiceFieldID == fielditem.Field_Level ) //선택 사냥터
+           {
+             FieldImge.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
+           }
+        }
     }
+
+
 
     ////플레이어 로딩
     //private void PlayerLoad()

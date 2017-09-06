@@ -30,8 +30,16 @@ public class GameController : MonoBehaviour {
         PlayerStatLoad();   //플레이어 상태 로드 - _gameData에서 로드
     }
 
+    //랜덤숫자 생성 공통
+    public int CommonRnd(int min, int max)
+    {
+        System.Random r = new System.Random();
+        int retVal = r.Next(min, max);
+        return retVal;
+    }
+
     //플레이어 상태 로드
-    void PlayerStatLoad()
+    protected void PlayerStatLoad()
     {
         LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
         PC_Exp = DataController.Instance.gameData.PC_Exp;                  //현재 경험치
@@ -40,20 +48,21 @@ public class GameController : MonoBehaviour {
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
 
-        GoldText.text = DataController.Instance.gameData.PC_Gold.ToString();
+        int goldamount = DataController.Instance.gameData.PC_Gold;
+        GoldText.text = String.Format("{0:n0}", goldamount);
         LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
 
-        PC_FieldLevel = DataController.Instance.gameData.PC_FieldLevel;  //사냥필드레벨
+        //PC_FieldLevel = DataController.Instance.gameData.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
     }
 
     //사냥터 선택 팝업
     public void FieldChoicePop()
     {
         FieldChoiceBack.gameObject.SetActive(true);
-        List<FieldChoice> fieldchoices = DataController.Instance.GetFieldChoiceList().FieldList;
+        List<FieldInfo> fieldchoices = DataController.Instance.GetFieldInfo().FieldList;
         int i = 0;
 
-        foreach (FieldChoice fielditem in fieldchoices)
+        foreach (FieldInfo fielditem in fieldchoices)
         {
             GameObject FieldInfo = Resources.Load("Prefabs/FieldInfo") as GameObject;  //프리팹으로 등록된 정보 불러옴
             GameObject obj = Instantiate(FieldInfo, FieldChoiceContent);   //자식 오브젝트
@@ -66,8 +75,8 @@ public class GameController : MonoBehaviour {
             {
                 if (text.tag=="FieldName")                                       //지정된 Tag로 정의 
                 {
-                    int FieldLevel = fielditem.FieldLevel;
-                    string FieldName = fielditem.FieldName;
+                    int FieldLevel = fielditem.Field_Level;
+                    string FieldName = fielditem.Field_Name;
 
                    // if (PC_FieldLevel >= FieldLevel)  //플레이어의 입장 가능 사냥터 레벨제한 없음
                     String strFieldName = String.Format("Lv. {0}  {1}", FieldLevel, FieldName);
@@ -82,7 +91,7 @@ public class GameController : MonoBehaviour {
                 Button[] btns = obj.GetComponentsInChildren<Button>();
                 foreach (Button btn in btns)
                 {
-                    btn.onClick.AddListener(() => GoHunting(fielditem.FieldLevel));
+                    btn.onClick.AddListener(() => GoHunting(fielditem.Field_Level));
                 }
             }
            i++;
@@ -112,14 +121,13 @@ public class GameController : MonoBehaviour {
     //사냥 이동
     public void GoHunting(int cfd)
     {
-        ChoiceFieldID = cfd;  //선택한 필드 아이디 할당
+       ChoiceFieldID = cfd;  //선택한 필드 아이디 할당
        SceneManager.LoadScene("Hunting", LoadSceneMode.Single);
     }
 
     //가방 이동
     public void GoInventory()
     {
-
         SceneManager.LoadScene("Inventory", LoadSceneMode.Single);
     }
 
