@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Advertisements;
 
 public class GameController : MonoBehaviour {
 
@@ -125,6 +126,14 @@ public class GameController : MonoBehaviour {
        SceneManager.LoadScene("Hunting", LoadSceneMode.Single);
     }
 
+    //상점 이동
+    public void GoShop()
+    {
+        Debug.Log("광고보여주기");
+        ShowRewardedVideo();
+    }
+
+
     //가방 이동
     public void GoInventory()
     {
@@ -136,6 +145,33 @@ public class GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
-    
-    
+
+
+    //광고 보여주기
+    void ShowRewardedVideo()
+    {
+        var options = new ShowOptions();
+        options.resultCallback = HandleShowResult;
+
+        Advertisement.Show("rewardedVideo", options);
+    }
+
+    void HandleShowResult(ShowResult result)
+    {
+        if (result == ShowResult.Finished)
+        {
+            Debug.Log("Video completed - Offer a reward to the player");
+
+        }
+        else if (result == ShowResult.Skipped)
+        {
+            Debug.LogWarning("Video was skipped - Do NOT reward the player");
+
+        }
+        else if (result == ShowResult.Failed)
+        {
+            Debug.LogError("Video failed to show");
+        }
+    }
+
 }

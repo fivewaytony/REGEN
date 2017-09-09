@@ -34,33 +34,39 @@ public class HuntingController : GameController
     private float PlayerHPBarNum;
     private int Player_HP;
     private int Player_CurHP;
+    private int PC_WpnID;
+    private int PC_Str;
+    private int PC_Con;
+
+    private int Wpn_Attack;
 
 
     void Start()
     {
-        PlayerStatLoad();
+        PlayerStatLoad(); //플레이어 게임컨트롤로
         FieldBGLoad(); //사냥터 배경로드
         MonsterLoad();//몹로드
-        //PlayerLoad(); //플레이어
+        WeaponLoad(); 
         //StartCoroutine(AttackToPlayer()); //몬스터가 공격
     }
 
-    ////필드 로딩
+    #region [필드 로딩]
     private void FieldBGLoad()
     {
         List<FieldInfo> fieldinfos = DataController.Instance.GetFieldInfo().FieldList;
         int bgNum = Instance.CommonRnd(1, 4);
         foreach (FieldInfo fielditem in fieldinfos)
         {
-           if (Instance.ChoiceFieldID == fielditem.Field_Level ) //선택 사냥터
-           {
+            if (Instance.ChoiceFieldID == fielditem.Field_Level) //선택 사냥터
+            {
                 FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
                 FieldName.text = fielditem.Field_Name;
-           }
+            }
         }
     }
-    
-    ////몬스터 로딩
+    #endregion
+
+    #region [몬스터 로딩]
     private void MonsterLoad()
     {
         List<MonsterInfo> monsterinfos = DataController.Instance.GetMonsterInfo().MonsterList;
@@ -72,44 +78,25 @@ public class HuntingController : GameController
             if (Instance.ChoiceFieldID == monsterinfos[i].Mon_FieldLevel) //선택 사냥터
             {
 
-                courMonster = monsterinfos.GetRange(MonNum-1, 1);  //인덱스 기준 랜덤하게 선택된 1개몹 정보 
+                courMonster = monsterinfos.GetRange(MonNum - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개몹 정보 
                 foreach (MonsterInfo item in courMonster)
                 {
-                    Debug.Log(MonNum);
-                    Debug.Log(item.Mon_GroupLevel);
-                    Debug.Log(item.Mon_ImgName);
+                    MonsterName.text = item.Mon_Name;
+                    MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + item.Mon_ImgName);
+                    Mon_HP = item.Mon_HP; //최초 몹피
+                    MonsterHPUpdate(0);
                 }
             }
         }
-
-       //foreach (MonsterInfo monitem in monsterinfos)
-       // {
-       //     if (Instance.ChoiceFieldID == monitem.Mon_FieldLevel)  
-       //     {
-
-       //         Array[MonsterInfo]  curMmonsterinfo = monsterinfos.CopyTo(monsterinfos[MonNum]);
-        
-       //         //var strMonImg = from monimg in monsterinfos
-       //         //                     where monitem.Mon_FieldLevel == MonNum
-       //         //                     select monitem.Mon_ImgName;
-       //         //var strMonName = from monname in monsterinfos
-       //         //               where monitem.Mon_FieldLevel == MonNum
-       //         //               select monitem.Mon_Name;
-       //         MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + strMonImg.ToString()) ;
-       //         MonsterName.text = strMonName.ToString();
-       //     }
-       // }
-       // //MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + fielditem.Field_ImgName + bgNum.ToString());
-
-       // ////  FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
-       // //MonsterName.text = DataController.Instance.Mon_Name;
-       // ////MonsterHPUpdate(0);
     }
-
+    #endregion
+    
+    #region [랜덤하게 몹리젠(가중치 적용)]
+    //랜덤하게 몹리젠(가중치 적용)
     private int MonNumerLoad(int num)
     {
         int retVal = 0;
-        if (num >= 0 && num <35 )
+        if (num >= 0 && num < 35)
         {
             retVal = 1;
         }
@@ -131,44 +118,71 @@ public class HuntingController : GameController
         }
         return retVal;
     }
+    #endregion
+
+    #region [몬스터 HP Update]
+
+    private void MonsterHPUpdate(int hitdamage)
+    {
+        if (hitdamage == 0)                                //최초
+        {
+            Mon_CurHP = Mon_HP;
+        }
+        else
+        {
+            Mon_CurHP = Mon_CurHP - hitdamage;
+        }
+
+        if (Mon_CurHP <= 0) //현재 몹의 HP가 0
+        {
+            // MonDestory();
+            MonsterLoad();
+        }
+        else                     //HP Bar Update
+        {
+            MonHPBarNum = (Mon_CurHP * 100) / (float)Mon_HP;    // MonHP --> %로 표시
+            MonHPBarText.text = String.Format("{0}", Math.Round(MonHPBarNum, 1)) + "%";
+            MonHPBarFill.gameObject.GetComponent<Image>().fillAmount = Mon_CurHP / (float)Mon_HP; //현재 HP
+        }
+
+    }
+    #endregion
+
+    #region [무기 로딩]
+    private void WeaponLoad()
+    {
+        //PC_WpnID = DataController.Instance.gameData.PC_WpnID; //들고있는 무기 아이디
+        //PC_Str = DataController.Instance.gameData.PC_Str; //힘
+        //PC_Con = DataController.Instance.gameData.PC_Con; //체력
+
+        List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
+        List<WeaponInfo> courWeapon = new List<WeaponInfo>();
+        for (int i = 0; i < weaponinfos.Count; i++)
+        {
+            if (PC_WpnID == weaponinfos[i].Wpn_ID)  //들고있는 무기정보
+            {
+                courWeapon = weaponinfos.GetRange(PC_WpnID - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개몹 정보 
+                foreach (WeaponInfo item in courWeapon)
+                {
+                    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
+                    Wpn_Attack = item.Wpn_AttackSec;  //1회 공격력
+                }
+            }
+        }
 
 
-    ////플레이어 로딩
-    //private void PlayerLoad()
-    //{
-    //    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + DataController.Instance.Wep_ImgName + "");
-    //    Wep_Attack = DataController.Instance.Wep_Attack;            //플레이어의 현재 무기 공격력
-    //    PC_STR = DataController.Instance.PC_STR;                        //플레이어의 현재 힘
-    //    PlayerHPUpdate(0);                                                   // 플레이어 HPUpdate       
-    //}
+        //WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + DataController.Instance.Wep_ImgName + ""); 
+        //WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + DataController.Instance.Wep_ImgName + "");
+        //Wep_Attack = DataController.Instance.Wep_Attack;            //플레이어의 현재 무기 공격력
+        //PC_STR = DataController.Instance.PC_STR;                        //플레이어의 현재 힘
+        //PlayerHPUpdate(0);                                                   // 플레이어 HPUpdate       
+    }
+    #endregion
+    ////
 
 
-    ////몬스터 HP Update
-    //private void MonsterHPUpdate(int hitdamage)
-    //{
-    //    Mon_HP = DataController.Instance.Mon_HP;   //최초 Max HP
-    //    if (hitdamage == 0 )                                //최초
-    //    {
-    //        Mon_CurHP = Mon_HP;
-    //    }
-    //    else
-    //    {
-    //        Mon_CurHP = Mon_CurHP - hitdamage;
-    //    }
 
-    //    if (Mon_CurHP <= 0) //현재 몹의 HP가 0
-    //    {
-    //       // MonDestory();
-    //        MonsterLoad();
-    //    }
-    //    else                     //HP Bar Update
-    //    {
-    //        MonHPBarNum = (Mon_CurHP * 100) / (float)Mon_HP;    // MonHP --> %로 표시
-    //        MonHPBarText.text = String.Format("{0}", Math.Round(MonHPBarNum, 1)) + "%";
-    //        MonHPBarFill.gameObject.GetComponent<Image>().fillAmount = Mon_CurHP / (float)Mon_HP; //현재 HP
-    //    }
 
-    //}
 
     //// Update is called once per frame
     //void Update()

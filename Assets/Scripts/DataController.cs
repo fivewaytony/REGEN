@@ -50,7 +50,7 @@ public class DataController : MonoBehaviour
 
     #region[저장된 gamedata Load/Save]
     public string gameDataProjectFilePath = "/game.json";  //저장된 테이터 파일
-    GameData _gameData;     // 저장된 데이터
+    GameData _gameData;     // 저장된(할) 데이터
 
     public GameData gameData
     {
@@ -77,27 +77,35 @@ public class DataController : MonoBehaviour
         else
         {
             Debug.Log("Create new");
-            _gameData = new GameData();
-            List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
-            foreach (PlayerStat item in statList)
-            {
-                _gameData.PC_ID = item.PC_ID;
-                _gameData.PC_Level = item.PC_Level;
-                _gameData.PC_Str = item.PC_Str;
-                _gameData.PC_Con = item.PC_Con;
-                _gameData.PC_Exp = item.PC_Exp;
-                _gameData.PC_UpExp = item.PC_UpExp;
-                _gameData.PC_Gold = item.PC_Gold;
-                _gameData.PC_WpnID = item.PC_WpnID;
-                _gameData.PC_WpnEct = item.PC_WpnEct;
-                _gameData.PC_FieldLevel = item.PC_FieldLevel;
-                _gameData.PC_Type = item.PC_Type;
-                _gameData.PC_Name = item.PC_Name;
-            }
-            SaveGameData();
+            UpateGameData();
         }
     }
 
+    /// <summary>
+    ///  저장할 정보 Update
+    /// </summary>
+    public void UpateGameData() { 
+    _gameData = new GameData();
+    List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
+        foreach (PlayerStat item in statList)
+        {
+            _gameData.PC_ID = item.PC_ID;
+            _gameData.PC_Level = item.PC_Level;
+            _gameData.PC_Str = item.PC_Str;
+            _gameData.PC_Con = item.PC_Con;
+            _gameData.PC_Exp = item.PC_Exp;
+            _gameData.PC_UpExp = item.PC_UpExp;
+            _gameData.PC_Gold = item.PC_Gold;
+            _gameData.PC_WpnID = item.PC_WpnID;
+            _gameData.PC_WpnEct = item.PC_WpnEct;
+            _gameData.PC_FieldLevel = item.PC_FieldLevel;
+            _gameData.PC_Type = item.PC_Type;
+            _gameData.PC_Name = item.PC_Name;
+        }
+        SaveGameData();
+    }
+
+    //Data 저장
     public void SaveGameData()
     {
         string dataAsJson = JsonUtility.ToJson(gameData);
@@ -135,6 +143,39 @@ public class DataController : MonoBehaviour
         return monsterinfolist;
     }
     #endregion
+    
+    #region [FireBase로 메세지 보내기]
+    void Start()
+    {
+        Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+        Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+    }
+
+    public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    {
+        UnityEngine.Debug.Log("Received Registration Token: " + token.Token);
+    }
+
+    public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+    {
+        UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
+    }
+    #endregion
+
+    #region[무기 정보]
+    public WeaponInfoList weaponrinfolist;
+    public WeaponInfoList GetWeaponInfo()
+    {
+        if (weaponrinfolist == null)
+        {
+            TextAsset weaponDataJson = Resources.Load("MetaData/Weapon") as TextAsset;
+            weaponrinfolist = JsonUtility.FromJson<WeaponInfoList>(weaponDataJson.text);
+        }
+
+        return weaponrinfolist;
+    }
+    #endregion
+    
 
     ////호출 공통
     //public void LoadFunc(string jsonfile, string datadiv)

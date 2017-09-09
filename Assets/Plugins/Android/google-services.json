@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "693109121123",
+    "firebase_url": "https://regen-d5f5b.firebaseio.com",
+    "project_id": "regen-d5f5b",
+    "storage_bucket": "regen-d5f5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693109121123:android:dd12a524362e6216",
+        "android_client_info": {
+          "package_name": "com.fiveway.regen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693109121123-1v8cosd0ll5068btaom8faqlj094lsoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn1zAB5PGH8ObOARwQlO5eut15p1AMvzg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
