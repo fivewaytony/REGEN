@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Linq;
 
 
 public class HuntingController : GameController
 {
     //Huting Scene
-    public Image FieldImge;
+    public Image FieldImage;
+    public Text FieldName;
+
     public Image WeaponImage;
+
     public Image MonsterImage;
     public Text MonsterName;
     public Image MonsterHit;
@@ -20,14 +24,13 @@ public class HuntingController : GameController
     public Image WeaponPanel;
     public Text PlayerHPBarText;
     public Image PlayerHPBarFill;
-
+   
     // Use this for initialization
     private float MonHPBarNum;
     private int Mon_HP;         //최초 Max HP
     private int Mon_CurHP;    //현재 Mon HP
     private bool isMonOnLoad = true;
-    private int TotalMonCount = 10; //임시 리젠되는 몹개수 - Field json 에서 설정
-
+    
     private float PlayerHPBarNum;
     private int Player_HP;
     private int Player_CurHP;
@@ -37,7 +40,7 @@ public class HuntingController : GameController
     {
         PlayerStatLoad();
         FieldBGLoad(); //사냥터 배경로드
-        //MonsterLoad();//몹로드
+        MonsterLoad();//몹로드
         //PlayerLoad(); //플레이어
         //StartCoroutine(AttackToPlayer()); //몬스터가 공격
     }
@@ -45,18 +48,89 @@ public class HuntingController : GameController
     ////필드 로딩
     private void FieldBGLoad()
     {
-        List<FieldInfo> fieldchoices = DataController.Instance.GetFieldInfo().FieldList;
+        List<FieldInfo> fieldinfos = DataController.Instance.GetFieldInfo().FieldList;
         int bgNum = Instance.CommonRnd(1, 4);
-        Debug.Log(bgNum);
-        foreach (FieldInfo fielditem in fieldchoices)
+        foreach (FieldInfo fielditem in fieldinfos)
         {
            if (Instance.ChoiceFieldID == fielditem.Field_Level ) //선택 사냥터
            {
-             FieldImge.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
+                FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
+                FieldName.text = fielditem.Field_Name;
            }
         }
     }
+    
+    ////몬스터 로딩
+    private void MonsterLoad()
+    {
+        List<MonsterInfo> monsterinfos = DataController.Instance.GetMonsterInfo().MonsterList;
+        List<MonsterInfo> courMonster = new List<MonsterInfo>();
+        int MonNum = MonNumerLoad(Instance.CommonRnd(0, 100));
 
+        for (int i = 0; i < monsterinfos.Count; i++)
+        {
+            if (Instance.ChoiceFieldID == monsterinfos[i].Mon_FieldLevel) //선택 사냥터
+            {
+
+                courMonster = monsterinfos.GetRange(MonNum-1, 1);  //인덱스 기준 랜덤하게 선택된 1개몹 정보 
+                foreach (MonsterInfo item in courMonster)
+                {
+                    Debug.Log(MonNum);
+                    Debug.Log(item.Mon_GroupLevel);
+                    Debug.Log(item.Mon_ImgName);
+                }
+            }
+        }
+
+       //foreach (MonsterInfo monitem in monsterinfos)
+       // {
+       //     if (Instance.ChoiceFieldID == monitem.Mon_FieldLevel)  
+       //     {
+
+       //         Array[MonsterInfo]  curMmonsterinfo = monsterinfos.CopyTo(monsterinfos[MonNum]);
+        
+       //         //var strMonImg = from monimg in monsterinfos
+       //         //                     where monitem.Mon_FieldLevel == MonNum
+       //         //                     select monitem.Mon_ImgName;
+       //         //var strMonName = from monname in monsterinfos
+       //         //               where monitem.Mon_FieldLevel == MonNum
+       //         //               select monitem.Mon_Name;
+       //         MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + strMonImg.ToString()) ;
+       //         MonsterName.text = strMonName.ToString();
+       //     }
+       // }
+       // //MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + fielditem.Field_ImgName + bgNum.ToString());
+
+       // ////  FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
+       // //MonsterName.text = DataController.Instance.Mon_Name;
+       // ////MonsterHPUpdate(0);
+    }
+
+    private int MonNumerLoad(int num)
+    {
+        int retVal = 0;
+        if (num >= 0 && num <35 )
+        {
+            retVal = 1;
+        }
+        else if (num >= 35 && num < 70)
+        {
+            retVal = 2;
+        }
+        else if (num >= 70 && num < 85)
+        {
+            retVal = 3;
+        }
+        else if (num >= 85 && num < 95)
+        {
+            retVal = 4;
+        }
+        else
+        {
+            retVal = 5;
+        }
+        return retVal;
+    }
 
 
     ////플레이어 로딩
@@ -68,23 +142,6 @@ public class HuntingController : GameController
     //    PlayerHPUpdate(0);                                                   // 플레이어 HPUpdate       
     //}
 
-    ////몬스터 로딩
-    //private void MonsterLoad()
-    //{
-    //    if (TotalMonCount > 0)
-    //    {
-    //        DataController.Instance.LoadFunc("Monster.json", "monster"); //몹을 10개 들고 오기 ListData 담아논다로 수정 예정
-    //        MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + DataController.Instance.Mon_ImgName + "");
-    //        MonsterName.text = DataController.Instance.Mon_Name;
-    //        MonsterHPUpdate(0);
-    //        TotalMonCount = TotalMonCount - 1;
-    //   }
-    //    else //사냥 1판 클리어
-    //    {
-    //        isMonOnLoad = false;
-    //    }
-
-    //}
 
     ////몬스터 HP Update
     //private void MonsterHPUpdate(int hitdamage)
