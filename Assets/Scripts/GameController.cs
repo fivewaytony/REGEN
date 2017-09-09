@@ -16,8 +16,13 @@ public class GameController : MonoBehaviour {
 
     protected int PC_Exp;           //현재 경험치
     protected int PC_UpExp;     //업에 필요한 경험치
-    protected int PC_FieldLevel;
-    
+    protected int PC_WpnID;     //무기아이디
+    protected int PC_FieldLevel;  //출입가능 필드레벨(현재 적용안함)
+    protected int PC_Str;           // 힘
+    protected int PC_Con;           //체력
+    protected int PC_MaxHP;        //MaxHP
+
+
     private float LevelBarNum;
 
     public GameObject FieldChoiceBack;
@@ -27,6 +32,7 @@ public class GameController : MonoBehaviour {
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
+        //DataController.Instance.CreateGameData();
         Instance = this;     //GameController 접근하기 위해
         PlayerStatLoad();   //플레이어 상태 로드 - _gameData에서 로드
     }
@@ -45,12 +51,16 @@ public class GameController : MonoBehaviour {
         LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
         PC_Exp = DataController.Instance.gameData.PC_Exp;                  //현재 경험치
         PC_UpExp = DataController.Instance.gameData.PC_UpExp;
+        PC_WpnID = DataController.Instance.gameData.PC_WpnID;
+        PC_MaxHP = DataController.Instance.gameData.PC_MaxHP;
+        PC_Str = DataController.Instance.gameData.PC_Str;
+
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
-
-        int goldamount = DataController.Instance.gameData.PC_Gold;
-        GoldText.text = String.Format("{0:n0}", goldamount);
+        
+        string goldamount = DataController.Instance.gameData.PC_Gold;
+        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(goldamount));
         LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
 
         //PC_FieldLevel = DataController.Instance.gameData.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
@@ -132,8 +142,7 @@ public class GameController : MonoBehaviour {
         Debug.Log("광고보여주기");
         ShowRewardedVideo();
     }
-
-
+    
     //가방 이동
     public void GoInventory()
     {
@@ -145,8 +154,7 @@ public class GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
-
-
+    
     //광고 보여주기
     void ShowRewardedVideo()
     {

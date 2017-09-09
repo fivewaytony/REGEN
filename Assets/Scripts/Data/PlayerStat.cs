@@ -11,7 +11,8 @@ public class PlayerStat
     public int PC_Con;
     public int PC_Exp;
     public int PC_UpExp;
-    public int PC_Gold;
+    public int PC_MaxHP;
+    public string PC_Gold;
     public int PC_WpnID;
     public int PC_WpnEct;
     public int PC_FieldLevel;

@@ -76,17 +76,17 @@ public class DataController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Create new");
-            UpateGameData();
+            CreateGameData();
         }
     }
 
     /// <summary>
-    ///  저장할 정보 Update
+    ///  최초 플레이어 정보 Json 로드
     /// </summary>
-    public void UpateGameData() { 
-    _gameData = new GameData();
-    List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
+    public void CreateGameData() {
+        Debug.Log("CreateGameData");
+        _gameData = new GameData();
+        List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
         foreach (PlayerStat item in statList)
         {
             _gameData.PC_ID = item.PC_ID;
@@ -95,6 +95,7 @@ public class DataController : MonoBehaviour
             _gameData.PC_Con = item.PC_Con;
             _gameData.PC_Exp = item.PC_Exp;
             _gameData.PC_UpExp = item.PC_UpExp;
+            _gameData.PC_MaxHP = item.PC_MaxHP;
             _gameData.PC_Gold = item.PC_Gold;
             _gameData.PC_WpnID = item.PC_WpnID;
             _gameData.PC_WpnEct = item.PC_WpnEct;
@@ -103,6 +104,30 @@ public class DataController : MonoBehaviour
             _gameData.PC_Name = item.PC_Name;
         }
         SaveGameData();
+    }
+
+    /// <summary>
+    ///  플레이어 정보 UpdateGameData
+    /// </summary>
+    public void UpdateGameData()
+    {
+        Debug.Log("UpdateGameData");
+        _gameData = new GameData();
+        //_gameData.PC_ID = item.PC_ID;
+        //_gameData.PC_Level = item.PC_Level;
+        //_gameData.PC_Str = item.PC_Str;
+        //_gameData.PC_Con = item.PC_Con;
+        //_gameData.PC_Exp = item.PC_Exp;
+        //_gameData.PC_UpExp = item.PC_UpExp;
+        //_gameData.PC_MaxHP = item.PC_MaxHP;
+        //_gameData.PC_Gold = item.PC_Gold;
+        //_gameData.PC_WpnID = item.PC_WpnID;
+        //_gameData.PC_WpnEct = item.PC_WpnEct;
+        //_gameData.PC_FieldLevel = item.PC_FieldLevel;
+        //_gameData.PC_Type = item.PC_Type;
+        //_gameData.PC_Name = item.PC_Name;
+     
+        //SaveGameData();
     }
 
     //Data 저장
@@ -144,6 +169,20 @@ public class DataController : MonoBehaviour
     }
     #endregion
     
+    #region[무기 정보]
+    public WeaponInfoList weaponinfolist;
+    public WeaponInfoList GetWeaponInfo()
+    {
+        if (weaponinfolist == null)
+        {
+            TextAsset weaponDataJson = Resources.Load("MetaData/Weapon") as TextAsset;
+            weaponinfolist = JsonUtility.FromJson<WeaponInfoList>(weaponDataJson.text);
+        }
+
+        return weaponinfolist;
+    }
+    #endregion
+
     #region [FireBase로 메세지 보내기]
     void Start()
     {
@@ -161,21 +200,6 @@ public class DataController : MonoBehaviour
         UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
     }
     #endregion
-
-    #region[무기 정보]
-    public WeaponInfoList weaponrinfolist;
-    public WeaponInfoList GetWeaponInfo()
-    {
-        if (weaponrinfolist == null)
-        {
-            TextAsset weaponDataJson = Resources.Load("MetaData/Weapon") as TextAsset;
-            weaponrinfolist = JsonUtility.FromJson<WeaponInfoList>(weaponDataJson.text);
-        }
-
-        return weaponrinfolist;
-    }
-    #endregion
-    
 
     ////호출 공통
     //public void LoadFunc(string jsonfile, string datadiv)
