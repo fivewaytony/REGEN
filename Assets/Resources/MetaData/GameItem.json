@@ -1,0 +1,16 @@
+{
+	"GameItemList": 
+	[
+		{"GameItem_ID":1,"GameItem_Type":"Weapon","GameItem_Name":"무기"},
+		{"GameItem_ID":2,"GameItem_Type":"Helmet","GameItem_Name":"투구"},
+		{"GameItem_ID":3,"GameItem_Type":"Armor","GameItem_Name":"갑옷"},
+		{"GameItem_ID":4,"GameItem_Type":"Boots","GameItem_Name":"부츠"},
+		{"GameItem_ID":5,"GameItem_Type":"Gauntlet","GameItem_Name":"장갑"},
+		{"GameItem_ID":6,"GameItem_Type":"Necklace","GameItem_Name":"목걸이"},
+		{"GameItem_ID":7,"GameItem_Type":"Earring","GameItem_Name":"귀걸이"},
+		{"GameItem_ID":8,"GameItem_Type":"Ring","GameItem_Name":"반지"},
+		{"GameItem_ID":9,"GameItem_Type":"Hpotion","GameItem_Name":"HP물약"},
+		{"GameItem_ID":10,"GameItem_Type":"SItem","GameItem_Name":"특별아이템"},
+		{"GameItem_ID":11,"GameItem_Type":"Stuff","GameItem_Name":"재료"}
+	]
+}

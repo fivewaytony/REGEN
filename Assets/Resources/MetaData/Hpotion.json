@@ -1,0 +1,17 @@
+{
+	"HPList":
+	[
+	  {
+		"HP_ID": 1,
+		"GameItem_ID": 9,
+		"HP_Name": "작은 물약",
+		"HP_Rate": 50
+	  },
+	  {
+		"HP_ID": 2,
+		"GameItem_ID": 9,
+		"HP_Name": "큰 물약",
+		"HP_Rate": 100
+	  }
+	]
+}

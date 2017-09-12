@@ -22,6 +22,12 @@ public class GameController : MonoBehaviour {
     protected int PC_Con;           //체력
     protected int PC_MaxHP;        //MaxHP
 
+    protected int PssItem_ID;
+    protected int GameItem_ID;
+    protected string GameItem_Type;
+    protected int Amount;
+    protected int pssHP_Count = 0; //로딩 시 소유 물약 개수
+    protected int CurpassHP_Count = 90;  //사용 or 구매 or 제조 후 업뎃이트 할 물약개수
 
     private float LevelBarNum;
 
@@ -33,8 +39,11 @@ public class GameController : MonoBehaviour {
     void Start ()
     {
         //DataController.Instance.CreateGameData();
+        //DataController.Instance.CreatePssItem();  
+        //DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
         PlayerStatLoad();   //플레이어 상태 로드 - _gameData에서 로드
+        PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
     }
 
     //랜덤숫자 생성 공통
@@ -65,6 +74,31 @@ public class GameController : MonoBehaviour {
 
         //PC_FieldLevel = DataController.Instance.gameData.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
     }
+
+    //플레이어 소유 아이템 로드
+    protected void PlayerPssItemLoad()
+    {
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면
+            {
+                pssHP_Count = passitems[i].Amount;          //소유물약개수
+            }
+            Debug.Log(passitems[i].GameItem_Type);
+        }
+      
+        /*
+        passitems.Add(new PssItem(3, 1, 9, "Stuff", 1, 0));
+        foreach (var item in passitems)
+        {
+            Debug.Log("Add="+item.GameItem_Type);
+        }
+        PssItemInfoList pssiteminfolist = new PssItemInfoList();
+        pssiteminfolist.SetPssItemList = passitems;
+        DataController.Instance.SaveGameDataPssItem(pssiteminfolist);
+        */
+}
 
     //사냥터 선택 팝업
     public void FieldChoicePop()
@@ -121,7 +155,7 @@ public class GameController : MonoBehaviour {
     protected void JsonDataLoad()
     {
 
-        // DataController.Instance.LoadFunc("PlayerStat.json", "playerstat");
+        //DataController.Instance.LoadFunc("PlayerStat.json", "playerstat");
         //DataController.Instance.LoadFunc("Character.json", "character");
         //DataController.Instance.LoadFunc("Weapon.json", "weapon");
         //DataController.Instance.LoadFunc("Field.json", "field");

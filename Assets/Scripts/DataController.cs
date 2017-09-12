@@ -47,11 +47,11 @@ public class DataController : MonoBehaviour
         return statData;
     }
     #endregion
-
+    
     #region[저장된 gamedata Load/Save]
-    public string gameDataProjectFilePath = "/game.json";  //저장된 테이터 파일
-    GameData _gameData;     // 저장된(할) 데이터
+    public string gameDataProjectFilePath = "/pcstat.json";  //저장된 테이터 파일
 
+    GameData _gameData;     // 저장된(할) 데이터
     public GameData gameData
     {
         get
@@ -70,7 +70,7 @@ public class DataController : MonoBehaviour
 
         if (File.Exists(filePath))
         {
-            Debug.Log("loaded!");
+            Debug.Log("LoadGameData!");
             string dataAsJson = File.ReadAllText(filePath);
             _gameData = JsonUtility.FromJson<GameData>(dataAsJson);
         }
@@ -103,7 +103,7 @@ public class DataController : MonoBehaviour
             _gameData.PC_Type = item.PC_Type;
             _gameData.PC_Name = item.PC_Name;
         }
-        SaveGameData();
+        SaveGameData("pcstatData");
     }
 
     /// <summary>
@@ -126,19 +126,179 @@ public class DataController : MonoBehaviour
         //_gameData.PC_FieldLevel = item.PC_FieldLevel;
         //_gameData.PC_Type = item.PC_Type;
         //_gameData.PC_Name = item.PC_Name;
-     
+
         //SaveGameData();
+
     }
 
-    //Data 저장
-    public void SaveGameData()
-    {
-        string dataAsJson = JsonUtility.ToJson(gameData);
+    #endregion
+    
+    #region[저장된 소유아이템 Load/Save]
+    public string pssItemProjectFilePath = "/pssitem.json";  //저장된 테이터 파일
 
-        string filePath = Application.persistentDataPath + gameDataProjectFilePath;
+    public PssItemInfoList pssiteminfolist;
+    public PssItemInfoList GetPssItemInfo()
+    {
+        if (pssiteminfolist == null)
+        {
+            string filePath = Application.persistentDataPath + pssItemProjectFilePath;
+            if (File.Exists(filePath))      //폰에 저장된 gamedata pssitem json 로드
+            {
+                pssiteminfolist = PssItemLoadDataPath();
+                Debug.Log("PssItemLoadDataPath");
+            }
+            else                            // Resources PassItem Json 로드 생성후 
+            {
+                pssiteminfolist = PssItemLoadResources();
+                Debug.Log("PssItemLoadResources");
+
+                if (pssiteminfolist != null)
+                    SaveGameData("pssItemData"); // DataPath에 파일생성
+            }
+         }
+        return pssiteminfolist;
+    }
+
+
+    #region [플레이어 소유 아이템 -- DataPath에서 읽기 ] 
+    public PssItemInfoList PssItemLoadDataPath()
+    {
+        PssItemInfoList DataPathPssItemData;
+
+        string filePath = Application.persistentDataPath + pssItemProjectFilePath;
+        string dataAsJson = File.ReadAllText(filePath);
+        DataPathPssItemData = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
+
+        return DataPathPssItemData;
+    }
+    #endregion
+    
+    #region [플레이어 소유 아이템 -- 최초 한번 Resources MetaData에서 읽기 ] 
+    public PssItemInfoList PssItemLoadResources()
+    {
+        PssItemInfoList ResourcesPssItemData;
+
+        TextAsset PssItem = Resources.Load("MetaData/PssItem") as TextAsset;
+        ResourcesPssItemData = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
+
+        return ResourcesPssItemData;
+    }
+    #endregion
+
+    #region [플레이어 소유 아이템 -- DEV 용도 Resources MetaData에서 읽어 쓰기 ] 
+    public void PssItemLoadResourcesDEV()
+    {
+        TextAsset PssItem = Resources.Load("MetaData/PssItem") as TextAsset;
+        pssiteminfolist = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
+        Debug.Log("PssItemLoadResourcesDEV");
+        SaveGameData("pssItemData"); // DataPath에 파일생성
+    }
+    #endregion
+
+  //  PssItemInfoList _pssItem;     // 생성할 or 저장된 데이터
+    //public PssItemInfoList pssItem
+    //{
+    //    get
+    //    {
+    //        if (_pssItem == null)
+    //        {
+    //            LoadPssItem();
+    //        }
+    //        return _pssItem;
+    //    }
+    //    set { }
+    //}
+
+    //public void LoadPssItem()   //저장된 소유 아이템 정보 불러오기
+    //{
+    //    string filePath = Application.persistentDataPath + pssItemProjectFilePath;
+
+    //    if (File.Exists(filePath))
+    //    {
+    //        Debug.Log("LoadPssItem!");
+    //        string dataAsJson = File.ReadAllText(filePath);
+    //        _pssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
+    //    }
+    //    else
+    //    {
+    //        CreatePssItem();
+    //    }
+    //}
+
+    /// <summary>
+    ///  최초 플레이어 소유 아이템
+    /// </summary>
+    //public void CreatePssItem()
+    //{
+    //    Debug.Log("CreatePssItem");
+    //    _pssItem = DataController.Instance.PssItemLoadCreate(); //Resources MetaData에서 읽기
+    //    SaveGameData("pssItemData");
+    //}
+
+    
+
+    /// <summary>
+    ///  플레이어 소유 아이템 Update
+    /// </summary>
+    //public List<PssItem> UpdatePssitemList = new List<PssItem>();
+    //public void UpdatePssItem()
+    //{
+    //    Debug.Log("UpdatePssItem");
+    //    UpdatePssitemList.Add(new PssItem(1, 1, 1, "Weapon",1,1));
+    //    UpdatePssitemList.Add(new PssItem(2, 1, 9, "Hpotion", 99, 0));
+
+    //}
+
+    #endregion
+
+    #region [PCStatData, PCPssItemData 저장]
+    public void SaveGameData(string GDdiv)
+    {
+        string dataAsJson = string.Empty;
+        string filePath = string.Empty;
+        if (GDdiv == "pcstatData")   //플레이어 스텟
+        {
+            dataAsJson = JsonUtility.ToJson(gameData);
+            filePath = Application.persistentDataPath + gameDataProjectFilePath;
+        }
+        else                               //플레이어 소유 아이템
+        {
+            dataAsJson = JsonUtility.ToJson(pssiteminfolist);
+            Debug.Log("dataAsJson=" + dataAsJson);
+            filePath = Application.persistentDataPath + pssItemProjectFilePath;
+        }
         File.WriteAllText(filePath, dataAsJson);
     }
 
+    /// <summary>
+    /// 소유 아이템 전용 Update
+    /// </summary>
+    /// <param name="pssiteminfolist"></param>
+    public void SaveGameDataPssItem(PssItemInfoList pssiteminfolist)
+    {
+        string dataAsJson = string.Empty;
+        string filePath = string.Empty;
+        
+        dataAsJson = JsonUtility.ToJson(pssiteminfolist);
+        Debug.Log("dataAsJson=" + dataAsJson);
+        filePath = Application.persistentDataPath + pssItemProjectFilePath;
+     
+        File.WriteAllText(filePath, dataAsJson);
+    }
+    #endregion
+
+    #region [게임 아이템 정보]
+    public GameItemInfoList gameitemlist;
+    public GameItemInfoList GetGameIteminfo()
+    {
+        if (gameitemlist == null)
+        {
+            TextAsset GameItemJson = Resources.Load("MetaData/GameItem") as TextAsset;
+            gameitemlist = JsonUtility.FromJson<GameItemInfoList>(GameItemJson.text);
+        }
+
+        return gameitemlist;
+    }
     #endregion
 
     #region[사냥터 선택 팝업]
@@ -182,7 +342,7 @@ public class DataController : MonoBehaviour
         return weaponinfolist;
     }
     #endregion
-
+    
     #region [FireBase로 메세지 보내기]
     void Start()
     {

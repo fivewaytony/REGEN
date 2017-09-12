@@ -1,0 +1,7 @@
+{
+	"PssItemList": 
+	[
+		{"PssItem_ID":1,"PC_ID":1,"GameItem_ID":1,"GameItem_Type":"Weapon","Amount":1,"Equip_Stat":1},
+		{"PssItem_ID":2,"PC_ID":1,"GameItem_ID":9,"GameItem_Type":"Hpotion","Amount":100,"Equip_Stat":0}
+	]
+}
