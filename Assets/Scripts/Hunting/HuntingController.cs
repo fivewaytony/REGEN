@@ -35,14 +35,21 @@ public class HuntingController : GameController
     private int Player_CurHP;
     private int Wpn_Attack;
 
+    private 
+
 
     void Start()
     {
-        PlayerStatLoad(); //플레이어 게임컨트롤로딩
+        /* GameData에서 기본 정보 로딩 매신마다 로딩*/
+        PlayerStatLoad();   
+        PlayerPssItemLoad(); 
+
+        /* 기본 정보 로딩 매신마다 로딩*/
         FieldBGLoad(); //사냥터 배경로드
         MonsterLoad();//몹로드
         WeaponLoad(); 
         StartCoroutine(AttackToPlayer()); //몬스터가 공격
+        StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템)
     }
 
     #region [필드 로딩]
@@ -214,8 +221,8 @@ public class HuntingController : GameController
         }
     }
     #endregion
-    
-    //몬스터 공격 - 무기 클릭
+
+    #region [몬스터 공격 - 무기 클릭]
     public void HuntingMon()
     {
         MonsterHPUpdate(Wpn_Attack + PC_Str);  //현재 무기의 공격력 + 레벨 힘
@@ -227,7 +234,9 @@ public class HuntingController : GameController
 
         StartCoroutine(StartMonsterHit());  //hit 이미지  & 무기배경색 안보이게
     }
+    #endregion
 
+    #region [공격 시 무기 배경색 변경]
     IEnumerator StartMonsterHit()
     {
         yield return new WaitForSecondsRealtime(0.2f);
@@ -238,14 +247,68 @@ public class HuntingController : GameController
 
         MonsterHit.gameObject.SetActive(false);
     }
+    #endregion
 
-    // 물약먹기
+    #region [HP 물약클릭]
+    public void ClickPlayerHPBtn()
+    {
+        if (pssHP_Count > 0 ) //
+        {
+            StartCoroutine(PlayerHPRecover()); 
+        }
+       // Debug.Log("현재 물약개수 : " + pssHP_Count);
+    }
+    IEnumerator PlayerHPRecover()
+    {
+        yield return new WaitForSecondsRealtime(1f);  //1초
+        pssHP_Count--;
+        PlayerHPUpdate(0);  //만피 채우기
+    }
+    #endregion
+
+    #region [GameDataUpdate-코루틴]
+    IEnumerator UpdateGameData() 
+    {
+       yield return new WaitForSecondsRealtime(3f);  //3초
+       StartCoroutine("UpdateGameData");
+
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면
+            {
+                passitems[i].Amount = pssHP_Count;
+            }
+        }
+        PssItemInfoList pssiteminfolist = new PssItemInfoList();
+        pssiteminfolist.SetPssItemList = passitems;
+        DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+        PlayerPssItemLoad();
+       
+        /*  //구현 예정임 소유 아이템 업데이트
+       passitems.Add(new PssItem(3, 1, 9, "Stuff", 1, 0));
+       foreach (var item in passitems)
+       {
+           Debug.Log("Add="+item.GameItem_Type);
+       }
+       PssItemInfoList pssiteminfolist = new PssItemInfoList();
+       pssiteminfolist.SetPssItemList = passitems;
+       DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+       */
+
+
+    }
+    #endregion
+
+    // 물약먹기 --> 소유 아이템 Update
+    // 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
     // 몬스터 리젠 시간텀 주기
     // 드랍아이템 표시하기
     // 아이템 습득 후 저장
     // 몬스터 사냥 후 플레이어 스텟 업데이트
     // 특템아이템 표시 
     // 특템 아이템 사용 표시
+    // 각 hit 이미지 바꾸기(여러개 노출 랜덤하게)
 
 
 

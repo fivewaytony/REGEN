@@ -26,8 +26,9 @@ public class GameController : MonoBehaviour {
     protected int GameItem_ID;
     protected string GameItem_Type;
     protected int Amount;
-    protected int pssHP_Count = 0; //로딩 시 소유 물약 개수
-    protected int CurpassHP_Count = 90;  //사용 or 구매 or 제조 후 업뎃이트 할 물약개수
+
+    protected int pssHP_Count; //소유 물약 개수
+   // protected int CurpassHP_Count;  //사용 or 구매 or 제조 후 업뎃이트 할 물약개수
 
     private float LevelBarNum;
 
@@ -57,22 +58,22 @@ public class GameController : MonoBehaviour {
     //플레이어 상태 로드
     protected void PlayerStatLoad()
     {
-        LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
-        PC_Exp = DataController.Instance.gameData.PC_Exp;                  //현재 경험치
-        PC_UpExp = DataController.Instance.gameData.PC_UpExp;
-        PC_WpnID = DataController.Instance.gameData.PC_WpnID;
-        PC_MaxHP = DataController.Instance.gameData.PC_MaxHP;
-        PC_Str = DataController.Instance.gameData.PC_Str;
+        LevelText.text = "Lv. " + DataController.Instance.PlayerStat.PC_Level.ToString();
+        PC_Exp = DataController.Instance.PlayerStat.PC_Exp;                  //현재 경험치
+        PC_UpExp = DataController.Instance.PlayerStat.PC_UpExp;
+        PC_WpnID = DataController.Instance.PlayerStat.PC_WpnID;
+        PC_MaxHP = DataController.Instance.PlayerStat.PC_MaxHP;
+        PC_Str = DataController.Instance.PlayerStat.PC_Str;
 
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
         
-        string goldamount = DataController.Instance.gameData.PC_Gold;
+        string goldamount = DataController.Instance.PlayerStat.PC_Gold;
         GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(goldamount));
-        LevelText.text = "Lv. " + DataController.Instance.gameData.PC_Level.ToString();
+        LevelText.text = "Lv. " + DataController.Instance.PlayerStat.PC_Level.ToString();
 
-        //PC_FieldLevel = DataController.Instance.gameData.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
+        //PC_FieldLevel = DataController.Instance.PlayerStat.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
     }
 
     //플레이어 소유 아이템 로드
@@ -85,22 +86,12 @@ public class GameController : MonoBehaviour {
             {
                 pssHP_Count = passitems[i].Amount;          //소유물약개수
             }
-            Debug.Log(passitems[i].GameItem_Type);
         }
-      
-        /*
-        passitems.Add(new PssItem(3, 1, 9, "Stuff", 1, 0));
-        foreach (var item in passitems)
-        {
-            Debug.Log("Add="+item.GameItem_Type);
-        }
-        PssItemInfoList pssiteminfolist = new PssItemInfoList();
-        pssiteminfolist.SetPssItemList = passitems;
-        DataController.Instance.SaveGameDataPssItem(pssiteminfolist);
-        */
-}
+        Debug.Log("PlayerPssItemLoad pssHP_Count=" + pssHP_Count);
+       
+    }
 
-    //사냥터 선택 팝업
+    #region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {
         FieldChoiceBack.gameObject.SetActive(true);
@@ -118,12 +109,12 @@ public class GameController : MonoBehaviour {
             Text[] texts = obj.GetComponentsInChildren<Text>();         //자식 오브젝트중 Text 동적으로 변경
             foreach (Text text in texts)
             {
-                if (text.tag=="FieldName")                                       //지정된 Tag로 정의 
+                if (text.tag == "FieldName")                                       //지정된 Tag로 정의 
                 {
                     int FieldLevel = fielditem.Field_Level;
                     string FieldName = fielditem.Field_Name;
 
-                   // if (PC_FieldLevel >= FieldLevel)  //플레이어의 입장 가능 사냥터 레벨제한 없음
+                    // if (PC_FieldLevel >= FieldLevel)  //플레이어의 입장 가능 사냥터 레벨제한 없음
                     String strFieldName = String.Format("Lv. {0}  {1}", FieldLevel, FieldName);
                     text.text = strFieldName;
                 }
@@ -139,30 +130,17 @@ public class GameController : MonoBehaviour {
                     btn.onClick.AddListener(() => GoHunting(fielditem.Field_Level));
                 }
             }
-           i++;
+            i++;
         }
 
     }
+    #endregion
 
-    //
     // Update is called once per frame
     void Update () {
         
     }
-
-    #region [JsonDataLoad()]
-    //DataController 정의
-    protected void JsonDataLoad()
-    {
-
-        //DataController.Instance.LoadFunc("PlayerStat.json", "playerstat");
-        //DataController.Instance.LoadFunc("Character.json", "character");
-        //DataController.Instance.LoadFunc("Weapon.json", "weapon");
-        //DataController.Instance.LoadFunc("Field.json", "field");
-        //DataController.Instance.LoadFunc("Monster.json", "monster");
-    }
-    #endregion
-
+    
     //사냥 이동
     public void GoHunting(int cfd)
     {

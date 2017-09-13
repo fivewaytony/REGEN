@@ -36,83 +36,83 @@ public class DataController : MonoBehaviour
     #endregion
 
     #region [플레이어 데이터 -- 최초 한번]
-    public PlayerStatList statData;   //플레이어 데이터 -- 최초 한번 --> 저장된 게임 데이터가 없을때
-    public PlayerStatList PlayerStatLoad()
+    public PlayerStatList plyaerStatData;   //플레이어 데이터 -- 최초 한번 --> 저장된 게임 데이터가 없을때
+    public PlayerStatList PlayerStatLoadResources()
     {
-        if (statData == null)
+        if (plyaerStatData == null)
         {
             TextAsset statJson = Resources.Load("MetaData/PlayerStat") as TextAsset;
-            statData = JsonUtility.FromJson<PlayerStatList>(statJson.text);
+            plyaerStatData = JsonUtility.FromJson<PlayerStatList>(statJson.text);
         }
-        return statData;
+        return plyaerStatData;
     }
     #endregion
     
     #region[저장된 gamedata Load/Save]
     public string gameDataProjectFilePath = "/pcstat.json";  //저장된 테이터 파일
 
-    GameData _gameData;     // 저장된(할) 데이터
-    public GameData gameData
+    PlayerStat playerStatData;     // 플레이어 스텟 저장된(할) 데이터
+    public PlayerStat PlayerStat
     {
         get
         {
-            if (_gameData == null)
+            if (playerStatData == null)
             {
-                LoadGameData();
+                PlayerStatLoadDataPath();
             }
-            return _gameData;
+            return playerStatData;
         }
     }
-
-    public void LoadGameData()   //저장된 데이터 불러오기
+    
+    public void PlayerStatLoadDataPath()   //플레이어 스텟 저장된 데이터 불러오기
     {
         string filePath = Application.persistentDataPath + gameDataProjectFilePath;
 
         if (File.Exists(filePath))
         {
-            Debug.Log("LoadGameData!");
+            Debug.Log("PlayerStatLoadDataPath!");
             string dataAsJson = File.ReadAllText(filePath);
-            _gameData = JsonUtility.FromJson<GameData>(dataAsJson);
+            playerStatData = JsonUtility.FromJson<PlayerStat>(dataAsJson);
         }
         else
         {
-            CreateGameData();
+            CreatePlayerStatData();
         }
     }
 
     /// <summary>
     ///  최초 플레이어 정보 Json 로드
     /// </summary>
-    public void CreateGameData() {
-        Debug.Log("CreateGameData");
-        _gameData = new GameData();
-        List<PlayerStat> statList = DataController.Instance.PlayerStatLoad().StatList;
+    public void CreatePlayerStatData() {
+        Debug.Log("CreatePlayerStatData");
+        playerStatData = new PlayerStat();
+        List<PlayerStat> statList = DataController.Instance.PlayerStatLoadResources().StatList;
         foreach (PlayerStat item in statList)
         {
-            _gameData.PC_ID = item.PC_ID;
-            _gameData.PC_Level = item.PC_Level;
-            _gameData.PC_Str = item.PC_Str;
-            _gameData.PC_Con = item.PC_Con;
-            _gameData.PC_Exp = item.PC_Exp;
-            _gameData.PC_UpExp = item.PC_UpExp;
-            _gameData.PC_MaxHP = item.PC_MaxHP;
-            _gameData.PC_Gold = item.PC_Gold;
-            _gameData.PC_WpnID = item.PC_WpnID;
-            _gameData.PC_WpnEct = item.PC_WpnEct;
-            _gameData.PC_FieldLevel = item.PC_FieldLevel;
-            _gameData.PC_Type = item.PC_Type;
-            _gameData.PC_Name = item.PC_Name;
+            playerStatData.PC_ID = item.PC_ID;
+            playerStatData.PC_Level = item.PC_Level;
+            playerStatData.PC_Str = item.PC_Str;
+            playerStatData.PC_Con = item.PC_Con;
+            playerStatData.PC_Exp = item.PC_Exp;
+            playerStatData.PC_UpExp = item.PC_UpExp;
+            playerStatData.PC_MaxHP = item.PC_MaxHP;
+            playerStatData.PC_Gold = item.PC_Gold;
+            playerStatData.PC_WpnID = item.PC_WpnID;
+            playerStatData.PC_WpnEct = item.PC_WpnEct;
+            playerStatData.PC_FieldLevel = item.PC_FieldLevel;
+            playerStatData.PC_Type = item.PC_Type;
+            playerStatData.PC_Name = item.PC_Name;
         }
-        SaveGameData("pcstatData");
+        CreateGameData("pcstatData");
     }
 
     /// <summary>
     ///  플레이어 정보 UpdateGameData
     /// </summary>
-    public void UpdateGameData()
+    public void UpdateGameDataPlayerStat()
     {
-        Debug.Log("UpdateGameData");
-        _gameData = new GameData();
+        Debug.Log("UpdateGameDataPlayerStat");
+        playerStatData = new PlayerStat();
         //_gameData.PC_ID = item.PC_ID;
         //_gameData.PC_Level = item.PC_Level;
         //_gameData.PC_Str = item.PC_Str;
@@ -134,6 +134,7 @@ public class DataController : MonoBehaviour
     #endregion
     
     #region[저장된 소유아이템 Load/Save]
+
     public string pssItemProjectFilePath = "/pssitem.json";  //저장된 테이터 파일
 
     public PssItemInfoList pssiteminfolist;
@@ -142,7 +143,7 @@ public class DataController : MonoBehaviour
         if (pssiteminfolist == null)
         {
             string filePath = Application.persistentDataPath + pssItemProjectFilePath;
-            if (File.Exists(filePath))      //폰에 저장된 gamedata pssitem json 로드
+            if (File.Exists(filePath))          //폰에 저장된 gamedata pssitem json 로드
             {
                 pssiteminfolist = PssItemLoadDataPath();
                 Debug.Log("PssItemLoadDataPath");
@@ -153,12 +154,12 @@ public class DataController : MonoBehaviour
                 Debug.Log("PssItemLoadResources");
 
                 if (pssiteminfolist != null)
-                    SaveGameData("pssItemData"); // DataPath에 파일생성
+                    CreateGameData("pssItemData"); // DataPath에 파일생성
             }
          }
         return pssiteminfolist;
     }
-
+    #endregion
 
     #region [플레이어 소유 아이템 -- DataPath에서 읽기 ] 
     public PssItemInfoList PssItemLoadDataPath()
@@ -191,74 +192,18 @@ public class DataController : MonoBehaviour
         TextAsset PssItem = Resources.Load("MetaData/PssItem") as TextAsset;
         pssiteminfolist = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
         Debug.Log("PssItemLoadResourcesDEV");
-        SaveGameData("pssItemData"); // DataPath에 파일생성
+        CreateGameData("pssItemData"); // DataPath에 파일생성
     }
     #endregion
 
-  //  PssItemInfoList _pssItem;     // 생성할 or 저장된 데이터
-    //public PssItemInfoList pssItem
-    //{
-    //    get
-    //    {
-    //        if (_pssItem == null)
-    //        {
-    //            LoadPssItem();
-    //        }
-    //        return _pssItem;
-    //    }
-    //    set { }
-    //}
-
-    //public void LoadPssItem()   //저장된 소유 아이템 정보 불러오기
-    //{
-    //    string filePath = Application.persistentDataPath + pssItemProjectFilePath;
-
-    //    if (File.Exists(filePath))
-    //    {
-    //        Debug.Log("LoadPssItem!");
-    //        string dataAsJson = File.ReadAllText(filePath);
-    //        _pssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
-    //    }
-    //    else
-    //    {
-    //        CreatePssItem();
-    //    }
-    //}
-
-    /// <summary>
-    ///  최초 플레이어 소유 아이템
-    /// </summary>
-    //public void CreatePssItem()
-    //{
-    //    Debug.Log("CreatePssItem");
-    //    _pssItem = DataController.Instance.PssItemLoadCreate(); //Resources MetaData에서 읽기
-    //    SaveGameData("pssItemData");
-    //}
-
-    
-
-    /// <summary>
-    ///  플레이어 소유 아이템 Update
-    /// </summary>
-    //public List<PssItem> UpdatePssitemList = new List<PssItem>();
-    //public void UpdatePssItem()
-    //{
-    //    Debug.Log("UpdatePssItem");
-    //    UpdatePssitemList.Add(new PssItem(1, 1, 1, "Weapon",1,1));
-    //    UpdatePssitemList.Add(new PssItem(2, 1, 9, "Hpotion", 99, 0));
-
-    //}
-
-    #endregion
-
-    #region [PCStatData, PCPssItemData 저장]
-    public void SaveGameData(string GDdiv)
+    #region [PCStatData, PCPssItemData 생성]
+    public void CreateGameData(string GDdiv)
     {
         string dataAsJson = string.Empty;
         string filePath = string.Empty;
         if (GDdiv == "pcstatData")   //플레이어 스텟
         {
-            dataAsJson = JsonUtility.ToJson(gameData);
+            dataAsJson = JsonUtility.ToJson(playerStatData);
             filePath = Application.persistentDataPath + gameDataProjectFilePath;
         }
         else                               //플레이어 소유 아이템
@@ -274,13 +219,12 @@ public class DataController : MonoBehaviour
     /// 소유 아이템 전용 Update
     /// </summary>
     /// <param name="pssiteminfolist"></param>
-    public void SaveGameDataPssItem(PssItemInfoList pssiteminfolist)
+    public void UpdateGameDataPssItem(PssItemInfoList pssiteminfolist)
     {
         string dataAsJson = string.Empty;
         string filePath = string.Empty;
         
         dataAsJson = JsonUtility.ToJson(pssiteminfolist);
-        Debug.Log("dataAsJson=" + dataAsJson);
         filePath = Application.persistentDataPath + pssItemProjectFilePath;
      
         File.WriteAllText(filePath, dataAsJson);
@@ -360,187 +304,7 @@ public class DataController : MonoBehaviour
         UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
     }
     #endregion
-
-    ////호출 공통
-    //public void LoadFunc(string jsonfile, string datadiv)
-    //{
-    //  //  Debug.Log("Json Data 불러옵니다.");
-    //    StartCoroutine(LoadData(jsonfile, datadiv)); //
-    //}
-
-    ////Load 공통
-    //IEnumerator LoadData(string jsonfile, string datadiv)
-    //{
-    //    string JsonString = File.ReadAllText(Application.dataPath + "/Resources/MetaData/" + jsonfile + "");
-    //    JsonData jsondata = JsonMapper.ToObject(JsonString);
-    //    ParsingJsonData(jsondata, datadiv);
-    //    yield return null;
-    //}
-
-    //PlayerStateEnt pse = new PlayerStateEnt();  //Player 현재 상태
-    // public List<PlayerState> pslist = new List<PlayerState>();
-
-    //public int PC_ID = 0;
-    //public int PC_Level, PC_Str, PC_Con, PC_Exp, PC_UpExp, PC_Gold, PC_WpnID, PC_WpnEct;
-    //public string PC_Type;
-    //public string PC_Name;
-
-
-
-    ////CharacterEnt che = new CharacterEnt(); //레벨별 케릭터 수치 
-    ////public List<Character> chlist = new List<Character>();
-    //public int Character_Level;
-    //public int Character_Str;
-    //public int Character_Con;
-    //public int Character_HP;
-    //public int Character_Exp;
-
-    ////무기
-    //public int Wep_ID;
-    //public string Wep_Name = string.Empty;
-    //public string Wep_ImgName = string.Empty;
-    //public int Wep_Level;
-    //public int Wep_Attack;
-    //public int Wep_AttackSec;
-    //public int Wep_Stuff;
-
-    //사냥터
-    //public int Field_ID;
-    //public int Field_Level;
-    //public string Field_Name;
-    //public string Field_ImgName;
-
-    //몬스터
-    //public int Mon_ID;
-    //public int Mon_Level;
-    //public string Mon_Name;
-    //public int Mon_HP;
-    //public string Mon_ImgName;
-    //public int Mon_AttackSec;
-    //public int Mon_ReturnExp;
-    //public int Mon_FieldLevel;
-    //public string Mon_DropItem;
-    /*
-    public int PC_ID = 0;
-    public int PC_Level, PC_Str, PC_Con, PC_Exp, PC_UpExp, PC_Gold, PC_WpnID, PC_WpnEct;
-    public string PC_Type;
-    public string PC_Name;
-    */
-    //private void ParsingJsonData(JsonData jsondata, string datadiv)
-    //{
-    //    #region[playerState //Player 현재 상태] 
-    //    //if (datadiv == "playerstat") 
-    //    //{
-    //    //    PC_ID = (int)(jsondata[i]["PC_ID"]);
-    //    //    PC_CurLevel = (int)(jsondata[i]["PC_CurLevel"]);
-    //    //    PC_STR = (int)(jsondata[i]["PC_STR"]);
-    //    //    PC_CON = (int)(jsondata[i]["PC_CON"]);
-    //    //    PC_CurExp = (int)(jsondata[i]["PC_CurExp"]);
-    //    //    PC_CurGold = string.Format("{0:n0}", (int)(jsondata[i]["PC_CurGold"]));
-    //    //    PC_WeaponID = (int)(jsondata[i]["PC_WeaponID"]);
-
-    //    //}
-    //    #endregion
-
-    //    //#region[Character //케릭터 레벨별 수치]
-    //    //if (datadiv == "character")
-    //    //{
-    //    //    for (int i = 0; i < jsondata.Count; i++)
-    //    //    {
-    //    //        if (i == PC_CurLevel-1) //Player 현재 레벨 = 케릭 레벨 수치
-    //    //        {
-    //    //            Character_Level = (int)(jsondata[i]["Character_Level"]);     //레벨
-    //    //            Character_Str = (int)(jsondata[i]["Character_Str"]);        //힘
-    //    //            Character_Con = (int)(jsondata[i]["Character_Con"]);     //체력
-    //    //            Character_HP = (int)(jsondata[i]["Character_HP"]);      //생명력
-    //    //            Character_Exp = (int)(jsondata[i]["Character_Exp"]);    //업에 필요한 경험치
-    //    //            //chlist.Add(new Character(che));
-
-    //    //            return;
-    //    //        }
-    //    //    }
-    //    //    //foreach (var item in chlist)
-    //    //    //{
-    //    //    //        Character_Level = item.character_level;
-    //    //    //        Character_Str = item.character_str;
-    //    //    //        Character_Con = item.character_con;
-    //    //    //        Character_HP = item.character_hp;
-    //    //    //        Character_Exp = item.character_exp;
-    //    //    //}
-    //    //}
-    //    //#endregion
-
-    //    //#region[Weapon //무기 레벨별 수치]
-    //    //if (datadiv == "weapon")
-    //    //{
-    //    //    //for (int i = 0; i < jsondata.Count; i++)
-    //    //    //{
-    //    //    //    if (i == PC_WeaponID - 1) //Player 현재 무기 ID = 무기 ID
-    //    //    //    {
-    //    //    Wep_ID = (int)(jsondata[PC_WeaponID - 1]["Wep_ID"]);     //무기 ID
-    //    //    Wep_Name = (jsondata[PC_WeaponID - 1]["Wep_Name"]).ToString();        //이름
-    //    //    Wep_ImgName = (jsondata[PC_WeaponID - 1]["Wep_ImgName"]).ToString();        //이미지명
-    //    //    Wep_Level = (int)(jsondata[PC_WeaponID - 1]["Wep_Level"]);     //레벨
-    //    //    Wep_Attack = (int)(jsondata[PC_WeaponID - 1]["Wep_Attack"]);      //공격력
-    //    //    Wep_AttackSec = (int)(jsondata[PC_WeaponID - 1]["Wep_AttackSec"]);    //초당공격력
-
-    //    //    //        return;
-    //    //    //    }
-    //    //    //    //        }
-    //    //    //    //foreach (var item in chlist)
-    //    //    //    //{
-    //    //    //    //        Character_Level = item.character_level;
-    //    //    //    //        Character_Str = item.character_str;
-    //    //    //    //        Character_Con = item.character_con;
-    //    //    //    //        Character_HP = item.character_hp;
-    //    //    //    //        Character_Exp = item.character_exp;
-    //    //    //    //}
-    //    //    //}
-    //    //}
-    //    //#endregion
-
-    //    //#region[Field //사냥터]
-    //    //if (datadiv == "field")
-    //    //{
-    //    //    // int field_id = Random.Range(Min, Max);  //일단 임시 : 추후에는 동적으로 받아야됨.. Min, Max)
-    //    //    int field_id = Random.Range(1, 3); 
-
-    //    //    Field_ID = (int)(jsondata[field_id-1]["Field_ID"]);
-    //    //    Field_Level = (int)(jsondata[field_id - 1]["Field_Level"]);
-    //    //    Field_Name =jsondata[field_id - 1]["Field_Name"].ToString();
-    //    //    Field_ImgName = jsondata[field_id - 1]["Field_ImgName"].ToString();
-
-    //    //}
-    //    //#endregion
-
-    //    //#region[Monster //몬스터]
-    //    //if (datadiv == "monster")
-    //    //{
-    //    //    // int mon_id = Random.Range(Min, Max);  //일단 임시 : 추후에는 동적으로 받아야됨.. Min, Max)
-    //    //    int mon_id = Random.Range(1, 3);
-
-    //    //    Mon_ID = (int)(jsondata[mon_id - 1]["Mon_ID"]);                         // ID
-    //    //    Mon_Level = (int)(jsondata[mon_id - 1]["Mon_Level"]);                   // Level
-    //    //    Mon_Name = jsondata[mon_id - 1]["Mon_Name"].ToString();             // 이름
-    //    //    Mon_HP = (int)jsondata[mon_id - 1]["Mon_HP"];                         // HP
-    //    //    Mon_ImgName = jsondata[mon_id - 1]["Mon_ImgName"].ToString();   // 이미지
-    //    //    Mon_AttackSec = (int)(jsondata[mon_id - 1]["Mon_AttackSec"]);           //  초당 공격력
-    //    //    Mon_ReturnExp = (int)(jsondata[mon_id - 1]["Mon_ReturnExp"]);           // 경험치
-    //    //    Mon_FieldLevel = (int)(jsondata[mon_id - 1]["Mon_FieldLevel"]);             // 출현 필드 레벨
-    //    //    Mon_DropItem =  jsondata[mon_id - 1]["Mon_DropItem"].ToString();       // 드랍 아이템
-    //    //}
-    //    //#endregion
-    //}
-
-
-    //public void PlayerStatLoad()
-    //{
-    //    GetStatList();
-    //}
-
-
-
-
+    
 }
 
 
