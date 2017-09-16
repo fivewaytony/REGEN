@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Advertisements;
+using UnityEngine.Purchasing;
 
 public class GameController : MonoBehaviour {
 
@@ -35,29 +36,63 @@ public class GameController : MonoBehaviour {
     public GameObject FieldChoiceBack;
     public Transform FieldChoiceContent; //필드선택 팝업
     public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
-    
+#if UNITY_IOS
+    string gameId = "1537760";
+#elif UNITY_ANDROID
+    string gameId = "1537759";
+#endif
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
+
+        if (Advertisement.isSupported)
+        {
+            Advertisement.Initialize(gameId, true);
+            Debug.Log("Ad init");
+        }
+        else
+        {
+            Debug.LogError("Ad is not supported");
+        }
         //DataController.Instance.PlayerStatLoadResourcesDEV();
         //DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
         PlayerStatLoad();   //플레이어 상태 로드
         PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
+
     }
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            DialogDataConfirm confirm = new DialogDataConfirm("게임 종료", "게임을 종료하시겠습니까?",
+                delegate (bool yn) {
+                    if (yn)
+                    {
+                        Application.Quit();
+                        // Debug.Log("Confirm OK");
+                    }
+                    else
+                    {
+                       // Debug.Log("Confirm Cancel");
+                    }
 
-    }
-    #region [랜덤숫자 생성 -  공통]
+                });
+
+            DialogManager.Instance.Push(confirm);
+        }
+     }
+
+
+#region [랜덤숫자 생성 -  공통]
     public int CommonRnd(int min, int max)
     {
         System.Random r = new System.Random();
         int retVal = r.Next(min, max);
         return retVal;
     }
-    #endregion
+#endregion
 
     //플레이어 상태 로드
     protected void PlayerStatLoad()
@@ -98,7 +133,7 @@ public class GameController : MonoBehaviour {
         }
    }
 
-    #region [사냥터 선택 팝업]
+#region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {
         FieldChoiceBack.gameObject.SetActive(true);
@@ -141,7 +176,7 @@ public class GameController : MonoBehaviour {
         }
 
     }
-    #endregion
+#endregion
     
     //사냥 이동
     public void GoHunting(int cfd)
@@ -169,13 +204,21 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 
-    #region [광고 보여주기]
+#region [광고 보여주기]
     void ShowRewardedVideo()
     {
-        var options = new ShowOptions();
-        options.resultCallback = HandleShowResult;
+        if (Advertisement.IsReady("rewardedVideo"))
+        {
 
-        Advertisement.Show("rewardedVideo", options);
+            var options = new ShowOptions();
+            options.resultCallback = HandleShowResult;
+
+            Advertisement.Show("rewardedVideo", options);
+        }
+        else
+        {
+            Debug.LogError("Ready Fail");
+        }
     }
 
     void HandleShowResult(ShowResult result)
@@ -192,11 +235,17 @@ public class GameController : MonoBehaviour {
         }
         else if (result == ShowResult.Failed)
         {
-            Debug.LogError("Video failed to show");
+            Debug.LogError("Video failed to show" + result.ToString());
         }
     }
-    #endregion
-    
-    
+#endregion
+
+#region [인앱결제]
+    public void PurchaseComplete(Product p)
+    {
+        Debug.Log(p.metadata.localizedTitle + " purchase success!");
+    }
+#endregion
+
 
 }

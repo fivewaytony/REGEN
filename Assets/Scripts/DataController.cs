@@ -148,7 +148,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-        //Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+        Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
         return DataPathPssItem;
@@ -284,6 +284,39 @@ public class DataController : MonoBehaviour
         return charinfolist;
     }
     #endregion
+
+    #region[재료 정보]
+    public StuffInfoList stuffinfolist;
+    public StuffInfoList GetStuffInfo()
+    {
+        if (stuffinfolist == null)
+        {
+            TextAsset stuffDataJson = Resources.Load("MetaData/Stuff") as TextAsset;
+            stuffinfolist = JsonUtility.FromJson<StuffInfoList>(stuffDataJson.text);
+        }
+
+        return stuffinfolist;
+    }
+    #endregion
+
+    public string GetStuffName(int st_id)
+    {
+        string retVal = string.Empty;
+        if (stuffinfolist == null)
+        {
+            stuffinfolist = GetStuffInfo();
+        }
+        foreach (var item in stuffinfolist.StuffList)
+        {
+            if (item.Stuff_ID == st_id)
+            {
+                retVal = item.Stuff_Name;
+                break;
+            }
+        }
+        return retVal;
+    }
+
 
     #region [FireBase로 메세지 보내기]
     void Start()

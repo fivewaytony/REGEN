@@ -12,7 +12,7 @@ public class HuntingController : GameController
     //Huting Scene
     public Image FieldImage;
     public Text FieldName;
-
+    public Camera MainCamera;
     public Image WeaponImage;
 
     public GameObject MonsterBG;
@@ -28,7 +28,9 @@ public class HuntingController : GameController
     public Text GetItemText;
 
     public Text CurHP_Count;
-   
+
+    public AudioClip SFXClick;
+
     private float MonHPBarNum;
     private int Mon_HP;         //최초 Max HP
     private int Mon_CurHP;    //현재 Mon HP
@@ -43,6 +45,7 @@ public class HuntingController : GameController
     private float PlayerHPBarNum;
     private int Player_CurHP;
     private int Wpn_Attack;
+    private string GetItemTextView;
 
     void Start()
     {
@@ -55,9 +58,8 @@ public class HuntingController : GameController
         FieldBGLoad(); //사냥터 배경로드
        
         WeaponLoad(); //무기
-
         MonsterLoad();//몹로드
-        StartCoroutine(AttackToPlayer()); //몬스터가 공격
+        
         StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템)
     }
 
@@ -104,9 +106,39 @@ public class HuntingController : GameController
                 }
             }
         }
+        StopCoroutine("AttackToPlayer");
+        StartCoroutine("AttackToPlayer");
     }
     #endregion
-    
+
+    #region [몬스터가 공격-코루틴]
+    IEnumerator AttackToPlayer() //몬스터가 공격
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(3f);  //3초
+
+            if (isMonOnLoad == true && Player_CurHP > 0)
+            {
+                float timeStart = Time.time;
+                float timePassed = Time.time - timeStart;
+                while (timePassed <= 0.2f)
+                {
+                    yield return new WaitForFixedUpdate();  //다음 프레임까지 대기(1초 60프레임)
+                    timePassed = Time.time - timeStart;
+                    PlayerHit.gameObject.SetActive(true);
+                }
+                PlayerHit.gameObject.SetActive(false);
+
+                // 플레이어 PlayerHPBarUpdate
+                int hitdamage = Mon_AttackDmg;
+                PlayerHPUpdate(hitdamage);
+            }
+        }
+       
+    }
+    #endregion
+
     #region [랜덤하게 몹리젠(가중치 적용)]
     //랜덤하게 몹리젠(가중치 적용 숫자 리턴)
     private int MonNumberLoad(int num)
@@ -173,15 +205,17 @@ public class HuntingController : GameController
         UpdateGetItem();
 
         GetItemText.gameObject.SetActive(true);
-        GetItemText.text = "뼈조각 1개\n구리 1개\n5 골드\n획득하였습니다.";
+        GetItemText.text = GetItemTextView;
+
         yield return new WaitForSecondsRealtime(1.5f);
+
         GetItemText.text = "";
         GetItemText.gameObject.SetActive(false);
 
         MonsterLoad();//몹로드
+        
     }
     #endregion
-
 
     #region [경험치/골드 Update]
     private void UpdatePlayerExpGold()
@@ -241,7 +275,7 @@ public class HuntingController : GameController
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
         string[] arrDropItemID = Mon_DropItem.Split('/');
         bool isHaveType = false;
-
+        GetItemTextView = "";
         for (int i = 0; i < arrDropItemID.Length; i++)
         {
            // Debug.Log("드랍 아이템 아이디 : " + arrDropItemID[i]); // 1 / 2 /
@@ -258,17 +292,21 @@ public class HuntingController : GameController
                 passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0));
             }
             isHaveType = false;
+
+            GetItemTextView = GetItemTextView + DataController.Instance.GetStuffName(Convert.ToInt32(arrDropItemID[i]))+ " 1개\n";
         }
+        GetItemTextView = GetItemTextView + Mon_DropGold +  "골드\n 를 획득했습니다.";
 
         PssItemInfoList pssiteminfolist = new PssItemInfoList();
         pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
         DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
-
-
+        
         PlayerPssItemLoad();
     }
     #endregion
     
+    
+
     #region [무기 로딩]
     private void WeaponLoad()
     {
@@ -302,10 +340,13 @@ public class HuntingController : GameController
         {
             Player_CurHP = Player_CurHP - hitdamage;
         }
+
         if (Player_CurHP <= 0) //플레이어 죽음
         {
             Player_CurHP = 0;
-            Debug.Log("플레이어 다이");
+            isMonOnLoad = false;
+            StopCoroutine("AttackToPlayer");
+            PC_DieAlert();
         }
 
         PlayerHPBarNum = (Player_CurHP * 100) / (float)PC_MaxHP;    // HP --> %로 표시
@@ -314,32 +355,17 @@ public class HuntingController : GameController
     }
     #endregion
 
-    #region [몬스터가 공격-코루틴]
-    IEnumerator AttackToPlayer() //몬스터가 공격
+    #region [플레이어 사망 Alert - Main이동]
+    private  void PC_DieAlert()
     {
-        yield return new WaitForSecondsRealtime(3f);  //3초
-        if (isMonOnLoad == true && Player_CurHP > 0 )
-        {
-            float timeStart = Time.time;
-            float timePassed = Time.time - timeStart;
-         //   float rate = timePassed / 0.5f;
-            while (timePassed <= 0.2f)
-            {
-               // yield return new WaitForFixedUpdate();
-                timePassed = Time.time - timeStart;
-         //       rate = timePassed / 0.1f;
-                PlayerHit.gameObject.SetActive(true);
-             }
-            PlayerHit.gameObject.SetActive(false);
+        DialogDataAlert alert = new DialogDataAlert("", "사망하였습니다!", delegate () {
+          //  Debug.Log("OK Pressed!");
 
-            // 플레이어 PlayerHPBarUpdate
-            int hitdamage = Mon_AttackDmg;
-            PlayerHPUpdate(hitdamage);
-            StartCoroutine("AttackToPlayer");
-        }
+        });
+        DialogManager.Instance.Push(alert);
     }
     #endregion
-
+    
     #region [몬스터 공격 - 무기 클릭]
     public void HuntingMon()
     {
@@ -351,7 +377,7 @@ public class HuntingController : GameController
             Color wcolor = WeaponPanel.color;          //배경색 조정
             wcolor.a = 0.5f;
             WeaponPanel.color = wcolor;
-
+            MainCamera.gameObject.GetComponent<AudioSource>().PlayOneShot(SFXClick);
             StartCoroutine(StartMonsterHit());  //hit 이미지  & 무기배경색 안보이게
         }
 
@@ -427,11 +453,14 @@ public class HuntingController : GameController
 
 
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GoMain();
+        }
+    }
 
 
 
