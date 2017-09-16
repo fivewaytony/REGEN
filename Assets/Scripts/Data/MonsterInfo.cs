@@ -6,7 +6,7 @@ using System;
 public class MonsterInfo
 {
     public int Mon_ID = 1;
-    public int Mon_FieldLevel =1;
+    public int Field_ID =1;
     public int Mon_GroupLevel;
     public string Mon_Name;
     public string Mon_ImgName;

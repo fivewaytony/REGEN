@@ -1,75 +1,15 @@
 {
 	"FieldList":
 		[
-		  {
-			"Field_ID": 1,
-			"Field_Level": 1,
-			"Field_Name": "깊은 숲",
-			"Field_ImgName": "Field_1",
-			"GetItem": "구리/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 2,
-			"Field_Level": 2,
-			"Field_Name": "바람 절벽",
-			"Field_ImgName": "Field_2",
-			"GetItem": "주석/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 3,
-			"Field_Level": 3,
-			"Field_Name": "서쪽 계곡",
-			"Field_ImgName": "Field_3",
-			"GetItem": "코발트/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 4,
-			"Field_Level": 4,
-			"Field_Name": "여우 숲",
-			"Field_ImgName": "Field_4",
-			"GetItem": "구리4/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 5,
-			"Field_Level": 5,
-			"Field_Name": "이끼 해안",
-			"Field_ImgName": "Field_5",
-			"GetItem": "구리5/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 6,
-			"Field_Level": 6,
-			"Field_Name": "검은 숲",
-			"Field_ImgName": "Field_6",
-			"GetItem": "구리6/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 7,
-			"Field_Level": 7,
-			"Field_Name": "동쪽 계곡",
-			"Field_ImgName": "Field_7",
-			"GetItem": "구리7/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 8,
-			"Field_Level": 8,
-			"Field_Name": "낙엽의 숲",
-			"Field_ImgName": "Field_8",
-			"GetItem": "구리8/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 9,
-			"Field_Level": 9,
-			"Field_Name": "칼바위 절벽",
-			"Field_ImgName": "Field_9",
-			"GetItem": "구리9/자수정/철조각/뼈조각"
-		  },
-		  {
-			"Field_ID": 10,
-			"Field_Level": 10,
-			"Field_Name": "구름 절벽",
-			"Field_ImgName": "Field_10",
-			"GetItem": "구리10/자수정/철조각/뼈조각"
-		  }
+			{"Field_ID":1,"Field_Level":1,"Field_Name":"깊은 숲","Field_ImgName":"Field_1","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":2,"Field_Level":2,"Field_Name":"바람 절벽","Field_ImgName":"Field_2","GetItem":"주석/철/단단한뼈/자수정"},
+			{"Field_ID":3,"Field_Level":3,"Field_Name":"서쪽 계곡","Field_ImgName":"Field_3","GetItem":"코발트/철/뼈조각/루비"},
+			{"Field_ID":4,"Field_Level":4,"Field_Name":"여우 숲","Field_ImgName":"Field_4","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":5,"Field_Level":5,"Field_Name":"이끼 해안","Field_ImgName":"Field_5","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":6,"Field_Level":6,"Field_Name":"검은 숲","Field_ImgName":"Field_6","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":7,"Field_Level":7,"Field_Name":"동쪽 계곡","Field_ImgName":"Field_7","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":8,"Field_Level":8,"Field_Name":"낙엽의 숲","Field_ImgName":"Field_8","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":9,"Field_Level":9,"Field_Name":"칼바위 절벽","Field_ImgName":"Field_9","GetItem":"구리/철/뼈조각/자수정"},
+			{"Field_ID":10,"Field_Level":10,"Field_Name":"구름 절벽","Field_ImgName":"Field_10","GetItem":"구리/철/뼈조각/자수정"}
 		]
 }

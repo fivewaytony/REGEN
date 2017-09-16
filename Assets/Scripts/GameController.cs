@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
     public Text LevelBarText;
     public Image LeveBarFill;
 
+    protected int PC_Level;         //현재 레벨
     protected int PC_Exp;           //현재 경험치
     protected int PC_UpExp;     //업에 필요한 경험치
     protected int PC_WpnID;     //무기아이디
@@ -23,12 +24,11 @@ public class GameController : MonoBehaviour {
     protected int PC_MaxHP;        //MaxHP
 
     protected int PssItem_ID;
-    protected int GameItem_ID;
     protected string GameItem_Type;
     protected int Amount;
+    protected string PC_Gold;
 
     protected int pssHP_Count; //소유 물약 개수
-   // protected int CurpassHP_Count;  //사용 or 구매 or 제조 후 업뎃이트 할 물약개수
 
     private float LevelBarNum;
 
@@ -39,41 +39,50 @@ public class GameController : MonoBehaviour {
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
-        //DataController.Instance.CreateGameData();
-        //DataController.Instance.CreatePssItem();  
+        //DataController.Instance.PlayerStatLoadResourcesDEV();
         //DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
-        PlayerStatLoad();   //플레이어 상태 로드 - _gameData에서 로드
+        PlayerStatLoad();   //플레이어 상태 로드
         PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
     }
+    // Update is called once per frame
+    void Update()
+    {
 
-    //랜덤숫자 생성 공통
+    }
+    #region [랜덤숫자 생성 -  공통]
     public int CommonRnd(int min, int max)
     {
         System.Random r = new System.Random();
         int retVal = r.Next(min, max);
         return retVal;
     }
+    #endregion
 
     //플레이어 상태 로드
     protected void PlayerStatLoad()
     {
-        LevelText.text = "Lv. " + DataController.Instance.PlayerStat.PC_Level.ToString();
-        PC_Exp = DataController.Instance.PlayerStat.PC_Exp;                  //현재 경험치
-        PC_UpExp = DataController.Instance.PlayerStat.PC_UpExp;
-        PC_WpnID = DataController.Instance.PlayerStat.PC_WpnID;
-        PC_MaxHP = DataController.Instance.PlayerStat.PC_MaxHP;
-        PC_Str = DataController.Instance.PlayerStat.PC_Str;
-
+        List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
+        foreach (var pcstat in playerstats)
+        {
+            PC_Level = pcstat.PC_Level;
+            PC_Exp = pcstat.PC_Exp;
+            PC_UpExp = pcstat.PC_UpExp;
+            PC_WpnID = pcstat.PC_WpnID;
+            PC_MaxHP = pcstat.PC_MaxHP;
+            PC_Str = pcstat.PC_Str;
+            PC_Con = pcstat.PC_Con;
+            PC_Gold = pcstat.PC_Gold;
+        }
+        LevelText.text = "Lv. " + PC_Level.ToString();
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
-        
-        string goldamount = DataController.Instance.PlayerStat.PC_Gold;
-        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(goldamount));
-        LevelText.text = "Lv. " + DataController.Instance.PlayerStat.PC_Level.ToString();
 
-        //PC_FieldLevel = DataController.Instance.PlayerStat.PC_FieldLevel;  //사냥필드레벨 -->출입제한없음
+        string goldamount = PC_Gold;
+        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(goldamount));
+
+        //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
     }
 
     //플레이어 소유 아이템 로드
@@ -87,9 +96,7 @@ public class GameController : MonoBehaviour {
                 pssHP_Count = passitems[i].Amount;          //소유물약개수
             }
         }
-        Debug.Log("PlayerPssItemLoad pssHP_Count=" + pssHP_Count);
-       
-    }
+   }
 
     #region [사냥터 선택 팝업]
     public void FieldChoicePop()
@@ -135,11 +142,6 @@ public class GameController : MonoBehaviour {
 
     }
     #endregion
-
-    // Update is called once per frame
-    void Update () {
-        
-    }
     
     //사냥 이동
     public void GoHunting(int cfd)
@@ -166,8 +168,8 @@ public class GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
-    
-    //광고 보여주기
+
+    #region [광고 보여주기]
     void ShowRewardedVideo()
     {
         var options = new ShowOptions();
@@ -193,5 +195,8 @@ public class GameController : MonoBehaviour {
             Debug.LogError("Video failed to show");
         }
     }
+    #endregion
+    
+    
 
 }

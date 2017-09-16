@@ -24,4 +24,12 @@ public class PlayerStat
 public class PlayerStatList
 {
     public List<PlayerStat> StatList;
+
+    public List<PlayerStat> SetPlayerStatList
+    {
+        set
+        {
+            StatList = value;
+        }
+    }
 }

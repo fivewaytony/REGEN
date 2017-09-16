@@ -35,107 +35,87 @@ public class DataController : MonoBehaviour
     // Singleton class end
     #endregion
 
-    #region [플레이어 데이터 -- 최초 한번]
-    public PlayerStatList plyaerStatData;   //플레이어 데이터 -- 최초 한번 --> 저장된 게임 데이터가 없을때
-    public PlayerStatList PlayerStatLoadResources()
-    {
-        if (plyaerStatData == null)
-        {
-            TextAsset statJson = Resources.Load("MetaData/PlayerStat") as TextAsset;
-            plyaerStatData = JsonUtility.FromJson<PlayerStatList>(statJson.text);
-        }
-        return plyaerStatData;
-    }
-    #endregion
-    
-    #region[저장된 gamedata Load/Save]
-    public string gameDataProjectFilePath = "/pcstat.json";  //저장된 테이터 파일
+    #region [저장된 플레이어 스텟 Load]
+    public string playerStatProjectFilePath = "/pcstat.json";  //저장된 플레이어 스텟  테이터 파일
 
-    PlayerStat playerStatData;     // 플레이어 스텟 저장된(할) 데이터
-    public PlayerStat PlayerStat
+    public PlayerStatList playerStatData;   //플레이어 데이터 
+    public PlayerStatList GetPlayerStatInfo()
     {
-        get
+        if (playerStatData == null)
         {
-            if (playerStatData == null)
+           string filePath = Application.persistentDataPath + playerStatProjectFilePath;
+            if (File.Exists(filePath))          //폰에 저장된 pcstat json 로드
             {
-                PlayerStatLoadDataPath();
+                playerStatData = PlayerStatLoadDataPath();
+                Debug.Log("PlayerStatLoadDataPath");
             }
-            return playerStatData;
+            else                            // Resources PassItem Json 로드 생성후 
+            {
+                playerStatData = PlayerStatResources();
+                Debug.Log("PlayerStatResources");
+
+                if (playerStatData != null)
+                    CreateGameData("pcstatData"); // DataPath에 파일생성
+            }
         }
+        return playerStatData;
     }
-    
-    public void PlayerStatLoadDataPath()   //플레이어 스텟 저장된 데이터 불러오기
-    {
-        string filePath = Application.persistentDataPath + gameDataProjectFilePath;
-
-        if (File.Exists(filePath))
-        {
-            Debug.Log("PlayerStatLoadDataPath!");
-            string dataAsJson = File.ReadAllText(filePath);
-            playerStatData = JsonUtility.FromJson<PlayerStat>(dataAsJson);
-        }
-        else
-        {
-            CreatePlayerStatData();
-        }
-    }
-
-    /// <summary>
-    ///  최초 플레이어 정보 Json 로드
-    /// </summary>
-    public void CreatePlayerStatData() {
-        Debug.Log("CreatePlayerStatData");
-        playerStatData = new PlayerStat();
-        List<PlayerStat> statList = DataController.Instance.PlayerStatLoadResources().StatList;
-        foreach (PlayerStat item in statList)
-        {
-            playerStatData.PC_ID = item.PC_ID;
-            playerStatData.PC_Level = item.PC_Level;
-            playerStatData.PC_Str = item.PC_Str;
-            playerStatData.PC_Con = item.PC_Con;
-            playerStatData.PC_Exp = item.PC_Exp;
-            playerStatData.PC_UpExp = item.PC_UpExp;
-            playerStatData.PC_MaxHP = item.PC_MaxHP;
-            playerStatData.PC_Gold = item.PC_Gold;
-            playerStatData.PC_WpnID = item.PC_WpnID;
-            playerStatData.PC_WpnEct = item.PC_WpnEct;
-            playerStatData.PC_FieldLevel = item.PC_FieldLevel;
-            playerStatData.PC_Type = item.PC_Type;
-            playerStatData.PC_Name = item.PC_Name;
-        }
-        CreateGameData("pcstatData");
-    }
-
-    /// <summary>
-    ///  플레이어 정보 UpdateGameData
-    /// </summary>
-    public void UpdateGameDataPlayerStat()
-    {
-        Debug.Log("UpdateGameDataPlayerStat");
-        playerStatData = new PlayerStat();
-        //_gameData.PC_ID = item.PC_ID;
-        //_gameData.PC_Level = item.PC_Level;
-        //_gameData.PC_Str = item.PC_Str;
-        //_gameData.PC_Con = item.PC_Con;
-        //_gameData.PC_Exp = item.PC_Exp;
-        //_gameData.PC_UpExp = item.PC_UpExp;
-        //_gameData.PC_MaxHP = item.PC_MaxHP;
-        //_gameData.PC_Gold = item.PC_Gold;
-        //_gameData.PC_WpnID = item.PC_WpnID;
-        //_gameData.PC_WpnEct = item.PC_WpnEct;
-        //_gameData.PC_FieldLevel = item.PC_FieldLevel;
-        //_gameData.PC_Type = item.PC_Type;
-        //_gameData.PC_Name = item.PC_Name;
-
-        //SaveGameData();
-
-    }
-
     #endregion
     
-    #region[저장된 소유아이템 Load/Save]
+    #region [플레이어 스텟 -- DataPath에서 읽기 ] 
+    public PlayerStatList PlayerStatLoadDataPath()   //플레이어 스텟 저장된 데이터 불러오기
+    {
+        PlayerStatList DataPathPlayerStat;
 
-    public string pssItemProjectFilePath = "/pssitem.json";  //저장된 테이터 파일
+        string filePath = Application.persistentDataPath + playerStatProjectFilePath;
+        string dataAsJson = File.ReadAllText(filePath);
+        DataPathPlayerStat = JsonUtility.FromJson<PlayerStatList>(dataAsJson);
+
+        return DataPathPlayerStat;
+    }
+    #endregion
+
+    #region [플레이어 스텟 - 최초 한번 Resources MetaData에서 읽기 ] 
+    public PlayerStatList PlayerStatResources()
+    {
+        PlayerStatList ResourcesPlayerStat;
+
+        TextAsset PlayerStat = Resources.Load("MetaData/PlayerStat") as TextAsset;
+        ResourcesPlayerStat = JsonUtility.FromJson<PlayerStatList>(PlayerStat.text);
+
+        return ResourcesPlayerStat;
+    }
+    #endregion
+    
+    #region [플레이어 스텟 -- DEV 용도 Resources MetaData에서 읽어 쓰기 ] 
+    public void PlayerStatLoadResourcesDEV()
+    {
+        TextAsset PlayerStat = Resources.Load("MetaData/PlayerStat") as TextAsset;
+        playerStatData = JsonUtility.FromJson<PlayerStatList>(PlayerStat.text);
+        Debug.Log("PlayerStatLoadResourcesDEV");
+        CreateGameData("pcstatData"); // DataPath에 파일생성
+    }
+    #endregion
+
+    #region [플레이어 전용 Update]
+    /// <summary>
+    /// 플레이어 전용 Update]
+    /// </summary>
+    /// <param name="playerstatlist"></param>
+    public void UpdateGameDataPlayerStat(PlayerStatList playerstatlist)
+    {
+        string dataAsJson = string.Empty;
+        string filePath = string.Empty;
+
+        dataAsJson = JsonUtility.ToJson(playerstatlist);
+        filePath = Application.persistentDataPath + playerStatProjectFilePath;
+
+        File.WriteAllText(filePath, dataAsJson);
+    }
+    #endregion
+
+    #region[저장된 소유아이템 Load]
+    public string pssItemProjectFilePath = "/pssitem.json";  //저장된 소유아이템 테이터 파일
 
     public PssItemInfoList pssiteminfolist;
     public PssItemInfoList GetPssItemInfo()
@@ -164,13 +144,14 @@ public class DataController : MonoBehaviour
     #region [플레이어 소유 아이템 -- DataPath에서 읽기 ] 
     public PssItemInfoList PssItemLoadDataPath()
     {
-        PssItemInfoList DataPathPssItemData;
+        PssItemInfoList DataPathPssItem;
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-        DataPathPssItemData = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
+        //Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+        DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
-        return DataPathPssItemData;
+        return DataPathPssItem;
     }
     #endregion
     
@@ -180,6 +161,7 @@ public class DataController : MonoBehaviour
         PssItemInfoList ResourcesPssItemData;
 
         TextAsset PssItem = Resources.Load("MetaData/PssItem") as TextAsset;
+        Debug.Log("Resources 소유아이템 : " + PssItem);
         ResourcesPssItemData = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
 
         return ResourcesPssItemData;
@@ -196,7 +178,7 @@ public class DataController : MonoBehaviour
     }
     #endregion
 
-    #region [PCStatData, PCPssItemData 생성]
+    #region [플레이어 스텟, 소유 아이템 생성]
     public void CreateGameData(string GDdiv)
     {
         string dataAsJson = string.Empty;
@@ -204,7 +186,7 @@ public class DataController : MonoBehaviour
         if (GDdiv == "pcstatData")   //플레이어 스텟
         {
             dataAsJson = JsonUtility.ToJson(playerStatData);
-            filePath = Application.persistentDataPath + gameDataProjectFilePath;
+            filePath = Application.persistentDataPath + playerStatProjectFilePath;
         }
         else                               //플레이어 소유 아이템
         {
@@ -214,7 +196,9 @@ public class DataController : MonoBehaviour
         }
         File.WriteAllText(filePath, dataAsJson);
     }
+    #endregion
 
+    #region [소유 아이템 전용 Update]
     /// <summary>
     /// 소유 아이템 전용 Update
     /// </summary>
@@ -223,22 +207,22 @@ public class DataController : MonoBehaviour
     {
         string dataAsJson = string.Empty;
         string filePath = string.Empty;
-        
+
         dataAsJson = JsonUtility.ToJson(pssiteminfolist);
         filePath = Application.persistentDataPath + pssItemProjectFilePath;
-     
+
         File.WriteAllText(filePath, dataAsJson);
     }
     #endregion
-
+    
     #region [게임 아이템 정보]
-    public GameItemInfoList gameitemlist;
-    public GameItemInfoList GetGameIteminfo()
+    public GameItemGroupInfoList gameitemlist;
+    public GameItemGroupInfoList GetGameIteminfo()
     {
         if (gameitemlist == null)
         {
-            TextAsset GameItemJson = Resources.Load("MetaData/GameItem") as TextAsset;
-            gameitemlist = JsonUtility.FromJson<GameItemInfoList>(GameItemJson.text);
+            TextAsset GameItemJson = Resources.Load("MetaData/GameItemGroup") as TextAsset;
+            gameitemlist = JsonUtility.FromJson<GameItemGroupInfoList>(GameItemJson.text);
         }
 
         return gameitemlist;
@@ -286,7 +270,21 @@ public class DataController : MonoBehaviour
         return weaponinfolist;
     }
     #endregion
-    
+
+    #region [레벨별 케릭터 정보]
+    public CharInfoList charinfolist;
+    public CharInfoList GetCharInfo()
+    {
+        if (charinfolist == null)
+        {
+            TextAsset charDataJson = Resources.Load("MetaData/Character") as TextAsset;
+            charinfolist = JsonUtility.FromJson<CharInfoList>(charDataJson.text);
+        }
+
+        return charinfolist;
+    }
+    #endregion
+
     #region [FireBase로 메세지 보내기]
     void Start()
     {

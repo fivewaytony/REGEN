@@ -8,10 +8,10 @@
 		"PC_Level": 1,
 		"PC_Str": 1,
 		"PC_Con": 1,
-		"PC_Exp": 55,
+		"PC_Exp": 94,
 		"PC_UpExp": 100,
 		"PC_MaxHP": 100,
-		"PC_Gold": 100000,
+		"PC_Gold": 10000,
 		"PC_WpnID": 1,
 		"PC_WpnEct": 0,
 		"PC_FieldLevel": 1
