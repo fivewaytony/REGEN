@@ -32,9 +32,9 @@ public class HuntingController : GameController
     public AudioClip SFXClick;
 
     private float MonHPBarNum;
-    private int Mon_HP;         //최초 Max HP
-    private int Mon_CurHP;    //현재 Mon HP
-    private int Mon_AttackDmg; // 1회 공격력
+    private float Mon_HP;         //최초 Max HP
+    private float Mon_CurHP;    //현재 Mon HP
+    private float Mon_AttackDmg; // 1회 공격력
     private bool isMonOnLoad = false;
     private string Mon_DropItem;
     private int PC_GetItem;
@@ -43,10 +43,10 @@ public class HuntingController : GameController
     private int Mon_GroupLevel;
     
     private float PlayerHPBarNum;
-    private int Player_CurHP;
-    private int Wpn_Attack;
+    private float Player_CurHP;
+    private float Wpn_Attack;
     private string GetItemTextView;
-
+    
     void Start()
     {
         /* DataPath 에서 기본 정보 로딩 매신마다 로딩*/
@@ -56,11 +56,12 @@ public class HuntingController : GameController
 
         /* 기본 정보 로딩 매신마다 로딩*/
         FieldBGLoad(); //사냥터 배경로드
-       
+
+        BalanceInfoLoad(); // 밸런싱 수치 정보 
         WeaponLoad(); //무기
         MonsterLoad();//몹로드
         
-        StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템)
+       // StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템) --> 지금은 사용 안함 : 처음 시작 한번하고 계속 루프에 이용
     }
 
     #region [필드 로딩]
@@ -78,7 +79,7 @@ public class HuntingController : GameController
         }
     }
     #endregion
-
+    
     #region [몬스터 로딩]
     private void MonsterLoad()
     {
@@ -97,8 +98,8 @@ public class HuntingController : GameController
                     MonsterName.text = item.Mon_Name;
                     MonsterImage.sprite = Resources.Load<Sprite>("Sprites/Monster/" + item.Mon_ImgName);
                     Mon_GroupLevel = item.Mon_GroupLevel;
-                    Mon_HP = item.Mon_HP; //최초 몹피
-                    Mon_AttackDmg = item.Mon_AttackDmg;
+                    Mon_HP = item.Mon_HP * mon_hprate; //최초 몹피
+                    Mon_AttackDmg = item.Mon_AttackDmg * mon_attrate;
                     Mon_DropItem = item.Mon_DropItem;
                     Mon_DropGold = item.Mon_DropGold;
                     Mon_ReturnExp = item.Mon_ReturnExp;
@@ -131,7 +132,7 @@ public class HuntingController : GameController
                 PlayerHit.gameObject.SetActive(false);
 
                 // 플레이어 PlayerHPBarUpdate
-                int hitdamage = Mon_AttackDmg;
+                float hitdamage = Mon_AttackDmg;
                 PlayerHPUpdate(hitdamage);
             }
         }
@@ -169,7 +170,7 @@ public class HuntingController : GameController
     #endregion
 
     #region [몬스터 HP Update]
-    private void MonsterHPUpdate(int hitdamage)
+    private void MonsterHPUpdate(float hitdamage)
     {
         if (hitdamage == 0)                                //최초
         {
@@ -196,7 +197,7 @@ public class HuntingController : GameController
     }
     #endregion
 
-    #region [몬스터 로딩 지연 코루틴]
+    #region [몬스터 로딩 지연 코루틴 - 몹 사냥 후]
     IEnumerator StartMonsterResult()
     {
         //경험치/골드 Update - 플레이어 상태
@@ -217,7 +218,7 @@ public class HuntingController : GameController
     }
     #endregion
 
-    #region [경험치/골드 Update]
+    #region [경험치/골드 Update - 몹 사냥 후]
     private void UpdatePlayerExpGold()
     {
         PC_Exp = PC_Exp + Mon_ReturnExp;  //경험치 +
@@ -235,7 +236,7 @@ public class HuntingController : GameController
                 {
                     PC_Str = cf.Char_Str;
                     PC_Con = cf.Char_Con;
-                    PC_MaxHP = cf.Char_HP;
+                    PC_MaxHP = cf.Char_HP * pc_hprate;
                     PC_UpExp = cf.Char_Exp;
                 }
             }
@@ -267,7 +268,7 @@ public class HuntingController : GameController
     }
     #endregion
 
-    #region [플레이어 획득 아이템 표시 /  Update - 소유아이템]
+    #region [플레이어 획득 아이템 표시 /  Update - 소유아이템  - 몹 사냥 후]
     private void UpdateGetItem()
     {
        // Debug.Log("드랍아이템 : " + Mon_DropItem);
@@ -304,9 +305,7 @@ public class HuntingController : GameController
         PlayerPssItemLoad();
     }
     #endregion
-    
-    
-
+       
     #region [무기 로딩]
     private void WeaponLoad()
     {
@@ -320,7 +319,7 @@ public class HuntingController : GameController
                 foreach (WeaponInfo item in courWeapon)
                 {
                     WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
-                    Wpn_Attack = item.Wpn_AttackSec;  //1회 공격력
+                    Wpn_Attack = item.Wpn_AttackSec * wpn_attrate;  //1회 공격력
                 }
             }
         }
@@ -330,7 +329,7 @@ public class HuntingController : GameController
     #endregion
 
     #region [플레이어 HPBar Update]
-    public void PlayerHPUpdate(int hitdamage)
+    public void PlayerHPUpdate(float hitdamage)
     {
         if (hitdamage == 0)                         //처음 로딩
         {
@@ -359,8 +358,7 @@ public class HuntingController : GameController
     private  void PC_DieAlert()
     {
         DialogDataAlert alert = new DialogDataAlert("", "사망하였습니다!", delegate () {
-          //  Debug.Log("OK Pressed!");
-
+  
         });
         DialogManager.Instance.Push(alert);
     }
@@ -406,22 +404,41 @@ public class HuntingController : GameController
             PlayerHPUpdate(0);  //만피 채우기
         }
         CurHP_Count.text = pssHP_Count.ToString()+"개";
+        UpdateGameDataHPCount();
     }
     #endregion
 
+    #region [HP 물약 개수 저장]
+    private void UpdateGameDataHPCount()
+    {
+        List<PssItem> pasitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < pasitems.Count; i++)
+        {
+            if (pasitems[i].GameItem_Type == "Hpotion")    //물약이면
+            {
+                pasitems[i].Amount = pssHP_Count;            //사용물약 저장하기
+            }
+        }
+        PssItemInfoList pssiteminfolist = new PssItemInfoList();
+        pssiteminfolist.SetPssItemList = pasitems;             //소유 아이템 업데이트
+        DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+        PlayerPssItemLoad();
+    }
+    #endregion
+    
     #region [GameDataUpdate-코루틴]
     IEnumerator UpdateGameData() 
     {
        yield return new WaitForSecondsRealtime(3f);  //3초
-
+        Debug.Log("UpdateGameData");
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
-        for (int i = 0; i < passitems.Count; i++)
-        {
-            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면
-            {
-                passitems[i].Amount = pssHP_Count;            //사용물약 저장하기
-            }
-        }
+        //for (int i = 0; i < passitems.Count; i++) --> 여기에 Update 시킬 항목 정의 후 Update
+        //{
+        //    if (passitems[i].GameItem_Type == "Hpotion")    //물약이면
+        //    {
+        //        passitems[i].Amount = pssHP_Count;            //사용물약 저장하기
+        //    }
+        //}
         PssItemInfoList pssiteminfolist = new PssItemInfoList();
         pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
         DataController.Instance.UpdateGameDataPssItem(pssiteminfolist); 
@@ -430,38 +447,36 @@ public class HuntingController : GameController
         StartCoroutine("UpdateGameData");
     }
     #endregion
-
-    // 물약먹기 --> 소유 아이템 Update (O)
-    // 몬스터 사냥 후 경험치 Update -->-> 플레이어 획득 아이템 업데이트 --> 획득 아이템 표시 (확률로 드랍)---> 몹 리젠
-    // 레벨업했으면 케릭터 기본값 Update 후 리로드
-    // 플레이어 사망 시 메인 이동
-    // 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
-    // 몬스터 리젠 시간텀 주기
-
-
-    // 특템아이템 표시 
-    // 특템 아이템 사용 표시
-    // 각 hit 이미지 바꾸기(여러개 노출 랜덤하게) --> 이미지 변경하고 노출 위치 랜덤
-
-
-
-    private void MonDestory()
-    {
-        //Destroy(GameObject.Find("Monster"));
-        //isMonOnLoad = false;
-    }
-
-
-
+    
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)) 
         {
             GoMain();
         }
     }
 
+
+
+    // 물약먹기 --> 소유 아이템 Update (O)
+    // 몬스터 사냥 후 경험치 Update -->-> 플레이어 획득 아이템 업데이트 --> 획득 아이템 표시 ---> 몹 리젠(O)
+    // 레벨업했으면 케릭터 기본값 Update 후 리로드 (O)
+    // 플레이어 사망 시 메인 이동  (O)
+    // 몬스터 리젠 시간텀 주기(O)
+    // 가방 구현
+
+
+    //로딩 바 넣기
+    //사냥터 선택 닫기
+    //플레이어 공격력, 방어력(HP), 몹의 공격력, 몹 방어력(HP) 의 수치를 config 형식의 변수로 관리 
+    //일단 4개만 정의: 플레이어 공격력(무기 공격력), 플레이어 HP, 몬스터 공격력, 몬스터 HP
+
+
+// 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
+// 특템아이템 표시 
+// 특템 아이템 사용 표시
+// 각 hit 이미지 바꾸기(여러개 노출 랜덤하게) --> 이미지 변경하고 노출 위치 랜덤
 
 
 }

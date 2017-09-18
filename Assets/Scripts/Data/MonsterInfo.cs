@@ -10,8 +10,8 @@ public class MonsterInfo
     public int Mon_GroupLevel;
     public string Mon_Name;
     public string Mon_ImgName;
-    public int Mon_HP;
-    public int Mon_AttackDmg;
+    public float Mon_HP;
+    public float Mon_AttackDmg;
     public int Mon_ReturnExp;
     public string Mon_DropItem;
     public int Mon_DropGold;

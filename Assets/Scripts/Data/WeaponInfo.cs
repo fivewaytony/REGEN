@@ -10,7 +10,7 @@ public class WeaponInfo
     public string Wpn_ImgName;
     public int Wpn_Level;
     public int Wpn_Attack;
-    public int Wpn_AttackSec;
+    public float Wpn_AttackSec;
     public string Wpn_Stuff;
 }
 

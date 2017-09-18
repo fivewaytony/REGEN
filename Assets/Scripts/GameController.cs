@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour {
     protected int PC_FieldLevel;  //출입가능 필드레벨(현재 적용안함)
     protected int PC_Str;           // 힘
     protected int PC_Con;           //체력
-    protected int PC_MaxHP;        //MaxHP
+    protected float PC_MaxHP;        //MaxHP
 
     protected int PssItem_ID;
     protected string GameItem_Type;
@@ -36,6 +36,12 @@ public class GameController : MonoBehaviour {
     public GameObject FieldChoiceBack;
     public Transform FieldChoiceContent; //필드선택 팝업
     public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
+
+    protected float wpn_attrate;
+    protected float pc_hprate;
+    protected float mon_attrate;
+    protected float mon_hprate;
+
 #if UNITY_IOS
     string gameId = "1537760";
 #elif UNITY_ANDROID
@@ -44,7 +50,6 @@ public class GameController : MonoBehaviour {
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
-
         if (Advertisement.isSupported)
         {
             Advertisement.Initialize(gameId, true);
@@ -84,17 +89,30 @@ public class GameController : MonoBehaviour {
         }
      }
 
+    #region [밸런싱 수치]
+    protected void BalanceInfoLoad()
+    {
+        List<Balance> balanceinfos = DataController.Instance.GetBalanceInfo().BalanceList;
+        foreach (var bi in balanceinfos)
+        {
+            wpn_attrate = bi.Wpn_AttackSecRate;
+            pc_hprate = bi.PC_HPRate;
+            mon_attrate = bi.Mon_AttackSecRate;
+            mon_hprate = bi.Mon_HPRate;
+        }
+    }
+    #endregion
 
-#region [랜덤숫자 생성 -  공통]
+    #region [랜덤숫자 생성 -  공통]
     public int CommonRnd(int min, int max)
     {
         System.Random r = new System.Random();
         int retVal = r.Next(min, max);
         return retVal;
     }
-#endregion
+    #endregion
 
-    //플레이어 상태 로드
+    #region [플레이어 상태 로드]
     protected void PlayerStatLoad()
     {
         List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
@@ -119,8 +137,9 @@ public class GameController : MonoBehaviour {
 
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
     }
+    #endregion
 
-    //플레이어 소유 아이템 로드
+    #region [플레이어 소유 아이템 로드]
     protected void PlayerPssItemLoad()
     {
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
@@ -131,9 +150,10 @@ public class GameController : MonoBehaviour {
                 pssHP_Count = passitems[i].Amount;          //소유물약개수
             }
         }
-   }
-
-#region [사냥터 선택 팝업]
+    }
+    #endregion
+    
+    #region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {
         FieldChoiceBack.gameObject.SetActive(true);
