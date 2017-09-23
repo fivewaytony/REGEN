@@ -285,7 +285,7 @@ public class DataController : MonoBehaviour
     }
     #endregion
 
-    #region[재료 아이테 정보]
+    #region[재료 아이템 정보]
     public StuffInfoList stuffinfolist;
     public StuffInfoList GetStuffInfo()
     {
@@ -293,10 +293,16 @@ public class DataController : MonoBehaviour
         {
             TextAsset stuffDataJson = Resources.Load("MetaData/Stuff") as TextAsset;
             stuffinfolist = JsonUtility.FromJson<StuffInfoList>(stuffDataJson.text);
+            stuffDic = new Dictionary<int, StuffInfo>();
+            foreach(StuffInfo stuff in stuffinfolist.StuffList)
+            {
+                stuffDic.Add(stuff.Stuff_ID, stuff);
+            }
         }
-
         return stuffinfolist;
     }
+    public Dictionary<int, StuffInfo> stuffDic;
+
     #endregion
 
     #region [밸러싱 수치 정보]

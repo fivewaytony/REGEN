@@ -15,11 +15,15 @@ public class InventoryController : GameController
     public List<GameObject> slots = new List<GameObject>();
     public GameObject ItemInfoBackPanel;
 
+    public Text ItemInfoNameText, ItemInfoDescText;
+
     private int pssItemID;
+    public static InventoryController invenInstance;
     
     void Start () {
+        invenInstance = this;
         PlayerPssItemLoadALL(); //전체 소유 아이템 로드
-
+        
     }
     #region [플레이어 소유 아이템 전체 로드]
     protected void PlayerPssItemLoadALL()
@@ -76,19 +80,27 @@ public class InventoryController : GameController
                     slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
                     slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Stuff/" + stuff.Stuff_ImgName);
                     slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+                    slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
+                    //Image[] items= ItemInfoBackPanel.GetComponentsInChildren<Image>();
+                    //foreach (Image item in items)
+                    //{
+                       
+                    //   // item. => GoHunting(fielditem.Field_Level));
+                    //}
                     break;
                 }
             }
 
         }
 
-
     }
     #endregion
 
-    public void ShowItemInfoPanel()
+    public void ShowItemInfoPanel(int ItemID)
     {
         ItemInfoBackPanel.gameObject.SetActive(true);
+        StuffInfo stuff = DataController.Instance.stuffDic[ItemID];
+        ItemInfoNameText.text = stuff.Stuff_Name;
     }
 
     public void CloseItemInfoPanel()
