@@ -8,6 +8,7 @@ public class StuffInfo
     public int Stuff_ID = 1;
     public int GameItem_ID = 11;
     public string Stuff_Name;
+    public string Stuff_ImgName;
 }
 
 [Serializable]

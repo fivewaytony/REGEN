@@ -1,13 +1,13 @@
 {
 	"StuffList":
 		[
-			{"Stuff_ID":1,"GameItem_ID":11,"Stuff_Name":"뼈조각"},
-			{"Stuff_ID":2,"GameItem_ID":11,"Stuff_Name":"구리"},
-			{"Stuff_ID":3,"GameItem_ID":11,"Stuff_Name":"철"},
-			{"Stuff_ID":4,"GameItem_ID":11,"Stuff_Name":"자수정"},
-			{"Stuff_ID":5,"GameItem_ID":11,"Stuff_Name":"단단한뼈"},
-			{"Stuff_ID":6,"GameItem_ID":11,"Stuff_Name":"주석"},
-			{"Stuff_ID":7,"GameItem_ID":11,"Stuff_Name":"강철"},
-			{"Stuff_ID":8,"GameItem_ID":11,"Stuff_Name":"루비"}
+			{"Stuff_ID":1,"GameItem_ID":11,"Stuff_Name":"뼈조각","Stuff_ImgName":"Stuff_ID_1"},
+			{"Stuff_ID":2,"GameItem_ID":11,"Stuff_Name":"구리","Stuff_ImgName":"Stuff_ID_2"},
+			{"Stuff_ID":3,"GameItem_ID":11,"Stuff_Name":"철","Stuff_ImgName":"Stuff_ID_3"},
+			{"Stuff_ID":4,"GameItem_ID":11,"Stuff_Name":"자수정","Stuff_ImgName":"Stuff_ID_4"},
+			{"Stuff_ID":5,"GameItem_ID":11,"Stuff_Name":"단단한뼈","Stuff_ImgName":"Stuff_ID_5"},
+			{"Stuff_ID":6,"GameItem_ID":11,"Stuff_Name":"주석","Stuff_ImgName":"Stuff_ID_6"},
+			{"Stuff_ID":7,"GameItem_ID":11,"Stuff_Name":"강철","Stuff_ImgName":"Stuff_ID_7"},
+			{"Stuff_ID":8,"GameItem_ID":11,"Stuff_Name":"루비","Stuff_ImgName":"Stuff_ID_8"}
 		]
 }

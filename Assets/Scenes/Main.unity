@@ -949,7 +949,7 @@ MonoBehaviour:
   LevelBarText: {fileID: 338405211}
   LeveBarFill: {fileID: 423447869}
   FieldChoiceBack: {fileID: 1963135224}
-  FieldChoiceContent: {fileID: 336645892}
+  FieldChoiceContent: {fileID: 1744417748}
   ChoiceFieldID: 0
 --- !u!4 &621366579
 Transform:

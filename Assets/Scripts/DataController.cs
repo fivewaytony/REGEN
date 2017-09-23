@@ -148,7 +148,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-        //Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+       // Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
         return DataPathPssItem;

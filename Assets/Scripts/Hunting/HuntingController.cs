@@ -64,6 +64,20 @@ public class HuntingController : GameController
        // StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템) --> 지금은 사용 안함 : 처음 시작 한번하고 계속 루프에 이용
     }
 
+    #region [플레이어 소유 아이템 로드]
+    protected void PlayerPssItemLoad()
+    {
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면 // 필요한 타입은 추가 ex--추가
+            {
+                pssHP_Count = passitems[i].Amount;          //소유물약개수
+            }
+        }
+    }
+    #endregion
+
     #region [필드 로딩]
     private void FieldBGLoad()
     {

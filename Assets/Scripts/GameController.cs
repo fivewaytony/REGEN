@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour {
     private float LevelBarNum;
 
     public GameObject FieldChoiceBack;
-    public Transform FieldChoiceContent; //필드선택 팝업
+    public Transform FieldChoiceContent; //필드선택 사냥터 - 부모
     public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
 
     protected float wpn_attrate;
@@ -63,7 +63,7 @@ public class GameController : MonoBehaviour {
         //DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
         PlayerStatLoad();   //플레이어 상태 로드
-        PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
+        //PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
 
     }
     // Update is called once per frame
@@ -138,21 +138,7 @@ public class GameController : MonoBehaviour {
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
     }
     #endregion
-
-    #region [플레이어 소유 아이템 로드]
-    protected void PlayerPssItemLoad()
-    {
-        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
-        for (int i = 0; i < passitems.Count; i++)
-        {
-            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면
-            {
-                pssHP_Count = passitems[i].Amount;          //소유물약개수
-            }
-        }
-    }
-    #endregion
-    
+        
     #region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {
