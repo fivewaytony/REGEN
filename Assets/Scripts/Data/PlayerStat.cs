@@ -6,6 +6,8 @@ using System;
 public class PlayerStat
 {
     public int PC_ID=1;
+    public string PC_Type;
+    public string PC_Name;
     public int PC_Level;
     public int PC_Str;
     public int PC_Con;
@@ -13,12 +15,9 @@ public class PlayerStat
     public int PC_UpExp;
     public float PC_MaxHP;
     public string PC_Gold;
-    public int PC_WpnID;
-    public int PC_WpnEct;
+    public int PC_Dia;
     public int PC_FieldLevel;
-    public string PC_Type;
-    public string PC_Name;
-}
+ }
 
 [Serializable]
 public class PlayerStatList

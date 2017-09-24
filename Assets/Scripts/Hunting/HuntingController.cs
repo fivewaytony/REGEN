@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Linq;
 
-
 public class HuntingController : GameController
 {
     //Huting Scene
@@ -50,33 +49,90 @@ public class HuntingController : GameController
     void Start()
     {
         /* DataPath 에서 기본 정보 로딩 매신마다 로딩*/
+
+        BalanceInfoLoad(); // 밸런싱 수치 정보 
         PlayerStatLoad();   
-        PlayerPssItemLoad();
+        PlayerPssItemLoad(); // 소유 아이템 로딩 
         CurHP_Count.text = pssHP_Count.ToString() + "개"; //물약개수 로딩
 
         /* 기본 정보 로딩 매신마다 로딩*/
         FieldBGLoad(); //사냥터 배경로드
 
-        BalanceInfoLoad(); // 밸런싱 수치 정보 
-        WeaponLoad(); //무기
+       
+       // WeaponLoad(); //무기
         MonsterLoad();//몹로드
-        
-       // StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템) --> 지금은 사용 안함 : 처음 시작 한번하고 계속 루프에 이용
+        PlayerHPUpdate(0);   // 플레이어 HPUpdate   
+     
+        // StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템) --> 지금은 사용 안함 : 처음 시작 한번하고 계속 루프에 이용
     }
 
-    #region [플레이어 소유 아이템 로드]
+    #region [플레이어 소유 아이템 로드 - 무기/HP 물약]
     protected void PlayerPssItemLoad()
     {
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        int pWpnID = 0;
         for (int i = 0; i < passitems.Count; i++)
         {
-            if (passitems[i].GameItem_Type == "Hpotion")    //물약이면 // 필요한 타입은 추가 ex--추가
+            if (passitems[i].Item_Type == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
             {
-                pssHP_Count = passitems[i].Amount;          //소유물약개수
+                pWpnID = passitems[i].Item_ID;
+                break;
             }
         }
+
+        List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;
+        GameItemInfo gameitem = DataController.Instance.gameitemDic[pWpnID];
+        WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + gameitem.Item_ImgName);
+        Wpn_Attack = gameitem.Wpn_AttackSec * wpn_attrate;  //1회 공격력
+ 
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_Type == "Potion" && passitems[i].Item_ID == 3)    //HP 물약이면 // 필요한 타입은 추가 ex--추가
+            {
+                pssHP_Count = Convert.ToInt32(passitems[i].Amount);          //소유물약개수
+                break;
+            }
+        }
+
     }
     #endregion
+
+    #region [무기 로딩 -- > 사용안함 ]
+    //private void WeaponLoad()
+    //{
+    //    List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+    //    int pWpnID = 0;
+    //    for (int i = 0; i < passitems.Count; i++)
+    //    {
+    //        if (passitems[i].Item_Type == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
+    //        {
+    //            pWpnID = passitems[i].Item_ID;
+    //            break;
+    //        }
+    //    }
+    //    //List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
+    //    //List<WeaponInfo> courWeapon = new List<WeaponInfo>();
+    //    //for (int i = 0; i < weaponinfos.Count; i++)
+    //    //{
+    //    //    if (PC_WpnID == weaponinfos[i].Wpn_ID)  //들고있는 무기정보
+    //    //    {
+    //    //        courWeapon = weaponinfos.GetRange(PC_WpnID - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개 무기 정보 
+    //    //        foreach (WeaponInfo item in courWeapon)
+    //    //        {
+    //    //            WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
+    //    //            Wpn_Attack = item.Wpn_AttackSec * wpn_attrate;  //1회 공격력
+    //    //        }
+    //    //    }
+    //    //}
+
+    //    List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;
+    //    GameItemInfo gameitem = DataController.Instance.gameitemDic[pWpnID];
+    //    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + gameitem.Item_ImgName);
+    //    Wpn_Attack = gameitem.Wpn_AttackSec * wpn_attrate;  //1회 공격력
+
+    //}
+    #endregion
+
 
     #region [필드 로딩]
     private void FieldBGLoad()
@@ -119,6 +175,7 @@ public class HuntingController : GameController
                     Mon_ReturnExp = item.Mon_ReturnExp;
                     MonsterHPUpdate(0);
                 }
+                break;
             }
         }
         StopCoroutine("AttackToPlayer");
@@ -195,11 +252,11 @@ public class HuntingController : GameController
             Mon_CurHP = Mon_CurHP - hitdamage;
         }
 
-        if (Mon_CurHP <= 0) //현재 몹의 HP가 0
+        if (Mon_CurHP <= 0) //현재 몹의 HP가 0  // 몬스터 사냥 후
         {
             isMonOnLoad = false;
             MonsterBG.gameObject.SetActive(false);
-            StartCoroutine(StartMonsterResult());
+            StartCoroutine(StartMonsterResult());  
         }
         else                     //HP Bar Update
         {
@@ -255,20 +312,18 @@ public class HuntingController : GameController
                 }
             }
         }
-        //골드 +
-        PC_Gold = (Convert.ToDecimal(PC_Gold)  + Convert.ToDecimal(Mon_DropGold)).ToString();
-
+      //  string pGoldAmout = (Convert.ToDecimal(passitems[0].Amount) + Convert.ToDecimal(Mon_DropGold)).ToString(); //골드
         //사용자 정보 Update(파일)
         List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
         foreach (var ps in playerstats)
         {
             ps.PC_Level = PC_Level;
             ps.PC_Exp = PC_Exp;
-            ps.PC_Gold = PC_Gold;
             ps.PC_Str = PC_Str;
             ps.PC_Con = PC_Con;
             ps.PC_MaxHP = PC_MaxHP;
             ps.PC_UpExp = PC_UpExp;
+            ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) + Convert.ToDecimal(Mon_DropGold)).ToString();
         }
          PlayerStatList playerstatlist = new PlayerStatList();
          playerstatlist.SetPlayerStatList = playerstats;            
@@ -288,7 +343,8 @@ public class HuntingController : GameController
        // Debug.Log("드랍아이템 : " + Mon_DropItem);
 
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
-        string[] arrDropItemID = Mon_DropItem.Split('/');
+       
+        string[] arrDropItemID = Mon_DropItem.Split('|');
         bool isHaveType = false;
         GetItemTextView = "";
         for (int i = 0; i < arrDropItemID.Length; i++)
@@ -296,15 +352,16 @@ public class HuntingController : GameController
            // Debug.Log("드랍 아이템 아이디 : " + arrDropItemID[i]); // 1 / 2 /
             for (int j = 0; j < passitems.Count; j++)
             {
-                if (passitems[j].GameItem_Type == "Stuff" && arrDropItemID[i] == passitems[j].Item_ID.ToString()) //재료
+                if (passitems[j].Item_Type == "Stuff" && arrDropItemID[i] == passitems[j].Item_ID.ToString()) //재료
                 {
                     isHaveType = true;
                     passitems[j].Amount = passitems[j].Amount + 1;
                 }
+
             }
             if (isHaveType == false)
             {
-                passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0));
+               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0,0));
             }
             isHaveType = false;
 
@@ -320,28 +377,6 @@ public class HuntingController : GameController
     }
     #endregion
        
-    #region [무기 로딩]
-    private void WeaponLoad()
-    {
-        List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
-        List<WeaponInfo> courWeapon = new List<WeaponInfo>();
-        for (int i = 0; i < weaponinfos.Count; i++)
-        {
-            if (PC_WpnID == weaponinfos[i].Wpn_ID)  //들고있는 무기정보
-            {
-                courWeapon = weaponinfos.GetRange(PC_WpnID - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개 무기 정보 
-                foreach (WeaponInfo item in courWeapon)
-                {
-                    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
-                    Wpn_Attack = item.Wpn_AttackSec * wpn_attrate;  //1회 공격력
-                }
-            }
-        }
-
-        PlayerHPUpdate(0);   // 플레이어 HPUpdate   
-    }
-    #endregion
-
     #region [플레이어 HPBar Update]
     public void PlayerHPUpdate(float hitdamage)
     {
@@ -428,7 +463,7 @@ public class HuntingController : GameController
         List<PssItem> pasitems = DataController.Instance.GetPssItemInfo().PssItemList;
         for (int i = 0; i < pasitems.Count; i++)
         {
-            if (pasitems[i].GameItem_Type == "Hpotion")    //물약이면
+            if (pasitems[i].Item_Type == "Potion" && pasitems[i].Item_ID == 3)    //HP 물약이면
             {
                 pasitems[i].Amount = pssHP_Count;            //사용물약 저장하기
             }
@@ -440,7 +475,7 @@ public class HuntingController : GameController
     }
     #endregion
     
-    #region [GameDataUpdate-코루틴]
+    #region [GameDataUpdate-코루틴 - 일단 사용안함]
     IEnumerator UpdateGameData() 
     {
        yield return new WaitForSecondsRealtime(3f);  //3초

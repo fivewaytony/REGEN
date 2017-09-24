@@ -9,7 +9,7 @@
 		{"GameItem_ID":6,"GameItem_Type":"Necklace","GameItem_Name":"목걸이"},
 		{"GameItem_ID":7,"GameItem_Type":"Earring","GameItem_Name":"귀걸이"},
 		{"GameItem_ID":8,"GameItem_Type":"Ring","GameItem_Name":"반지"},
-		{"GameItem_ID":9,"GameItem_Type":"Hpotion","GameItem_Name":"HP물약"},
+		{"GameItem_ID":9,"GameItem_Type":"Potion","GameItem_Name":"물약"},
 		{"GameItem_ID":10,"GameItem_Type":"SItem","GameItem_Name":"특별아이템"},
 		{"GameItem_ID":11,"GameItem_Type":"Stuff","GameItem_Name":"재료"},
 		{"GameItem_ID":12,"GameItem_Type":"Recipe","GameItem_Name":"제작법"}

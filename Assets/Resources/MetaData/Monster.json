@@ -1,11 +1,11 @@
 {
 	"MonsterList":
 	[
-		{"Mon_ID":1,"Field_ID":1,"Mon_GroupLevel":1,"Mon_Name":"배고픈 해골","Mon_ImgName":"skeleton_1","Mon_HP":200,"Mon_AttackDmg":10,"Mon_ReturnExp":2,"Mon_DropItem":"1/2","Mon_DropGold":5},
-		{"Mon_ID":2,"Field_ID":1,"Mon_GroupLevel":2,"Mon_Name":"연약한 유령","Mon_ImgName":"ghost_1","Mon_HP":200,"Mon_AttackDmg":10,"Mon_ReturnExp":2,"Mon_DropItem":"1/2/3","Mon_DropGold":5},
-		{"Mon_ID":3,"Field_ID":1,"Mon_GroupLevel":3,"Mon_Name":"졸린 들개","Mon_ImgName":"cur_1","Mon_HP":250,"Mon_AttackDmg":15,"Mon_ReturnExp":3,"Mon_DropItem":"1/2/3","Mon_DropGold":10},
-		{"Mon_ID":4,"Field_ID":1,"Mon_GroupLevel":4,"Mon_Name":"덩치큰 멧돼지","Mon_ImgName":"boar_1","Mon_HP":300,"Mon_AttackDmg":20,"Mon_ReturnExp":4,"Mon_DropItem":"1/2/3/4","Mon_DropGold":15},
-		{"Mon_ID":5,"Field_ID":1,"Mon_GroupLevel":5,"Mon_Name":"화난 고릴라","Mon_ImgName":"gorilla_1","Mon_HP":400,"Mon_AttackDmg":30,"Mon_ReturnExp":5,"Mon_DropItem":"1/2/3/4","Mon_DropGold":20},
-		{"Mon_ID":6,"Field_ID":2,"Mon_GroupLevel":1,"Mon_Name":"무서운 고릴라","Mon_ImgName":"gorilla_2","Mon_HP":400,"Mon_AttackDmg":30,"Mon_ReturnExp":5,"Mon_DropItem":"5/6/7/8","Mon_DropGold":20}
+		{"Mon_ID":1,"Field_ID":1,"Mon_GroupLevel":1,"Mon_Name":"배고픈 해골","Mon_ImgName":"skeleton_1","Mon_HP":200,"Mon_AttackDmg":10,"Mon_ReturnExp":2,"Mon_DropItem":"4|5","Mon_DropGold":5},
+		{"Mon_ID":2,"Field_ID":1,"Mon_GroupLevel":2,"Mon_Name":"연약한 유령","Mon_ImgName":"ghost_1","Mon_HP":200,"Mon_AttackDmg":10,"Mon_ReturnExp":2,"Mon_DropItem":"4|5|6","Mon_DropGold":5},
+		{"Mon_ID":3,"Field_ID":1,"Mon_GroupLevel":3,"Mon_Name":"졸린 들개","Mon_ImgName":"cur_1","Mon_HP":250,"Mon_AttackDmg":15,"Mon_ReturnExp":3,"Mon_DropItem":"4|5|6","Mon_DropGold":10},
+		{"Mon_ID":4,"Field_ID":1,"Mon_GroupLevel":4,"Mon_Name":"덩치큰 멧돼지","Mon_ImgName":"boar_1","Mon_HP":300,"Mon_AttackDmg":20,"Mon_ReturnExp":4,"Mon_DropItem":"5|6|7","Mon_DropGold":15},
+		{"Mon_ID":5,"Field_ID":1,"Mon_GroupLevel":5,"Mon_Name":"화난 고릴라","Mon_ImgName":"gorilla_1","Mon_HP":400,"Mon_AttackDmg":30,"Mon_ReturnExp":5,"Mon_DropItem":"6|7|8|12","Mon_DropGold":20},
+		{"Mon_ID":6,"Field_ID":2,"Mon_GroupLevel":1,"Mon_Name":"무서운 고릴라","Mon_ImgName":"gorilla_2","Mon_HP":400,"Mon_AttackDmg":30,"Mon_ReturnExp":5,"Mon_DropItem":"4|5|6","Mon_DropGold":20}
 ]
 }

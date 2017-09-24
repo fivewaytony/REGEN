@@ -18,16 +18,16 @@ public class GameController : MonoBehaviour {
     protected int PC_Level;         //현재 레벨
     protected int PC_Exp;           //현재 경험치
     protected int PC_UpExp;     //업에 필요한 경험치
-    protected int PC_WpnID;     //무기아이디
     protected int PC_FieldLevel;  //출입가능 필드레벨(현재 적용안함)
     protected int PC_Str;           // 힘
     protected int PC_Con;           //체력
     protected float PC_MaxHP;        //MaxHP
+    protected string PC_Gold;       //골드
+    protected int PC_Dia;      //다이아
 
     protected int PssItem_ID;
     protected string GameItem_Type;
     protected int Amount;
-    protected string PC_Gold;
 
     protected int pssHP_Count; //소유 물약 개수
 
@@ -59,12 +59,10 @@ public class GameController : MonoBehaviour {
         {
             Debug.LogError("Ad is not supported");
         }
-        //DataController.Instance.PlayerStatLoadResourcesDEV();
-        //DataController.Instance.PssItemLoadResourcesDEV();
+       // DataController.Instance.PlayerStatLoadResourcesDEV();
+       // DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
         PlayerStatLoad();   //플레이어 상태 로드
-        //PlayerPssItemLoad();  // 플레이어 소유 아이템 로딩 _pssItem에서 로드
-
     }
     // Update is called once per frame
     void Update()
@@ -115,30 +113,31 @@ public class GameController : MonoBehaviour {
     #region [플레이어 상태 로드]
     protected void PlayerStatLoad()
     {
+        //string goldAmount = 
         List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
         foreach (var pcstat in playerstats)
         {
             PC_Level = pcstat.PC_Level;
             PC_Exp = pcstat.PC_Exp;
             PC_UpExp = pcstat.PC_UpExp;
-            PC_WpnID = pcstat.PC_WpnID;
             PC_MaxHP = pcstat.PC_MaxHP;
             PC_Str = pcstat.PC_Str;
             PC_Con = pcstat.PC_Con;
             PC_Gold = pcstat.PC_Gold;
         }
+        
         LevelText.text = "Lv. " + PC_Level.ToString();
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
-
-        string goldamount = PC_Gold;
-        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(goldamount));
+        //string goldAmount = Convert.ToDecimal(PC_Gold);
+        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Gold));
+        //DiaText.text = ""; --> 추가예정
 
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
     }
     #endregion
-        
+    
     #region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {

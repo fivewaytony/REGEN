@@ -148,7 +148,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-       // Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+        Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
         return DataPathPssItem;
@@ -178,7 +178,7 @@ public class DataController : MonoBehaviour
     }
     #endregion
 
-    #region [플레이어 스텟, 소유 아이템 생성]
+    #region [플레이어 스텟, 소유 아이템 생성(파일)]
     public void CreateGameData(string GDdiv)
     {
         string dataAsJson = string.Empty;
@@ -186,12 +186,13 @@ public class DataController : MonoBehaviour
         if (GDdiv == "pcstatData")   //플레이어 스텟
         {
             dataAsJson = JsonUtility.ToJson(playerStatData);
+            Debug.Log("dataAsJsonPcs=" + dataAsJson);
             filePath = Application.persistentDataPath + playerStatProjectFilePath;
         }
         else                               //플레이어 소유 아이템
         {
             dataAsJson = JsonUtility.ToJson(pssiteminfolist);
-            Debug.Log("dataAsJson=" + dataAsJson);
+            Debug.Log("dataAsJsonPss=" + dataAsJson);
             filePath = Application.persistentDataPath + pssItemProjectFilePath;
         }
         File.WriteAllText(filePath, dataAsJson);
@@ -256,20 +257,66 @@ public class DataController : MonoBehaviour
         return monsterinfolist;
     }
     #endregion
-    
-    #region[무기 정보]
-    public WeaponInfoList weaponinfolist;
-    public WeaponInfoList GetWeaponInfo()
-    {
-        if (weaponinfolist == null)
-        {
-            TextAsset weaponDataJson = Resources.Load("MetaData/Weapon") as TextAsset;
-            weaponinfolist = JsonUtility.FromJson<WeaponInfoList>(weaponDataJson.text);
-        }
 
-        return weaponinfolist;
+    #region [게임 아이템 정보 - 무기/방어구/재료/물약]
+    public GameItemInfoList gameiteminfolist;
+    public GameItemInfoList GetGameItemInfo()
+    {
+        if (gameiteminfolist == null)
+        {
+            TextAsset ItemDataJson = Resources.Load("MetaData/GameItem") as TextAsset;
+            Debug.Log("ItemDataJson=" + ItemDataJson);
+            gameiteminfolist = JsonUtility.FromJson<GameItemInfoList>(ItemDataJson.text);
+            gameitemDic = new Dictionary<int, GameItemInfo>();
+            foreach (GameItemInfo item in gameiteminfolist.GameItemList)
+            {
+                gameitemDic.Add(item.Item_ID, item);
+            }
+    
+          }
+        return gameiteminfolist;
     }
+    public Dictionary<int, GameItemInfo> gameitemDic;
     #endregion
+
+
+    #region[재료 아이템 정보]
+    //public StuffInfoList stuffinfolist;
+    //public StuffInfoList GetStuffInfo()
+    //{
+    //    if (stuffinfolist == null)
+    //    {
+    //        TextAsset stuffDataJson = Resources.Load("MetaData/Stuff") as TextAsset;
+    //        stuffinfolist = JsonUtility.FromJson<StuffInfoList>(stuffDataJson.text);
+
+    //        stuffDic = new Dictionary<int, StuffInfo>();
+    //        foreach (StuffInfo stuff in stuffinfolist.StuffList)
+    //        {
+    //            stuffDic.Add(stuff.Stuff_ID, stuff);
+    //        }
+    //        Debug.Log("stuffDic.count = " + stuffDic.Count);
+    //    }
+    //    return stuffinfolist;
+    //}
+    //public Dictionary<int, StuffInfo> stuffDic;
+
+    #endregion
+
+
+    #region[무기 정보]
+    //public WeaponInfoList weaponinfolist;
+    //public WeaponInfoList GetWeaponInfo()
+    //{
+    //    if (weaponinfolist == null)
+    //    {
+    //        TextAsset weaponDataJson = Resources.Load("MetaData/Weapon") as TextAsset;
+    //        weaponinfolist = JsonUtility.FromJson<WeaponInfoList>(weaponDataJson.text);
+    //    }
+
+    //    return weaponinfolist;
+    //}
+    #endregion
+
 
     #region [레벨별 케릭터 정보]
     public CharInfoList charinfolist;
@@ -285,26 +332,7 @@ public class DataController : MonoBehaviour
     }
     #endregion
 
-    #region[재료 아이템 정보]
-    public StuffInfoList stuffinfolist;
-    public StuffInfoList GetStuffInfo()
-    {
-        if (stuffinfolist == null)
-        {
-            TextAsset stuffDataJson = Resources.Load("MetaData/Stuff") as TextAsset;
-            stuffinfolist = JsonUtility.FromJson<StuffInfoList>(stuffDataJson.text);
-            stuffDic = new Dictionary<int, StuffInfo>();
-            foreach(StuffInfo stuff in stuffinfolist.StuffList)
-            {
-                stuffDic.Add(stuff.Stuff_ID, stuff);
-            }
-        }
-        return stuffinfolist;
-    }
-    public Dictionary<int, StuffInfo> stuffDic;
-
-    #endregion
-
+   
     #region [밸러싱 수치 정보]
     public BalanceInfoList balancelist;
     public BalanceInfoList GetBalanceInfo()
@@ -322,24 +350,22 @@ public class DataController : MonoBehaviour
     public string GetStuffName(int st_id)
     {
         string retVal = string.Empty;
-        if (stuffinfolist == null)
+        if (gameiteminfolist == null)
         {
-            stuffinfolist = GetStuffInfo();
+            gameiteminfolist = GetGameItemInfo();
         }
-        foreach (var item in stuffinfolist.StuffList)
+        foreach (var item in gameiteminfolist.GameItemList)
         {
-            if (item.Stuff_ID == st_id)
+            if (item.Item_ID == st_id)
             {
-                retVal = item.Stuff_Name;
+                retVal = item.Item_Name;
                 break;
             }
         }
         return retVal;
     }
     #endregion
-
-
-
+    
     #region [FireBase로 메세지 보내기]
     void Start()
     {

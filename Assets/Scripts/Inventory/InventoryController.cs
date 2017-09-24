@@ -38,60 +38,84 @@ public class InventoryController : GameController
             rt.anchoredPosition = new Vector2(0f, 0f);       // 자식 오브젝트를 위치를 잡고 그린다
         }
 
-        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
-        List<StuffInfo> stuffList = DataController.Instance.GetStuffInfo().StuffList;
-        List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
+         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
+         List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;
 
         for (int i = 0; i < passitems.Count; i++)
         {
-             //무기로딩
-            foreach (WeaponInfo weapon in weaponinfos)
+            foreach (GameItemInfo item in itemList)
             {
-                if (passitems[i].GameItem_Type == "Weapon" && weapon.Wpn_ID == passitems[i].Item_ID)
+                if (passitems[i].Item_ID == item.Item_ID)
                 {
                     Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
                     color.a = 1f;
                     slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
-                    slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Weapon/" + weapon.Wpn_ImgName);
-                    slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
-                    break;
-                }
-            }
-            //물약로딩
-            foreach (WeaponInfo weapon in weaponinfos)
-            {
-                if (passitems[i].GameItem_Type == "Hpotion")
-                {
-                    Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
-                    color.a = 1f;
-                    slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
-                    slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Hp");
-                    slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
-                    break;
-                }
-            }
-            //재료로딩
-            foreach (StuffInfo stuff in stuffList)
-            {
-                if(passitems[i].GameItem_Type == "Stuff" && stuff.Stuff_ID == passitems[i].Item_ID)
-                {
-                    Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
-                    color.a = 1f;
-                    slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
-                    slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Stuff/" + stuff.Stuff_ImgName);
-                    slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
-                    slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
-                    //Image[] items= ItemInfoBackPanel.GetComponentsInChildren<Image>();
-                    //foreach (Image item in items)
-                    //{
-                       
-                    //   // item. => GoHunting(fielditem.Field_Level));
-                    //}
-                    break;
-                }
-            }
 
-        }
+                    Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
+                    slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
+                    slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+
+                    slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
+
+                    break;
+                }
+                
+            }
+         }
+
+        //List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
+
+        //for (int i = 0; i < passitems.Count; i++)
+        //{
+        //     //무기로딩
+        //    foreach (WeaponInfo weapon in weaponinfos)
+        //    {
+        //        if (passitems[i].Item_Type == "Weapon" && weapon.Wpn_ID == passitems[i].Item_ID)
+        //        {
+        //            Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
+        //            color.a = 1f;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Weapon/" + weapon.Wpn_ImgName);
+        //            slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+        //            break;
+        //        }
+        //    }
+        //    //물약로딩
+        //    foreach (WeaponInfo weapon in weaponinfos)
+        //    {
+        //        if (passitems[i].Item_Type == "Hpotion")
+        //        {
+        //            Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
+        //            color.a = 1f;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Hp");
+        //            slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+        //            break;
+        //        }
+        //    }
+        //    //재료로딩
+        //    foreach (StuffInfo stuff in stuffList)
+        //    {
+        //        if(passitems[i].Item_Type == "Stuff" && stuff.Stuff_ID == passitems[i].Item_ID)
+        //        {
+        //            Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
+        //            color.a = 1f;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
+        //            slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/Stuff/" + stuff.Stuff_ImgName);
+        //            slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+
+        //            slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
+        //            //Image[] items= ItemInfoBackPanel.GetComponentsInChildren<Image>();
+        //            //foreach (Image item in items)
+        //            //{
+
+        //            //   // item. => GoHunting(fielditem.Field_Level));
+        //            //}
+        //            break;
+        //        }
+        //    }
+
+        //}
 
     }
     #endregion
@@ -99,8 +123,8 @@ public class InventoryController : GameController
     public void ShowItemInfoPanel(int ItemID)
     {
         ItemInfoBackPanel.gameObject.SetActive(true);
-        StuffInfo stuff = DataController.Instance.stuffDic[ItemID];
-        ItemInfoNameText.text = stuff.Stuff_Name;
+        GameItemInfo item = DataController.Instance.gameitemDic[ItemID];
+        ItemInfoNameText.text = item.Item_Name;
     }
 
     public void CloseItemInfoPanel()
