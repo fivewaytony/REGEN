@@ -45,7 +45,7 @@ public class HuntingController : GameController
     private float Player_CurHP;
     private float Wpn_Attack;
     private string GetItemTextView;
-    
+
     void Start()
     {
         /* DataPath 에서 기본 정보 로딩 매신마다 로딩*/
@@ -356,12 +356,23 @@ public class HuntingController : GameController
                 {
                     isHaveType = true;
                     passitems[j].Amount = passitems[j].Amount + 1;
+                    break;
                 }
-
             }
             if (isHaveType == false)
             {
-               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0,0));
+                if (GetisSlotEmpty() == true) //가방에 빈 슬롯이 있는지 - 구현해야됨(GameController)
+                {
+                    passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0, 0));
+                }
+                else
+                {
+                    // 얼럿 보여주기
+                    isMonOnLoad = false;
+                    StopCoroutine("AttackToPlayer");
+                    InvenFullAlert();
+                }
+                
             }
             isHaveType = false;
 
@@ -376,7 +387,8 @@ public class HuntingController : GameController
         PlayerPssItemLoad();
     }
     #endregion
-       
+
+
     #region [플레이어 HPBar Update]
     public void PlayerHPUpdate(float hitdamage)
     {
@@ -427,7 +439,6 @@ public class HuntingController : GameController
             MainCamera.gameObject.GetComponent<AudioSource>().PlayOneShot(SFXClick);
             StartCoroutine(StartMonsterHit());  //hit 이미지  & 무기배경색 안보이게
         }
-
     }
     #endregion
 
@@ -513,7 +524,9 @@ public class HuntingController : GameController
     // 레벨업했으면 케릭터 기본값 Update 후 리로드 (O)
     // 플레이어 사망 시 메인 이동  (O)
     // 몬스터 리젠 시간텀 주기(O)
-    // 가방 구현
+
+    //가방 꽉참 여부 체크해서 획득한 아이템 Add 체크 구현해야됨 - 0926
+     // 가방 구현
 
 
     //로딩 바 넣기

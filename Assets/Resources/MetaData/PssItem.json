@@ -1,7 +1,7 @@
 {
 	"PssItemList": 
 	[
-		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"Weapon","Item_ID":1,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"Weapon","Item_ID":2,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
 		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Potion","Item_ID":3,"Amount":100,"Equip_Stat":1,"Wpn_Ent":0}
 	]
 }

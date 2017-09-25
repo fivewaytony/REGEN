@@ -181,8 +181,26 @@ public class GameController : MonoBehaviour {
         }
 
     }
-#endregion
+    #endregion
     
+    #region [가방 가득 여부 / 가방 가득참 얼럿]
+    protected bool GetisSlotEmpty()
+    {
+        //가방 슬롯 개수와 소유 아이템 개수(소유아이템 뿌릴때 개수를 저녁 변수에 담기) 비교 남은 슬롯 개수 구하기
+
+        return false;
+    }
+
+    protected void InvenFullAlert()
+    {
+        DialogDataAlert alert = new DialogDataAlert("[알림]", "가방이 가득 찼습니다!", delegate () {
+            GoInventory();
+        });
+        DialogManager.Instance.Push(alert);
+    }
+    #endregion
+
+
     //사냥 이동
     public void GoHunting(int cfd)
     {
