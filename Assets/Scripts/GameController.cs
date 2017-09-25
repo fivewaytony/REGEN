@@ -188,7 +188,7 @@ public class GameController : MonoBehaviour {
     {
         //가방 슬롯 개수와 소유 아이템 개수(소유아이템 뿌릴때 개수를 저녁 변수에 담기) 비교 남은 슬롯 개수 구하기
 
-        return false;
+        return true;
     }
 
     protected void InvenFullAlert()

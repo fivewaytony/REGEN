@@ -14,6 +14,7 @@ public class GameItemInfo
     public string Item_Stuff ;
     public string Item_Enchant;
     public int HP_Rate;
+    public int Item_Price;
 }
 
 [Serializable]

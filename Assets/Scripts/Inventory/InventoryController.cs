@@ -51,7 +51,7 @@ public class InventoryController : GameController
                     color.a = 1f;
                     slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
 
-                    Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
+                   // Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
                     slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
                     slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
 
@@ -73,6 +73,11 @@ public class InventoryController : GameController
         ItemInfoBackPanel.gameObject.SetActive(true);
         GameItemInfo item = DataController.Instance.gameitemDic[ItemID];
         ItemInfoNameText.text = item.Item_Name;
+        ItemInfoDescText.text = "판매가격 : " + item.Item_Price.ToString() + "골드";
+        if (item.Item_Type == "Stuff")
+        {
+            ItemInfoDescText.text = ItemInfoDescText.text + "\n\n아이템 제조의\n재료로 필요합니다.";
+        }
     }
 
     public void CloseItemInfoPanel()
