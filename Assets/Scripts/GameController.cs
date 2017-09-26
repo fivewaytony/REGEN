@@ -37,10 +37,16 @@ public class GameController : MonoBehaviour {
     public Transform FieldChoiceContent; //필드선택 사냥터 - 부모
     public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
 
+    /* 밸러스 조정용 수치*/
     protected float wpn_attrate;
     protected float pc_hprate;
     protected float mon_attrate;
     protected float mon_hprate;
+
+    /* 가방 / 상점에서 선택한 아이템 정보 */
+    protected int SelectItemID; //선택한 아이템 ID
+    protected int SelectItemAmount; //선택한 아이템 소유량
+    protected int SelectItemPrice;    //선택한 아이템 단가
 
 #if UNITY_IOS
     string gameId = "1537760";

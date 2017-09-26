@@ -69,6 +69,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + playerStatProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
+        Debug.Log(dataAsJson);
         DataPathPlayerStat = JsonUtility.FromJson<PlayerStatList>(dataAsJson);
 
         return DataPathPlayerStat;

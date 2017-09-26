@@ -10,13 +10,16 @@ using System.Linq;
 public class InventoryController : GameController
 {
     public Transform SlotsParentContent; //인벤토리 부모 팬넬
-    public Transform InventorySlot; //각 슬롯
-    private int slotAmount = 42;
-    public List<GameObject> slots = new List<GameObject>();
-    public GameObject ItemInfoBackPanel;
+   // public Transform InventorySlot; //각 슬롯
+    private int slotAmount = 42;     //슬록 개수
+    public List<GameObject> slots = new List<GameObject>(); //각 슬록 List
 
-    public Text ItemInfoNameText, ItemInfoDescText;
-
+    public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
+    public Text ItemInfoNameText, ItemInfoDescText; //아이템 정보
+    public Image ItemCountBarFill;  //아이템 개수 설정 bar
+    public Text ItemCountTxt;       //아이템개수 Text
+    public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
+  
     private int pssItemID;
     public static InventoryController invenInstance;
     
@@ -56,7 +59,7 @@ public class InventoryController : GameController
                     slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
 
                     slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
-
+                    slots[i].GetComponent<ItemInfoMng>().ItemAmount = passitems[i].Amount;
                     break;
                 }
                 
@@ -68,7 +71,7 @@ public class InventoryController : GameController
     #endregion
 
     #region [아이템 정보 Panel Show / Close]
-    public void ShowItemInfoPanel(int ItemID)
+    public void ShowItemInfoPanel(int ItemID, int ItemAmount)
     {
         ItemInfoBackPanel.gameObject.SetActive(true);
         GameItemInfo item = DataController.Instance.gameitemDic[ItemID];
@@ -78,8 +81,79 @@ public class InventoryController : GameController
         {
             ItemInfoDescText.text = ItemInfoDescText.text + "\n\n아이템 제조의\n재료로 필요합니다.";
         }
+      
+        /*개수 Silder*/
+        ItemCountSilder.minValue = 1f;   //1개부터
+        ItemCountSilder.maxValue = ItemAmount;  //소유 아이템 개수 까지
+        ItemCountTxt.text = ItemCountSilder.value.ToString();
+
+        /* 현재 선택 아이템 정보 */
+        SelectItemID = ItemID;
+        SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
+        SelectItemPrice = item.Item_Price; //단가(골드)
     }
 
+    //Silder 변경하면 개수 표시
+    public void ItemCountSilderChange()  
+    {
+        ItemCountTxt.text = ItemCountSilder.value.ToString();
+        SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
+    }
+    
+    //아이템 팔기
+    public void SellpssItem()
+    {
+        //소유 아이템에서 빼기
+        //Gold 더하기 : 판매할 아이템 단가 구하기
+        
+        Debug.Log("SelectItemID=" + SelectItemID);
+        Debug.Log("SelectItemAmount=" + SelectItemAmount);
+        Debug.Log("SelectItemPrice=" + SelectItemPrice);
+
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        //장착 아이템은 팔수 없음 
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_ID == SelectItemID)
+            {
+                if (passitems[i].Equip_Stat == 1)//장착아이템은 팔수 없음
+                {
+                    //alert(장착 아이템은 판매 할 수 없음)
+                }
+                else //판매
+                {
+                    if (passitems[i].Amount > SelectItemAmount) //판매개수만 빼기
+                    {
+                        passitems[i].Amount = passitems[i].Amount - SelectItemAmount;
+                    }
+                    else                                                     
+                    {
+                          passitems.RemoveAt(i); //제거
+                    }
+
+                    PssItemInfoList pssiteminfolist = new PssItemInfoList();
+                    pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
+                    DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+
+                    //골드 정산 --> GameController로 빼기(정산할 골드 양과. +, -)만 넘겨서
+                    decimal addGold = SelectItemPrice * SelectItemAmount;
+                    List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
+                    foreach (var ps in playerstats)
+                    {
+                        ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) + Convert.ToDecimal(addGold)).ToString();
+                    }
+                    PlayerStatList playerstatlist = new PlayerStatList();
+                    playerstatlist.SetPlayerStatList = playerstats;
+                    DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
+                    //PlayerStatLoad(); //일단 에러남 상단 플레이어 레벨표시가 구현되야됨
+                }
+                break;
+            }
+        
+        }
+    }
+
+    //상세 Panel 닫기
     public void CloseItemInfoPanel()
     {
         ItemInfoBackPanel.gameObject.SetActive(false);
@@ -100,6 +174,9 @@ public class InventoryController : GameController
     같은 무기는 무조건 하나만 들 수 있음 --> 무기, 방어구, 장신구는 무조건 제조를 통해서만 가능하며
     제조시 장착하고 있는 무기, 방어구, 장신구는 또 제조 할 수 없도록 제조 리스트에서 보여주지 않는다
 
+
+     //골드 정산 --> GameController로 빼기(정산할 골드 양과. +, -)만 넘겨서
+      //PlayerStatLoad(); //일단 에러남 상단 플레이어 레벨표시가 구현되야됨
       */
 
 

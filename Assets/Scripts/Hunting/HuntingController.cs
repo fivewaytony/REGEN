@@ -48,16 +48,14 @@ public class HuntingController : GameController
 
     void Start()
     {
-        /* DataPath 에서 기본 정보 로딩 매신마다 로딩*/
+        /* DataPath 에서 기본 정보 로딩 매신마다 로딩 --> 순차적인 로딩 코루틴으로 수정하자*/
 
         BalanceInfoLoad(); // 밸런싱 수치 정보 
         PlayerStatLoad();   
         PlayerPssItemLoad(); // 소유 아이템 로딩 
         CurHP_Count.text = pssHP_Count.ToString() + "개"; //물약개수 로딩
-
         /* 기본 정보 로딩 매신마다 로딩*/
         FieldBGLoad(); //사냥터 배경로드
-
        
        // WeaponLoad(); //무기
         MonsterLoad();//몹로드
@@ -516,8 +514,6 @@ public class HuntingController : GameController
             GoMain();
         }
     }
-
-
 
     // 물약먹기 --> 소유 아이템 Update (O)
     // 몬스터 사냥 후 경험치 Update -->-> 플레이어 획득 아이템 업데이트 --> 획득 아이템 표시 ---> 몹 리젠(O)
