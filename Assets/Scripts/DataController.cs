@@ -368,6 +368,7 @@ public class DataController : MonoBehaviour
     #endregion
     
     #region [FireBase로 메세지 보내기]
+    /*
     void Start()
     {
         Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
@@ -382,7 +383,7 @@ public class DataController : MonoBehaviour
     public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
     {
         UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
-    }
+    }*/
     #endregion
     
 }

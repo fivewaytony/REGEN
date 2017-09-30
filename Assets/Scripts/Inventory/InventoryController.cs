@@ -11,7 +11,7 @@ public class InventoryController : GameController
 {
     public Transform SlotsParentContent; //인벤토리 부모 팬넬
    // public Transform InventorySlot; //각 슬롯
-    private int slotAmount = 42;     //슬록 개수
+    private int slotAmount = 104;     //슬록 개수
     public List<GameObject> slots = new List<GameObject>(); //각 슬록 List
 
     public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
@@ -79,7 +79,7 @@ public class InventoryController : GameController
         ItemInfoDescText.text = "판매가격 : " + item.Item_Price.ToString() + "골드";
         if (item.Item_Type == "Stuff")
         {
-            ItemInfoDescText.text = ItemInfoDescText.text + "\n\n아이템 제조의\n재료로 필요합니다.";
+            ItemInfoDescText.text = ItemInfoDescText.text + "\n\n아이템 제조의 재료로 필요합니다.";
         }
       
         /*개수 Silder*/

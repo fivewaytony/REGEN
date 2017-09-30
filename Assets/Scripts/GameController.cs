@@ -270,10 +270,12 @@ public class GameController : MonoBehaviour {
 #endregion
 
 #region [인앱결제]
+    /*
     public void PurchaseComplete(Product p)
     {
         Debug.Log(p.metadata.localizedTitle + " purchase success!");
     }
+    */
 #endregion
 
 
