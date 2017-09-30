@@ -4,8 +4,13 @@ using UnityEngine;
 using System.IO;
 using LitJson;
 
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine.SocialPlatforms;
+
 public class DataController : MonoBehaviour
 {
+
 
     #region[Singleton class start]
     static GameObject _container;
@@ -365,6 +370,66 @@ public class DataController : MonoBehaviour
         return retVal;
     }
     #endregion
+
+
+    void Start()
+    {
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+        // enables saving game progress.
+        .EnableSavedGames()
+        // requests the email address of the player be available.
+        // Will bring up a prompt for consent.
+        .RequestEmail()
+        // requests a server auth code be generated so it can be passed to an
+        //  associated back end server application and exchanged for an OAuth token.
+        .RequestServerAuthCode(false)
+        // requests an ID token be generated.  This OAuth token can be used to
+        //  identify the player to other services such as Firebase.
+        .RequestIdToken()
+        .Build();
+
+        PlayGamesPlatform.InitializeInstance(config);
+        // recommended for debugging:
+        PlayGamesPlatform.DebugLogEnabled = true;
+        // Activate the Google Play Games platform
+        PlayGamesPlatform.Activate();
+
+        if (!Social.localUser.authenticated)
+        {
+            Social.localUser.Authenticate((bool success) =>
+            {
+                string id_token = ((PlayGamesLocalUser)Social.localUser).GetIdToken();
+                Debug.Log("id_token : " + id_token);
+                DialogDataConfirm alert = new DialogDataConfirm("Login Result", string.Format("id_token: {0}", id_token), delegate (bool yn)
+                {
+                    Debug.Log("OK");
+                });
+                DialogManager.Instance.Push(alert);
+                if (!success)
+                {
+                    // Couldn't connect, should probably show an error
+                    Debug.Log("Logging in; Failed");
+
+                    return;
+                }
+            });
+        }
+        
+
+        //Social.localUser.Authenticate((result, errorMessage) => {
+        //    if (result)
+        //    {
+        //        // 인증 성공
+        //        Debug.Log("Social.localUser.id=" + Social.localUser.id);
+        //    }
+        //    else
+        //    {
+        //        // 인증 실패
+        //        Debug.Log("errorMessage=" + errorMessage);
+        //    }
+        //});
+
+    }
     
     #region [FireBase로 메세지 보내기]
     /*void Start()
@@ -383,7 +448,7 @@ public class DataController : MonoBehaviour
         UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
     }*/
     #endregion
-    
+
 }
 
 
