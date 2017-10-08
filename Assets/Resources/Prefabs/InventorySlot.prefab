@@ -75,6 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4627c4764778314685dda28d3b0d96c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemID: 0
+  ItemAmount: 0
 --- !u!114 &114400923358341576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,7 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 2
+  - eventID: 3
     callback:
       m_PersistentCalls:
         m_Calls:

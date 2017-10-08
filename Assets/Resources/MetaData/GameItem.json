@@ -1,17 +1,17 @@
 {
 	"GameItemList": 
 	[
-		{"Item_ID":1,"Item_Type":"Weapon","Item_Name":"숲 단검","Item_ImgName":"shortsword","Wpn_Attack":90,"Wpn_AttackSec":9,"Item_Stuff":"구리|10|자수정|5|철조각|20|골드|30|제조법1","Item_Enchant":"구리|10|자수정|5|철조각|20|골드|30|제조법1","HP_Rate":0},
-		{"Item_ID":2,"Item_Type":"Weapon","Item_Name":"명인의 더크","Item_ImgName":"masterdirk","Wpn_Attack":140,"Wpn_AttackSec":14,"Item_Stuff":"구리|10|자수정|5|철조각|20|골드|30|제조법2","Item_Enchant":"구리|10|자수정|5|철조각|20|골드|30|제조법2","HP_Rate":0},
-		{"Item_ID":3,"Item_Type":"Potion","Item_Name":"HP 물약","Item_ImgName":"Hp","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"빨간열매|10|구자초|1","Item_Enchant":"","HP_Rate":100},
-		{"Item_ID":4,"Item_Type":"Stuff","Item_Name":"뼈조각","Item_ImgName":"Bonechip","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":5,"Item_Type":"Stuff","Item_Name":"일반가죽","Item_ImgName":"Leather","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":6,"Item_Type":"Stuff","Item_Name":"철조각","Item_ImgName":"Iron","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":7,"Item_Type":"Stuff","Item_Name":"구리조각","Item_ImgName":"Corpiece","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":8,"Item_Type":"Stuff","Item_Name":"단단한뼈","Item_ImgName":"Bone","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"뼈조각|10","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":9,"Item_Type":"Stuff","Item_Name":"질긴가죽","Item_ImgName":"Tleather","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"일반가죽|10","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":10,"Item_Type":"Stuff","Item_Name":"강철","Item_ImgName":"Siron","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"철조각|20","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":11,"Item_Type":"Stuff","Item_Name":"구리","Item_ImgName":"Copper","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"구리조각|20","Item_Enchant":"","HP_Rate":0},
-		{"Item_ID":12,"Item_Type":"Stuff","Item_Name":"자수정","Item_ImgName":"Vquartz","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0}
+		{"Item_ID":1,"Item_Type":"Weapon","Item_Name":"숲 단검","Item_ImgName":"shortsword","Wpn_Attack":90,"Wpn_AttackSec":9,"Item_Stuff":"구리|10|자수정|5|철조각|20|골드|30|제조법1","Item_Enchant":"구리|10|자수정|5|철조각|20|골드|30|제조법1","HP_Rate":0,"Item_Price":10},
+		{"Item_ID":2,"Item_Type":"Weapon","Item_Name":"명인의 더크","Item_ImgName":"masterdirk","Wpn_Attack":140,"Wpn_AttackSec":14,"Item_Stuff":"구리|10|자수정|5|철조각|20|골드|30|제조법2","Item_Enchant":"구리|10|자수정|5|철조각|20|골드|30|제조법2","HP_Rate":0,"Item_Price":10},
+		{"Item_ID":3,"Item_Type":"Potion","Item_Name":"HP 물약","Item_ImgName":"Hp","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"빨간열매|10|구자초|1","Item_Enchant":"","HP_Rate":100,"Item_Price":5},
+		{"Item_ID":4,"Item_Type":"Stuff","Item_Name":"뼈조각","Item_ImgName":"Bonechip","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":3},
+		{"Item_ID":5,"Item_Type":"Stuff","Item_Name":"일반가죽","Item_ImgName":"Leather","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":3},
+		{"Item_ID":6,"Item_Type":"Stuff","Item_Name":"철조각","Item_ImgName":"Iron","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":3},
+		{"Item_ID":7,"Item_Type":"Stuff","Item_Name":"구리조각","Item_ImgName":"Corpiece","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":3},
+		{"Item_ID":8,"Item_Type":"Stuff","Item_Name":"단단한뼈","Item_ImgName":"Bone","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"뼈조각|10","Item_Enchant":"","HP_Rate":0,"Item_Price":5},
+		{"Item_ID":9,"Item_Type":"Stuff","Item_Name":"질긴가죽","Item_ImgName":"Tleather","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"일반가죽|10","Item_Enchant":"","HP_Rate":0,"Item_Price":5},
+		{"Item_ID":10,"Item_Type":"Stuff","Item_Name":"강철","Item_ImgName":"Siron","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"철조각|20","Item_Enchant":"","HP_Rate":0,"Item_Price":6},
+		{"Item_ID":11,"Item_Type":"Stuff","Item_Name":"구리","Item_ImgName":"Copper","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"구리조각|20","Item_Enchant":"","HP_Rate":0,"Item_Price":6},
+		{"Item_ID":12,"Item_Type":"Stuff","Item_Name":"자수정","Item_ImgName":"Vquartz","Wpn_Attack":0,"Wpn_AttackSec":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":10}
 	]
 }

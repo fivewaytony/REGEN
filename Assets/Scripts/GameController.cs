@@ -10,10 +10,13 @@ using UnityEngine.Purchasing;
 public class GameController : MonoBehaviour {
 
     //Main Scene
-    public Text GoldText;
     public Text LevelText;
     public Text LevelBarText;
     public Image LeveBarFill;
+
+    //골드&다이어
+    public Text GoldText;
+    public Text DiaText;
 
     protected int PC_Level;         //현재 레벨
     protected int PC_Exp;           //현재 경험치
@@ -37,10 +40,16 @@ public class GameController : MonoBehaviour {
     public Transform FieldChoiceContent; //필드선택 사냥터 - 부모
     public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
 
+    /* 밸러스 조정용 수치*/
     protected float wpn_attrate;
     protected float pc_hprate;
     protected float mon_attrate;
     protected float mon_hprate;
+
+    /* 가방 / 상점에서 선택한 아이템 정보 */
+    protected int SelectItemID; //선택한 아이템 ID
+    protected int SelectItemAmount; //선택한 아이템 소유량
+    protected int SelectItemPrice;    //선택한 아이템 단가
 
 #if UNITY_IOS
     string gameId = "1537760";
@@ -124,6 +133,7 @@ public class GameController : MonoBehaviour {
             PC_Str = pcstat.PC_Str;
             PC_Con = pcstat.PC_Con;
             PC_Gold = pcstat.PC_Gold;
+            PC_Dia = pcstat.PC_Dia;
         }
         
         LevelText.text = "Lv. " + PC_Level.ToString();
@@ -132,7 +142,7 @@ public class GameController : MonoBehaviour {
         LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
         //string goldAmount = Convert.ToDecimal(PC_Gold);
         GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Gold));
-        //DiaText.text = ""; --> 추가예정
+        DiaText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Dia));
 
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
     }

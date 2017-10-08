@@ -148,7 +148,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-        Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+       // Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
         return DataPathPssItem;
@@ -265,7 +265,7 @@ public class DataController : MonoBehaviour
         if (gameiteminfolist == null)
         {
             TextAsset ItemDataJson = Resources.Load("MetaData/GameItem") as TextAsset;
-            Debug.Log("ItemDataJson=" + ItemDataJson);
+           // Debug.Log("ItemDataJson=" + ItemDataJson);
             gameiteminfolist = JsonUtility.FromJson<GameItemInfoList>(ItemDataJson.text);
             gameitemDic = new Dictionary<int, GameItemInfo>();
             foreach (GameItemInfo item in gameiteminfolist.GameItemList)
@@ -302,7 +302,6 @@ public class DataController : MonoBehaviour
 
     #endregion
 
-
     #region[무기 정보]
     //public WeaponInfoList weaponinfolist;
     //public WeaponInfoList GetWeaponInfo()
@@ -316,8 +315,7 @@ public class DataController : MonoBehaviour
     //    return weaponinfolist;
     //}
     #endregion
-
-
+        
     #region [레벨별 케릭터 정보]
     public CharInfoList charinfolist;
     public CharInfoList GetCharInfo()
@@ -331,8 +329,7 @@ public class DataController : MonoBehaviour
         return charinfolist;
     }
     #endregion
-
-   
+       
     #region [밸러싱 수치 정보]
     public BalanceInfoList balancelist;
     public BalanceInfoList GetBalanceInfo()
