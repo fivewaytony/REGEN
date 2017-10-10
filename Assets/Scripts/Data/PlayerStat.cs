@@ -11,6 +11,7 @@ public class PlayerStat
     public int PC_Level;
     public int PC_Str;
     public int PC_Con;
+    public int PC_Dex;
     public int PC_Exp;
     public int PC_UpExp;
     public float PC_MaxHP;

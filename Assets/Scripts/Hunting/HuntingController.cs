@@ -96,44 +96,7 @@ public class HuntingController : GameController
 
     }
     #endregion
-
-    #region [무기 로딩 -- > 사용안함 ]
-    //private void WeaponLoad()
-    //{
-    //    List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
-    //    int pWpnID = 0;
-    //    for (int i = 0; i < passitems.Count; i++)
-    //    {
-    //        if (passitems[i].Item_Type == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
-    //        {
-    //            pWpnID = passitems[i].Item_ID;
-    //            break;
-    //        }
-    //    }
-    //    //List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
-    //    //List<WeaponInfo> courWeapon = new List<WeaponInfo>();
-    //    //for (int i = 0; i < weaponinfos.Count; i++)
-    //    //{
-    //    //    if (PC_WpnID == weaponinfos[i].Wpn_ID)  //들고있는 무기정보
-    //    //    {
-    //    //        courWeapon = weaponinfos.GetRange(PC_WpnID - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개 무기 정보 
-    //    //        foreach (WeaponInfo item in courWeapon)
-    //    //        {
-    //    //            WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
-    //    //            Wpn_Attack = item.Wpn_AttackSec * wpn_attrate;  //1회 공격력
-    //    //        }
-    //    //    }
-    //    //}
-
-    //    List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;
-    //    GameItemInfo gameitem = DataController.Instance.gameitemDic[pWpnID];
-    //    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + gameitem.Item_ImgName);
-    //    Wpn_Attack = gameitem.Wpn_AttackSec * wpn_attrate;  //1회 공격력
-
-    //}
-    #endregion
-
-
+    
     #region [필드 로딩]
     private void FieldBGLoad()
     {
@@ -188,7 +151,7 @@ public class HuntingController : GameController
     {
         while (true)
         {
-            yield return new WaitForSecondsRealtime(3f);  //3초
+            yield return new WaitForSecondsRealtime(2f);  //2초
 
             if (isMonOnLoad == true && Player_CurHP > 0)
             {
@@ -513,7 +476,9 @@ public class HuntingController : GameController
     // 레벨업했으면 케릭터 기본값 Update 후 리로드 (O)
     // 플레이어 사망 시 메인 이동  (O)
     // 몬스터 리젠 시간텀 주기(O)
-    // 가방 구현
+    // 몹공격시 좌우 흔들기
+    // 공격, 방어, 회피 적용 하기
+    // 가방 구현(진행중)
 
 
     //로딩 바 넣기
@@ -522,10 +487,45 @@ public class HuntingController : GameController
     //일단 4개만 정의: 플레이어 공격력(무기 공격력), 플레이어 HP, 몬스터 공격력, 몬스터 HP
 
 
-// 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
-// 특템아이템 표시 
-// 특템 아이템 사용 표시
-// 각 hit 이미지 바꾸기(여러개 노출 랜덤하게) --> 이미지 변경하고 노출 위치 랜덤
+    // 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
+    // 특템아이템 표시 
+    // 특템 아이템 사용 표시
+    // 각 hit 이미지 바꾸기(여러개 노출 랜덤하게) --> 이미지 변경하고 노출 위치 랜덤
 
+    #region [무기 로딩 -- > 사용안함 ]
+    //private void WeaponLoad()
+    //{
+    //    List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+    //    int pWpnID = 0;
+    //    for (int i = 0; i < passitems.Count; i++)
+    //    {
+    //        if (passitems[i].Item_Type == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
+    //        {
+    //            pWpnID = passitems[i].Item_ID;
+    //            break;
+    //        }
+    //    }
+    //    //List<WeaponInfo> weaponinfos = DataController.Instance.GetWeaponInfo().WeaponList;
+    //    //List<WeaponInfo> courWeapon = new List<WeaponInfo>();
+    //    //for (int i = 0; i < weaponinfos.Count; i++)
+    //    //{
+    //    //    if (PC_WpnID == weaponinfos[i].Wpn_ID)  //들고있는 무기정보
+    //    //    {
+    //    //        courWeapon = weaponinfos.GetRange(PC_WpnID - 1, 1);  //인덱스 기준 랜덤하게 선택된 1개 무기 정보 
+    //    //        foreach (WeaponInfo item in courWeapon)
+    //    //        {
+    //    //            WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + item.Wpn_ImgName);
+    //    //            Wpn_Attack = item.Wpn_AttackSec * wpn_attrate;  //1회 공격력
+    //    //        }
+    //    //    }
+    //    //}
+
+    //    List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;
+    //    GameItemInfo gameitem = DataController.Instance.gameitemDic[pWpnID];
+    //    WeaponImage.sprite = Resources.Load<Sprite>("Sprites/Weapon/" + gameitem.Item_ImgName);
+    //    Wpn_Attack = gameitem.Wpn_AttackSec * wpn_attrate;  //1회 공격력
+
+    //}
+    #endregion
 
 }

@@ -10,8 +10,7 @@ using System.Linq;
 public class InventoryController : GameController
 {
     public Transform SlotsParentContent; //인벤토리 부모 팬넬
-     // public Transform InventorySlot; //각 슬롯
-    private int slotCount = 105;     //슬록 개수
+    private int slotCount = 120;     //슬롯 개수
     public List<GameObject> slots = new List<GameObject>(); //각 슬록 List
 
     public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
@@ -24,8 +23,8 @@ public class InventoryController : GameController
     public static InventoryController invenInstance;
 
     void Start () {
-        Debug.Log("inventory start");
         invenInstance = this;
+        PlayerStatLoad();
         PlayerPssItemLoadALL(); //전체 소유 아이템 로드
     }
     #region [플레이어 소유 아이템 전체 로드]
@@ -65,8 +64,8 @@ public class InventoryController : GameController
                     color.a = 1f;
                     slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
 
-                    Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
-                    Debug.Log("item.ItemID = " + passitems[i].Item_ID);
+                    //Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
+                    //Debug.Log("item.ItemID = " + passitems[i].Item_ID);
                     slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
                     slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
 
@@ -129,7 +128,7 @@ public class InventoryController : GameController
         {
             if (passitems[i].Item_ID == SelectItemID)
             {
-                if (passitems[i].Equip_Stat == 1 && passitems[i].Item_Type != "Potion")//장착아이템은 팔수 없음 (물약은 가능)
+                if (passitems[i].Equip_Stat == 1)//장착아이템은 팔수 없음 (물약은 가능)
                 {
                     //alert(장착 아이템은 판매 할 수 없음)
                 }
@@ -147,17 +146,8 @@ public class InventoryController : GameController
                     pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
                     DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
 
-                    //골드 정산 --> GameController로 빼기(정산할 골드 양과. +, -)만 넘겨서
-                    decimal addGold = SelectItemPrice * SelectItemAmount;
-                    List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
-                    foreach (var ps in playerstats)
-                    {
-                        ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) + Convert.ToDecimal(addGold)).ToString();
-                    }
-                    PlayerStatList playerstatlist = new PlayerStatList();
-                    playerstatlist.SetPlayerStatList = playerstats;
-                    DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
-                    //PlayerStatLoad(); //일단 에러남 상단 플레이어 레벨표시가 구현되야됨
+                    //골드 정산 
+                    CalGold(SelectItemPrice, SelectItemAmount, "plus");
                 }
                   break;
             }
@@ -187,7 +177,7 @@ public class InventoryController : GameController
    아이템 설명 : 이름, 용도, 
    장착 아이템 표시
    같은 무기는 무조건 하나만 들 수 있음 --> 무기, 방어구, 장신구는 무조건 제조를 통해서만 가능하며
-   제조시 장착하고 있는 무기, 방어구, 장신구는 또 제조 할 수 없도록 제조 리스트에서 보여주지 않는다
+   제조시 소유하고 있는 무기, 방어구, 장신구는 또 제조 할 수 없도록 제조 리스트에서 보여주지 않는다
    
     장착아이템중에서 물약을 팔 수 있게 하자 --> 채집 엥벌이 용도
 

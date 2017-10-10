@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour {
     //Main Scene
     public Text LevelText;
     public Text LevelBarText;
-    public Image LeveBarFill;
+    public Image LevelBarFill;
 
     //골드&다이어
     public Text GoldText;
@@ -136,18 +136,19 @@ public class GameController : MonoBehaviour {
             PC_Dia = pcstat.PC_Dia;
         }
         
+       
         LevelText.text = "Lv. " + PC_Level.ToString();
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
-        LeveBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
+        LevelBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
         //string goldAmount = Convert.ToDecimal(PC_Gold);
         GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Gold));
         DiaText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Dia));
-
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
-    }
+
+     }
     #endregion
-    
+
     #region [사냥터 선택 팝업]
     public void FieldChoicePop()
     {
@@ -191,8 +192,30 @@ public class GameController : MonoBehaviour {
         }
 
     }
-#endregion
-    
+    #endregion
+
+    #region [골드정산(Plus , Minus)]
+    public void CalGold(int price, int amount, string caldiv)
+    {
+        decimal appGold = price * amount;
+        List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
+        foreach (var ps in playerstats)
+        {
+            if (caldiv =="plus")
+            {
+                ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) + Convert.ToDecimal(appGold)).ToString();
+            }
+            else
+            {
+                ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) - Convert.ToDecimal(appGold)).ToString();
+            }
+        }
+        PlayerStatList playerstatlist = new PlayerStatList();
+        playerstatlist.SetPlayerStatList = playerstats;
+        DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
+    }
+    #endregion
+
     //사냥 이동
     public void GoHunting(int cfd)
     {

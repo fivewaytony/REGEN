@@ -11,6 +11,8 @@ public class GameItemInfo
     public string Item_ImgName;
     public int Wpn_Attack;
     public int Wpn_AttackSec;
+    public int Prt_Degree;
+    public int Ace_Degree;
     public string Item_Stuff;
     public string Item_Enchant;
     public int HP_Rate;
