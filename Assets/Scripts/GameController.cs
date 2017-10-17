@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
     protected int PC_FieldLevel;  //출입가능 필드레벨(현재 적용안함)
     protected int PC_Str;           // 힘
     protected int PC_Con;           //체력
+    protected int PC_Dex;           //민첩
     protected float PC_MaxHP;        //MaxHP
     protected string PC_Gold;       //골드
     protected int PC_Dia;      //다이아
@@ -50,6 +51,19 @@ public class GameController : MonoBehaviour {
     protected int SelectItemID; //선택한 아이템 ID
     protected int SelectItemAmount; //선택한 아이템 소유량
     protected int SelectItemPrice;    //선택한 아이템 단가
+
+    /* 아이템 인벤 */
+    private int slotCount = 120;     //슬롯 개수
+    public Transform SlotsParentContent; //인벤토리 부모 팬넬
+    public List<GameObject> slots = new List<GameObject>(); //각 슬록 List
+
+    public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
+    public GameObject ItemInfoSellPanel;    //아이템 팔기 panel
+    public Text ItemInfoNameText, ItemInfoDescText; //아이템 정보
+    public Image ItemCountBarFill;  //아이템 개수 설정 bar
+    public Text ItemCountTxt;       //아이템개수 Text
+    public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
+
 
 #if UNITY_IOS
     string gameId = "1537760";
@@ -132,18 +146,36 @@ public class GameController : MonoBehaviour {
             PC_MaxHP = pcstat.PC_MaxHP;
             PC_Str = pcstat.PC_Str;
             PC_Con = pcstat.PC_Con;
+            PC_Dex = pcstat.PC_Dex;
             PC_Gold = pcstat.PC_Gold;
             PC_Dia = pcstat.PC_Dia;
-        }
-        
+        }        
        
         LevelText.text = "Lv. " + PC_Level.ToString();
         LevelBarNum = (PC_Exp * 100) / (float)PC_UpExp;      // 현재 경험치 --> %로 표시
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LevelBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
         //string goldAmount = Convert.ToDecimal(PC_Gold);
-        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Gold));
-        DiaText.text = String.Format("{0:n0}", Convert.ToDecimal(PC_Dia));
+        string vPC_Gold = string.Empty;
+        int vPC_Dia;
+        if (Convert.ToDecimal(PC_Gold) > 99999999 )
+        {
+            vPC_Gold = "99999999";
+        }
+        else
+        {
+            vPC_Gold = PC_Gold;
+        }
+        if (Convert.ToDecimal(PC_Dia) > 99999)
+        {
+            vPC_Dia = 99999;
+        }
+        else
+        {
+            vPC_Dia = PC_Dia;
+        }
+        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(vPC_Gold));
+        DiaText.text = String.Format("{0:n0}", Convert.ToDecimal(vPC_Dia));
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
 
      }
@@ -215,6 +247,183 @@ public class GameController : MonoBehaviour {
         DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
     }
     #endregion
+    
+    #region [플레이어 소유(인벤) 아이템 전체 로드]
+    protected void PlayerPssItemLoadALL()
+    {
+        /* Scroll viewport 위치 임시 수정 - 확인필요 
+         sv.gameObject.SetActive(false);
+         sv.gameObject.SetActive(true);
+        */
+
+        GameObject sv = GameObject.Find("SlotsScroll View");
+        sv.gameObject.SetActive(false);
+
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
+        List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
+
+        /* 슬롯 그리기 */
+        for (int i = 0; i < slotCount; i++)
+        {
+            GameObject SlotInfo = Resources.Load("Prefabs/InventorySlot") as GameObject;  //프리팹으로 등록된 정보 불러옴
+            GameObject objslot = Instantiate(SlotInfo, SlotsParentContent);   //자식 오브젝트
+            slots.Add(objslot);
+
+            RectTransform rt = objslot.GetComponent<RectTransform>(); //SlotInfo
+            rt.anchoredPosition = new Vector2(0f, 0f);       // 자식 오브젝트를 위치를 잡고 그린다
+        }
+        sv.gameObject.SetActive(true);
+        ItemInfoMng iteminfo = new ItemInfoMng();  //itemID 전달용 
+
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            foreach (GameItemInfo item in itemList)
+            {
+                if (passitems[i].Item_ID == item.Item_ID)
+                {
+                    Color color = slots[i].transform.GetChild(0).GetComponent<Image>().color;
+                    color.a = 1f;
+                    slots[i].transform.GetChild(0).GetComponent<Image>().color = color;
+
+                    //Debug.Log("item.Item_ImgName=" + item.Item_ImgName);
+                    //Debug.Log("item.ItemID = " + passitems[i].Item_ID);
+                    slots[i].transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
+                    slots[i].transform.GetChild(1).GetComponent<Text>().text = passitems[i].Amount.ToString();
+
+                    slots[i].GetComponent<ItemInfoMng>().ItemID = passitems[i].Item_ID;
+                    slots[i].GetComponent<ItemInfoMng>().ItemAmount = passitems[i].Amount;
+
+                    //장착 아이템 이미지 표시
+                    if (passitems[i].Equip_Stat == 1)
+                    {
+                        Color ecolor = slots[i].transform.GetChild(2).GetComponent<Image>().color;
+                        ecolor.a = 1f;
+                        slots[i].transform.GetChild(2).GetComponent<Image>().color = ecolor;
+                        slots[i].transform.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/equline");
+                    }
+                    break;
+                }
+            }
+        }
+                
+    }
+    #endregion
+
+    #region [아이템 정보 Panel Show / Close]
+    public void ShowItemInfoPanel(int ItemID, int ItemAmount)
+    {
+        if (ItemID != 0)
+        {
+            ItemInfoBackPanel.gameObject.SetActive(true);
+
+            PssItem pssitem = DataController.Instance.pssitemDic[ItemID];
+            GameItemInfo item = DataController.Instance.gameitemDic[ItemID];                //전체 아이템 정보
+            string equDesc = string.Empty;
+            if (pssitem.Equip_Stat == 1) //장착아이템 (판매X))
+            {
+                ItemInfoSellPanel.gameObject.SetActive(false);
+                if (pssitem.Item_Type == "Weapon")
+                {
+                    equDesc = "공격 : " + item.Wpn_Attack;
+                }
+                if (pssitem.Item_Type == "Helmet" || pssitem.Item_Type == "Armor" || pssitem.Item_Type == "Boots" || pssitem.Item_Type == "Gauntlet")
+                {
+                    equDesc = "방어 : " + item.Prt_Degree;
+                }
+                if (pssitem.Item_Type == "Necklace" || pssitem.Item_Type == "Earring" || pssitem.Item_Type == "Ring")
+                {
+                    equDesc = "회피 : " + item.Ace_Degree;
+                }
+                equDesc = equDesc + "\n강화 : +" + pssitem.Wpn_Ent;
+            }
+            else
+            {
+                //장착하기 링크 만들기
+
+                ItemInfoSellPanel.gameObject.SetActive(true);
+            }
+
+            ItemInfoNameText.text = item.Item_Name;
+            string DescStr = string.Empty;
+            DescStr = equDesc + "\n판매가격 : " + item.Item_Price.ToString() + "골드";
+
+            if (item.Item_Type == "Stuff")
+            {
+                DescStr = DescStr + "\n아이템 제조의 재료로 필요합니다.";
+            }
+            ItemInfoDescText.text = DescStr;
+
+            /*개수 Silder*/
+            ItemCountSilder.value = 1;
+            ItemCountSilder.minValue = 1f;   //1개부터
+            ItemCountSilder.maxValue = ItemAmount;  //소유 아이템 개수 까지
+            ItemCountTxt.text = ItemCountSilder.value.ToString();
+
+            /* 현재 선택 아이템 정보 */
+            SelectItemID = ItemID;
+            SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
+            SelectItemPrice = item.Item_Price; //단가(골드)
+        }
+    }
+
+    //Silder 변경하면 개수 표시
+    public void ItemCountSilderChange()
+    {
+        ItemCountTxt.text = ItemCountSilder.value.ToString();
+        SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
+    }
+
+    //아이템 팔기
+    public void SellpssItem()
+    {
+        //소유 아이템에서 빼기
+        //Gold 더하기 : 판매할 아이템 단가 구하기
+
+        Debug.Log("SelectItemID=" + SelectItemID);
+        Debug.Log("SelectItemAmount=" + SelectItemAmount);
+        Debug.Log("SelectItemPrice=" + SelectItemPrice);
+
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_ID == SelectItemID)
+            {
+                if (passitems[i].Equip_Stat == 1)//장착아이템은 팔수 없음 (물약은 가능)
+                {
+                    //장착 아이템은 판매 할 수 없음
+                }
+                else //판매
+                {
+                    if (passitems[i].Amount > SelectItemAmount) //판매개수만 빼기
+                    {
+                        passitems[i].Amount = passitems[i].Amount - SelectItemAmount;
+                    }
+                    else
+                    {
+                        passitems.RemoveAt(i);
+                    }
+                    PssItemInfoList pssiteminfolist = new PssItemInfoList();
+                    pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
+                    DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+
+                    //골드 정산 
+                    CalGold(SelectItemPrice, SelectItemAmount, "plus");
+                }
+                break;
+            }
+        }
+        SceneManager.LoadScene("Inventory", LoadSceneMode.Single);
+        //   ItemInfoBackPanel.gameObject.SetActive(false); //아이템 정보창 닫기
+        //   PlayerPssItemLoadALL();                              // 인벤 다시 로드
+    }
+
+    //상세 Panel 닫기
+    public void CloseItemInfoPanel()
+    {
+        ItemInfoBackPanel.gameObject.SetActive(false);
+    }
+    #endregion
+
 
     //사냥 이동
     public void GoHunting(int cfd)

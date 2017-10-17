@@ -6,10 +6,10 @@ public class ItemInfoMng : MonoBehaviour
 {
     public int ItemID;
     public int ItemAmount;
-
+    
     public void ShowItemInfo()
     {
-        InventoryController.invenInstance.ShowItemInfoPanel(ItemID, ItemAmount);
+        InventoryController.invenInstance.invenItemInfoPan(ItemID, ItemAmount);
     }
-
+    
 }

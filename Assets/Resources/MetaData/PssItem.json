@@ -2,6 +2,13 @@
 	"PssItemList": 
 	[
 		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"Weapon","Item_ID":1,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
-		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Potion","Item_ID":3,"Amount":100,"Equip_Stat":1,"Wpn_Ent":0}
+		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Potion","Item_ID":3,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
+		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Helmet","Item_ID":13,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":4,"PC_ID":1,"Item_Type":"Armor","Item_ID":14,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":5,"PC_ID":1,"Item_Type":"Boots","Item_ID":15,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":6,"PC_ID":1,"Item_Type":"Gauntlet","Item_ID":16,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":7,"PC_ID":1,"Item_Type":"Necklace","Item_ID":17,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":8,"PC_ID":1,"Item_Type":"Earring","Item_ID":18,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":9,"PC_ID":1,"Item_Type":"Ring","Item_ID":19,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0}
 	]
 }

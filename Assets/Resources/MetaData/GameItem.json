@@ -17,8 +17,8 @@
 		{"Item_ID":14,"Item_Type":"Armor","Item_Name":"기사 갑옷","Item_ImgName":"DknightArmor","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":10,"Ace_Degree":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":50},
 		{"Item_ID":15,"Item_Type":"Boots","Item_Name":"기사 부츠","Item_ImgName":"DknightBoots","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":5,"Ace_Degree":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":20},
 		{"Item_ID":16,"Item_Type":"Gauntlet","Item_Name":"기사 장갑","Item_ImgName":"DknightGauntlet","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":3,"Ace_Degree":0,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":15},
-		{"Item_ID":17,"Item_Type":"Necklace","Item_Name":"요정 목걸이","Item_ImgName":"DknightNecklace","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30},
-		{"Item_ID":18,"Item_Type":"Earring","Item_Name":"요정 귀걸이","Item_ImgName":"DknightEarring","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30},
-		{"Item_ID":19,"Item_Type":"Ring","Item_Name":"요정 반지","Item_ImgName":"DknightRing","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30}
+		{"Item_ID":17,"Item_Type":"Necklace","Item_Name":"요정 목걸이","Item_ImgName":"DelfNecklace","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30},
+		{"Item_ID":18,"Item_Type":"Earring","Item_Name":"요정 귀걸이","Item_ImgName":"DelfEarring","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30},
+		{"Item_ID":19,"Item_Type":"Ring","Item_Name":"요정 반지","Item_ImgName":"DelfRing","Wpn_Attack":0,"Wpn_AttackSec":0,"Prt_Degree":0,"Ace_Degree":5,"Item_Stuff":"","Item_Enchant":"","HP_Rate":0,"Item_Price":30}
 	]
 }

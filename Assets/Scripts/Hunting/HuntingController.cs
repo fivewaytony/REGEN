@@ -256,10 +256,10 @@ public class HuntingController : GameController
     private void UpdatePlayerExpGold()
     {
         PC_Exp = PC_Exp + Mon_ReturnExp;  //경험치 +
-        if (PC_Exp > 99)  //레벨업
+        if (PC_Exp > PC_UpExp)  //레벨업
         {
             PC_Level = PC_Level + 1;
-            int Over_Exp = PC_Exp - 100;
+            int Over_Exp = PC_Exp - PC_UpExp;
             PC_Exp = Over_Exp;  //레벨업 이후 남은 Exp +
 
             // 케리터 레벨 Data로 플레이어 스텟 Update
@@ -270,6 +270,7 @@ public class HuntingController : GameController
                 {
                     PC_Str = cf.Char_Str;
                     PC_Con = cf.Char_Con;
+                    PC_Dex = cf.Char_Dex;
                     PC_MaxHP = cf.Char_HP * pc_hprate;
                     PC_UpExp = cf.Char_Exp;
                 }
@@ -284,6 +285,7 @@ public class HuntingController : GameController
             ps.PC_Exp = PC_Exp;
             ps.PC_Str = PC_Str;
             ps.PC_Con = PC_Con;
+            ps.PC_Dex = PC_Dex;
             ps.PC_MaxHP = PC_MaxHP;
             ps.PC_UpExp = PC_UpExp;
             ps.PC_Gold = (Convert.ToDecimal(ps.PC_Gold) + Convert.ToDecimal(Mon_DropGold)).ToString();
@@ -488,9 +490,11 @@ public class HuntingController : GameController
 
 
     // 몬스터 공격 / 플레이어 공격력 랜덤으로 비중 주기
-    // 특템아이템 표시 
-    // 특템 아이템 사용 표시
+    // 특템물약 아이템 표시 
+    // 특템물약 아이템 사용 표시
     // 각 hit 이미지 바꾸기(여러개 노출 랜덤하게) --> 이미지 변경하고 노출 위치 랜덤
+    // 가방 꽉 찼을때 얼럿 보여주기
+    //사냥터에서 가방,상점 으로 가는 아이콘 추가
 
     #region [무기 로딩 -- > 사용안함 ]
     //private void WeaponLoad()

@@ -151,10 +151,16 @@ public class DataController : MonoBehaviour
        // Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
-        return DataPathPssItem;
+        pssitemDic = new Dictionary<int, PssItem>();
+        foreach (PssItem item in DataPathPssItem.PssItemList)
+        {
+            pssitemDic.Add(item.Item_ID, item);
+        }
+       return DataPathPssItem;
     }
+    public Dictionary<int, PssItem> pssitemDic;
     #endregion
-    
+
     #region [플레이어 소유 아이템 -- 최초 한번 Resources MetaData에서 읽기 ] 
     public PssItemInfoList PssItemLoadResources()
     {
@@ -163,6 +169,12 @@ public class DataController : MonoBehaviour
         TextAsset PssItem = Resources.Load("MetaData/PssItem") as TextAsset;
         Debug.Log("Resources 소유아이템 : " + PssItem);
         ResourcesPssItemData = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
+
+        pssitemDic = new Dictionary<int, PssItem>();
+        foreach (PssItem item in ResourcesPssItemData.PssItemList)
+        {
+            pssitemDic.Add(item.Item_ID, item);
+        }
 
         return ResourcesPssItemData;
     }
@@ -198,7 +210,7 @@ public class DataController : MonoBehaviour
         File.WriteAllText(filePath, dataAsJson);
     }
     #endregion
-
+    
     #region [소유 아이템 전용 Update]
     /// <summary>
     /// 소유 아이템 전용 Update
@@ -216,7 +228,7 @@ public class DataController : MonoBehaviour
     }
     #endregion
     
-    #region [게임 아이템 정보]
+    #region [게임 아이템 그룹 정보]
     public GameItemGroupInfoList gameitemlist;
     public GameItemGroupInfoList GetGameIteminfo()
     {
@@ -278,7 +290,6 @@ public class DataController : MonoBehaviour
     }
     public Dictionary<int, GameItemInfo> gameitemDic;
     #endregion
-
 
     #region[재료 아이템 정보]
     //public StuffInfoList stuffinfolist;
