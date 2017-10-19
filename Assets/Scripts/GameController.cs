@@ -316,6 +316,8 @@ public class GameController : MonoBehaviour {
         {
             ItemInfoBackPanel.gameObject.SetActive(true);
 
+            Debug.Log("ItemID=" + ItemID);
+
             PssItem pssitem = DataController.Instance.pssitemDic[ItemID];
             GameItemInfo item = DataController.Instance.gameitemDic[ItemID];                //전체 아이템 정보
             string equDesc = string.Empty;

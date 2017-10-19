@@ -156,12 +156,13 @@ public class InventoryController : GameController
     }
     #endregion
 
+    #region [인벤토리 아이템 상세보기 패널]
     public void invenItemInfoPan(int ItemID, int ItemAmount)
     {
         base.ShowItemInfoPanel(ItemID, ItemAmount);
     }
-
-
+    #endregion
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
