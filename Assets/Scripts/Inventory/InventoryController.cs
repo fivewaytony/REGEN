@@ -23,6 +23,11 @@ public class InventoryController : GameController
 
     void Start () {
         invenInstance = this;
+        Instance = this;
+        // Retrieve the name of this scene.
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneName = currentScene.name;
+
         PlayerStatLoad();
         PlayerPssItemLoadALL(); //전체 소유 아이템 로드
         PlayerEquItemLoad();    //장착아이템
@@ -312,6 +317,9 @@ public class InventoryController : GameController
    장착 아이템 표시
    같은 무기는 무조건 하나만 들 수 있음 --> 무기, 방어구, 장신구는 무조건 제조를 통해서만 가능하며
    제조시 소유하고 있는 무기, 방어구, 장신구는 또 제조 할 수 없도록 제조 리스트에서 보여주지 않는다
+   ---> 강화도를 어떻게 저장 할거인가.
+
+    Item_ID --> 강화도  ?
    
     장착아이템중에서 물약을 팔 수 있게 하자 --> 채집 엥벌이 용도
 

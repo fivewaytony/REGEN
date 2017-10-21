@@ -63,6 +63,8 @@ public class GameController : MonoBehaviour {
     public Image ItemCountBarFill;  //아이템 개수 설정 bar
     public Text ItemCountTxt;       //아이템개수 Text
     public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
+    public string SceneName = string.Empty;
+
 
 
 #if UNITY_IOS
@@ -414,7 +416,7 @@ public class GameController : MonoBehaviour {
                 break;
             }
         }
-        SceneManager.LoadScene("Inventory", LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneName, LoadSceneMode.Single);
         //   ItemInfoBackPanel.gameObject.SetActive(false); //아이템 정보창 닫기
         //   PlayerPssItemLoadALL();                              // 인벤 다시 로드
     }
@@ -453,7 +455,13 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene("Main", LoadSceneMode.Single);
     }
 
-#region [광고 보여주기]
+    //대장간 이동
+    public void GoForge()
+    {
+        SceneManager.LoadScene("Forge", LoadSceneMode.Single);
+    }
+
+    #region [광고 보여주기]
     void ShowRewardedVideo()
     {
         if (Advertisement.IsReady("rewardedVideo"))

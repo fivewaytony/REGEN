@@ -677,6 +677,16 @@ MonoBehaviour:
   FieldChoiceBack: {fileID: 0}
   FieldChoiceContent: {fileID: 0}
   ChoiceFieldID: 0
+  SlotsParentContent: {fileID: 0}
+  slots: []
+  ItemInfoBackPanel: {fileID: 0}
+  ItemInfoSellPanel: {fileID: 0}
+  ItemInfoNameText: {fileID: 0}
+  ItemInfoDescText: {fileID: 0}
+  ItemCountBarFill: {fileID: 0}
+  ItemCountTxt: {fileID: 0}
+  ItemCountSilder: {fileID: 0}
+  SceneName: 
   FieldImage: {fileID: 68994152}
   FieldName: {fileID: 2043706540}
   MainCamera: {fileID: 1887410207}
@@ -693,7 +703,7 @@ MonoBehaviour:
   PlayerHPBarFill: {fileID: 470597570}
   GetItemText: {fileID: 953476985}
   CurHP_Count: {fileID: 1138054706}
-  SFXClick: {fileID: 8300000, guid: dfd3da053567bda4f810cb6b2e463b94, type: 3}
+  SFXClick: {fileID: 8300000, guid: 33574702b1d3bb3438c22923743177ea, type: 3}
 --- !u!4 &292677089
 Transform:
   m_ObjectHideFlags: 0
@@ -3168,7 +3178,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ebda6b84116be664e9b02554cf72e39d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
