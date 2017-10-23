@@ -9,6 +9,7 @@ public class PlayerStat
     public string PC_Type;
     public string PC_Name;
     public int PC_Level;
+    public int PC_MakingLevel;
     public int PC_Str;
     public int PC_Con;
     public int PC_Dex;

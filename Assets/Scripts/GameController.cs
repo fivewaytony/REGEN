@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
     public Text DiaText;
 
     protected int PC_Level;         //현재 레벨
+    protected int PC_MakingLevel; //제조 레벨
     protected int PC_Exp;           //현재 경험치
     protected int PC_UpExp;     //업에 필요한 경험치
     protected int PC_FieldLevel;  //출입가능 필드레벨(현재 적용안함)
@@ -64,14 +65,20 @@ public class GameController : MonoBehaviour {
     public Text ItemCountTxt;       //아이템개수 Text
     public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
     public string SceneName = string.Empty;
-
-
+    
 
 #if UNITY_IOS
     string gameId = "1537760";
 #elif UNITY_ANDROID
     string gameId = "1537759";
 #endif
+    private void Awake()
+    {
+        //   DataController.Instance.PlayerStatLoadResourcesDEV();
+        //    DataController.Instance.PssItemLoadResourcesDEV();
+        PlayerStatLoad();
+    }
+
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
@@ -84,10 +91,7 @@ public class GameController : MonoBehaviour {
         {
             Debug.LogError("Ad is not supported");
         }
-       // DataController.Instance.PlayerStatLoadResourcesDEV();
-       // DataController.Instance.PssItemLoadResourcesDEV();
         Instance = this;     //GameController 접근하기 위해
-        PlayerStatLoad();   //플레이어 상태 로드
     }
     // Update is called once per frame
     void Update()
@@ -143,6 +147,7 @@ public class GameController : MonoBehaviour {
         foreach (var pcstat in playerstats)
         {
             PC_Level = pcstat.PC_Level;
+            PC_MakingLevel = pcstat.PC_MakingLevel;
             PC_Exp = pcstat.PC_Exp;
             PC_UpExp = pcstat.PC_UpExp;
             PC_MaxHP = pcstat.PC_MaxHP;
@@ -428,6 +433,37 @@ public class GameController : MonoBehaviour {
     }
     #endregion
 
+    #region [아이템 그룹정의 & 아이템 리스트 - enum 정의]
+    public enum ItemGroup
+    {
+        Weapon = 1, Protect, Acce, Potion, Etc
+    }
+    //무기
+    public enum WeaponType
+    {
+        OWeapon = 1, TWeapon
+    }
+    //방어구
+    public enum ProtectType
+    {
+        Helmet=1, Armor, Gauntlet, Boots
+    }
+    //장신구
+    public enum AcceType
+    {
+        Earring = 1,Necklace,Ring
+    }
+    //물약
+    public enum PotionType
+    {
+        Hunting = 1, Mining, Foraging
+    }
+    //기타
+    public enum EtcType
+    {
+        Herb =1 , Mineral, Gem, Special
+    }
+    #endregion
 
     //사냥 이동
     public void GoHunting(int cfd)

@@ -1,6 +1,6 @@
 {
 	"StatList" : 
 	[
-		{"PC_ID":1,"PC_Type":"Warrior","PC_Name":"fivewaytony","PC_Level":1,"PC_Str":3,"PC_Con":2,"PC_Dex":1,"PC_Exp":55,"PC_UpExp":100,"PC_MaxHP":100,"PC_Gold":1000,"PC_Dia":5,"PC_FieldLevel":1}
+		{"PC_ID":1,"PC_Type":"Warrior","PC_Name":"fivewaytony","PC_Level":1,"PC_MakingLevel":120,"PC_Str":3,"PC_Con":2,"PC_Dex":1,"PC_Exp":55,"PC_UpExp":100,"PC_MaxHP":100,"PC_Gold":10000,"PC_Dia":5,"PC_FieldLevel":1}
 	]
 }

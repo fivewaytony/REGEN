@@ -335,12 +335,18 @@ public class DataController : MonoBehaviour
         {
             TextAsset charDataJson = Resources.Load("MetaData/Character") as TextAsset;
             charinfolist = JsonUtility.FromJson<CharInfoList>(charDataJson.text);
-        }
 
+            charinfoDic = new Dictionary<int, CharInfo>();
+            foreach (CharInfo item in charinfolist.CharList)
+            {
+                charinfoDic.Add(item.Char_Level, item);
+            }
+        }
         return charinfolist;
     }
+    public Dictionary<int, CharInfo> charinfoDic;
     #endregion
-       
+
     #region [밸러싱 수치 정보]
     public BalanceInfoList balancelist;
     public BalanceInfoList GetBalanceInfo()

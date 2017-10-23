@@ -21,17 +21,20 @@ public class InventoryController : GameController
     private int pssItemID;
     public static InventoryController invenInstance;
 
+    private void Awake()
+    {
+        PlayerStatLoad();
+        PlayerPssItemLoadALL(); //전체 소유 아이템 로드
+        PlayerEquItemLoad();    //장착아이템
+    }
+
     void Start () {
         invenInstance = this;
         Instance = this;
         // Retrieve the name of this scene.
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
-
-        PlayerStatLoad();
-        PlayerPssItemLoadALL(); //전체 소유 아이템 로드
-        PlayerEquItemLoad();    //장착아이템
-    }
+     }
 
     #region [ //상단 장착 아이템 슬롯 & 플레이어 능력치]
     public void PlayerEquItemLoad() {
