@@ -1,7 +1,7 @@
 {
 	"PssItemList": 
 	[
-		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"Weapon","Item_ID":301,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
+		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"OWeapon","Item_ID":301,"Amount":1,"Equip_Stat":1,"Wpn_Ent":0},
 		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Stuff","Item_ID":101,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Stuff","Item_ID":102,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":4,"PC_ID":1,"Item_Type":"Stuff","Item_ID":103,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
@@ -9,7 +9,7 @@
 		{"PssItem_ID":6,"PC_ID":1,"Item_Type":"Stuff","Item_ID":105,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":7,"PC_ID":1,"Item_Type":"Stuff","Item_ID":106,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":8,"PC_ID":1,"Item_Type":"Stuff","Item_ID":150,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
-		{"PssItem_ID":9,"PC_ID":1,"Item_Type":"Stuff","Item_ID":151,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
+		{"PssItem_ID":9,"PC_ID":1,"Item_Type":"Stuff","Item_ID":151,"Amount":20,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":10,"PC_ID":1,"Item_Type":"Stuff","Item_ID":152,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":11,"PC_ID":1,"Item_Type":"Stuff","Item_ID":153,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},
 		{"PssItem_ID":12,"PC_ID":1,"Item_Type":"Stuff","Item_ID":190,"Amount":100,"Equip_Stat":0,"Wpn_Ent":0},

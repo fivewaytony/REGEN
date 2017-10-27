@@ -6,7 +6,9 @@ using System;
 public class GameItemInfo
 {
     public int Item_ID = 1;
+    public string Item_Group; 
     public string Item_Type;
+    public string Item_Grade;
     public string Item_Level;
     public string Item_Name;
     public string Item_ImgName;

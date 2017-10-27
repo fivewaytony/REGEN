@@ -262,7 +262,7 @@ public class GameController : MonoBehaviour {
          sv.gameObject.SetActive(false);
          sv.gameObject.SetActive(true);
         */
-
+        Debug.Log("invenslot");
         GameObject sv = GameObject.Find("SlotsScroll View");
         sv.gameObject.SetActive(false);
 
@@ -319,12 +319,12 @@ public class GameController : MonoBehaviour {
     #region [아이템 정보 Panel Show / Close]
     public void ShowItemInfoPanel(int ItemID, int ItemAmount)
     {
+        Debug.Log("ItemID=" + ItemID);
+        Debug.Log("ItemAmount=" + ItemAmount);
         if (ItemID != 0)
         {
             ItemInfoBackPanel.gameObject.SetActive(true);
-
-            Debug.Log("ItemID=" + ItemID);
-
+                    
             PssItem pssitem = DataController.Instance.pssitemDic[ItemID];
             GameItemInfo item = DataController.Instance.gameitemDic[ItemID];                //전체 아이템 정보
             string equDesc = string.Empty;
@@ -463,6 +463,7 @@ public class GameController : MonoBehaviour {
     {
         Herb =1 , Mineral, Gem, Special
     }
+    
     #endregion
 
     //사냥 이동
@@ -471,6 +472,8 @@ public class GameController : MonoBehaviour {
        ChoiceFieldID = cfd;  //선택한 필드 아이디 할당
        SceneManager.LoadScene("Hunting", LoadSceneMode.Single);
     }
+
+   
 
     //상점 이동
     public void GoShop()

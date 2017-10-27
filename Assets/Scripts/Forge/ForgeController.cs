@@ -28,6 +28,7 @@ public class ForgeController : GameController
     void Start () {
         forgeInstance = this;
         Instance = this;
+
         // Retrieve the name of this scene.
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
@@ -54,6 +55,7 @@ public class ForgeController : GameController
         {
             Destroy(TypeParent.GetChild(i).gameObject);  //아이템 종류 선택 버튼 노출 초기화
         }
+        ResetMakingPan();//제작 선택 아이템 정보 초기화
 
         //아이템 리스트 Panel 노출 초기화
         int ListchildCnt = ListParent.childCount;
@@ -153,7 +155,9 @@ public class ForgeController : GameController
         {
             Destroy(ListParent.GetChild(i).gameObject);  //아이템 종류 선택 버튼 노출 초기화
         }
+        ResetMakingPan();//제작 선택 아이템 정보 초기화
 
+        // 대상만 리스트로 추출
         var typelist = from stype in itemList
                        where stype.Item_Type == typeName
                        select stype;
@@ -166,19 +170,148 @@ public class ForgeController : GameController
             goButton.transform.GetChild(0).GetComponent<Text>().text = item.Item_Name;
 
             Button tempButton = goButton.GetComponent<Button>();
-           tempButton.onClick.AddListener(() => ShowMakingPan(item.Item_ID, item.Item_ImgName, item.Item_Name));
+            tempButton.onClick.AddListener(() => ShowMakingPan(item.Item_ID));
         }
      
     }
     #endregion
 
     #region [아이템 제작 Panel - 아이템 정보]
-    private void ShowMakingPan(int itemid, string itemimg, string itemname)
+    public Image MakeItemImg, Stuff1Img, Stuff2Img, Stuff3Img;
+    public Text MakeItemName, MakeItemDesc;  //아이템 이름, 설명
+    public Text Stuff1Name, Stuff2Name, Stuff3Name;
+    public Text Stuff1Cnt, Stuff2Cnt, Stuff3Cnt, GoldCnt; //필요 소유 개수
+    
+    private void ShowMakingPan(int itemid)
     {
-        // 아이템 제작 제료
+        GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid];                //전체 아이템 정보
+        MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Makeitem.Item_ImgName);
+
+        string Item_Leve = Makeitem.Item_Level;
+        string Item_Name = Makeitem.Item_Name;
+        switch (Item_Leve)
+        {
+            case "D":
+                Item_Name = "<color=white>" + Item_Name + "</color>";
+                break;
+            case "C":
+                Item_Name = "<color=yellow>" + Item_Name + "</color>";
+                break;
+            case "B":
+                Item_Name = "<color=blue>" + Item_Name + "</color>";
+                break;
+            case "A":
+                Item_Name = "<color=red>" + Item_Name + "</color>";
+                break;
+            case "S":
+                Item_Name = "<color=purple>" + Item_Name + "</color>";
+                break;
+            default:
+                Item_Name = "<color=white>" + Item_Name + "</color>";
+                break;
+        }
+        int Item_Price = Makeitem.Item_Price;
+        string Item_Group = Makeitem.Item_Group;
+        string Item_DescStr = string.Empty;
+        MakeItemName.transform.GetComponent<Text>().text = Item_Name.ToString();
+        switch (Item_Group)
+        {
+            case "Weapon": //무기
+                Item_DescStr = "공격력 : " + Makeitem.Wpn_Attack +"\n옵션 : 힘 ?,체력 ?";
+                break;
+            case "Protect":
+                Item_DescStr = "방어력 : " + Makeitem.Prt_Degree + "\n옵션 : 체력 ?";
+                break;
+            case "Acce":
+                Item_DescStr = "회피력 : " + Makeitem.Ace_Degree + "\n옵션 : 민첩 ?";
+                break;
+            case "Potion": //물약의 설명 추가
+                //switch (1)
+                //{
+                //    default:
+                //        break;
+                //}
+                break;
+            case "Stuff":
+                break;
+           case "Enhance":
+                break;
+            case "EtcProtect":
+                break;
+            case "Recipe":
+                break;
+            default:
+                break;
+
+        }
+        MakeItemDesc.transform.GetComponent<Text>().text = Item_DescStr; //아이템 설명
+
+        int Stuff1_ID = Makeitem.Stuff1_ID;
+        int Stuff1_Count = Makeitem.Stuff1_Count;
+        int Stuff2_ID = Makeitem.Stuff2_ID;
+        int Stuff2_Count = Makeitem.Stuff2_Count;
+        int Stuff3_ID = Makeitem.Stuff3_ID;
+        int Stuff3_Count = Makeitem.Stuff3_Count;
+        
+        Debug.Log("Stuff1_ID=" + Stuff1_ID);
+        Debug.Log("Stuff1_Count=" + Stuff1_Count);
+        Debug.Log("Stuff2_ID=" + Stuff2_ID);
+        Debug.Log("Stuff2_Count=" + Stuff2_Count);
+        Debug.Log("Stuff3_ID=" + Stuff3_ID);
+        Debug.Log("Stuff3_Count=" + Stuff3_Count);
+        GameItemInfo Stuff1_itemInfo = DataController.Instance.gameitemDic[Stuff1_ID];
+        GameItemInfo Stuff2_itemInfo = DataController.Instance.gameitemDic[Stuff2_ID];
+        GameItemInfo Stuff3_itemInfo = DataController.Instance.gameitemDic[Stuff3_ID];
+        //  string Stuff1_ImgName =
+        Stuff1Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff1_itemInfo.Item_ImgName);
+        Stuff2Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff2_itemInfo.Item_ImgName);
+        Stuff3Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff3_itemInfo.Item_ImgName);
+
+        Stuff1Name.transform.GetComponent<Text>().text = Stuff1_itemInfo.Item_Name.ToString();
+        Stuff2Name.transform.GetComponent<Text>().text = Stuff2_itemInfo.Item_Name.ToString();
+        Stuff3Name.transform.GetComponent<Text>().text = Stuff3_itemInfo.Item_Name.ToString();
+
+        int Makeitemstuff1Cnt = Makeitem.Stuff1_Count;
+        int Makeitemstuff2Cnt = Makeitem.Stuff2_Count;
+        int Makeitemstuff3Cnt = Makeitem.Stuff3_Count;
+
+        PssItem pssStuff1 = DataController.Instance.pssitemDic[Stuff1_ID];
+        PssItem pssStuff2 = DataController.Instance.pssitemDic[Stuff2_ID];
+        PssItem pssStuff3 = DataController.Instance.pssitemDic[Stuff3_ID];
+        Debug.Log("pssStuff1=" + pssStuff1.Amount);
+        Debug.Log("pssStuff2=" + pssStuff2.Amount);
+        Debug.Log("pssStuff3=" + pssStuff3.Amount);
+
+        //   Stuff1Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff1_Count.ToString();
+        ////    Stuff2Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff2_Count.ToString();
+        Stuff3Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff3_Count.ToString();
+
+
+
     }
     #endregion
 
+    #region [제작 선택 아이템 정보 초기화]
+    public void ResetMakingPan()
+    {
+        MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/BoxBg");
+        MakeItemName.transform.GetComponent<Text>().text ="";
+        MakeItemDesc.transform.GetComponent<Text>().text = "";
+
+        Stuff1Name.transform.GetComponent<Text>().text = "";
+        Stuff2Name.transform.GetComponent<Text>().text = "";
+        Stuff3Name.transform.GetComponent<Text>().text = "";
+        
+        Stuff1Cnt.transform.GetComponent<Text>().text = "";
+        Stuff2Cnt.transform.GetComponent<Text>().text = "";
+        Stuff3Cnt.transform.GetComponent<Text>().text = "";
+        GoldCnt.transform.GetComponent<Text>().text = "";
+
+        Stuff1Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
+        Stuff2Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
+        Stuff3Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
+    }
+    #endregion
 
     // Update is called once per frame
     void Update()

@@ -10,6 +10,8 @@ public class ItemInfoMng : MonoBehaviour
     /* 인벤토리 아이템 상세보기*/
     public void ShowItemInfo()
     {
+        Debug.Log("ShowItemInfo");
         GameController.Instance.ShowItemInfoPanel(ItemID, ItemAmount);
     }
+    
 }
