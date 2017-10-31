@@ -15,9 +15,9 @@ public class ForgeController : GameController
     public GameObject prefabTypeBtn, prefabListBtn;
     public Text MakingLevel;
 
- //   bool isbtnWeapon = false , isbtnProtect = false, isbtnAcce = false, isbtnPotion = false, isbtnEtc = false;
- //   private string curTypeStr; //현재 선택된 아이템 타입
- 
+    //생성할 아이템 TypeName 전역변수(OWeapon,    TWeapon,    Helmet,,Armor, Stuff...
+    private string MakeItemTypeName;
+
     // Use this for initialization
     private void Awake()
     {
@@ -29,7 +29,7 @@ public class ForgeController : GameController
         forgeInstance = this;
         Instance = this;
 
-        // Retrieve the name of this scene.
+        // 현재씬의 이름
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
         ClickGroupBtn(); //아이템 그룹 선택
@@ -147,9 +147,8 @@ public class ForgeController : GameController
     {
         Debug.Log("gName=" + gName);
         Debug.Log("typeName=" + typeName);
-        List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
-
-        //아이템 List 선택 버튼 노출 초기화
+        MakeItemTypeName = typeName;
+         //아이템 List 선택 버튼 노출 초기화
         int childCnt = ListParent.childCount;
         for (int i = 0; i < childCnt; i++)
         {
@@ -157,9 +156,19 @@ public class ForgeController : GameController
         }
         ResetMakingPan();//제작 선택 아이템 정보 초기화
 
-        // 대상만 리스트로 추출
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
+        var exceptitemid = from exceptList in passitems
+                           where exceptList.Item_Type == "OWeapon" || exceptList.Item_Type == "TWeapon"
+                                 || exceptList.Item_Type == "Helmet" || exceptList.Item_Type == "Armor" || exceptList.Item_Type == "Gauntlet" || exceptList.Item_Type == "Boots"
+                                 || exceptList.Item_Type == "Earring" || exceptList.Item_Type == "Necklace" || exceptList.Item_Type == "Ring"
+                           select exceptList;
+       //소유아이템 중 강화 가능 아이템은 제조제외
+         List < GameItemInfo > itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
+       // 대상만 리스트로 추출
         var typelist = from stype in itemList
                        where stype.Item_Type == typeName
+                                && !(from exceptid in exceptitemid
+                                             select exceptid.Item_ID).Contains(stype.Item_ID)
                        select stype;
 
         foreach (var item in typelist)
@@ -180,15 +189,27 @@ public class ForgeController : GameController
     public Image MakeItemImg, Stuff1Img, Stuff2Img, Stuff3Img;
     public Text MakeItemName, MakeItemDesc;  //아이템 이름, 설명
     public Text Stuff1Name, Stuff2Name, Stuff3Name;
-    public Text Stuff1Cnt, Stuff2Cnt, Stuff3Cnt, GoldCnt; //필요 소유 개수
-    
+    public Text Stuff1Cnt, Stuff2Cnt, Stuff3Cnt, GoldCnt;   //필요 소유 개수
+    public GameObject GoCheckPan;   // [제조 버튼 Open Check Pan]
+    public GameObject MakeSliderPan; //제조 개수 슬라이드바
+    /* 제조버튼 클릭시 이용될 제조 전역 변수 */
+    int MakeitemCount = 1;  // 제조 아이템 개수
+    int Makeitemid;             //제조 할 아이템 id
+    long MakeNeedGold;    //제조에 필요한 골드
+    int MakeStuff1_ID=0, MakeStuff2_ID=0, MakeStuff3_ID=0;   //재료 1,2,3 id
+    int MakeStuff1_Cnt=0, MakeStuff2_Cnt=0, MakeStuff3_Cnt=0; // 재료 1,23 필요 개수
+    /* 제조버튼 클릭시 이용될 제조 전역 변수 */
+
+
     private void ShowMakingPan(int itemid)
     {
-        GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid];                //전체 아이템 정보
+        Makeitemid = itemid;  //제조할 아이템 ID
+        GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid]; //전체 아이템 정보
         MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Makeitem.Item_ImgName);
 
         string Item_Leve = Makeitem.Item_Level;
         string Item_Name = Makeitem.Item_Name;
+        int Make_Stat = Makeitem.Making_Stat; //제조에 필요한 재료 개수
         switch (Item_Leve)
         {
             case "D":
@@ -218,23 +239,29 @@ public class ForgeController : GameController
         {
             case "Weapon": //무기
                 Item_DescStr = "공격력 : " + Makeitem.Wpn_Attack +"\n옵션 : 힘 ?,체력 ?";
+                MakeSliderPan.gameObject.SetActive(false); 
                 break;
             case "Protect":
                 Item_DescStr = "방어력 : " + Makeitem.Prt_Degree + "\n옵션 : 체력 ?";
+                MakeSliderPan.gameObject.SetActive(false);
                 break;
             case "Acce":
                 Item_DescStr = "회피력 : " + Makeitem.Ace_Degree + "\n옵션 : 민첩 ?";
+                MakeSliderPan.gameObject.SetActive(false);
                 break;
             case "Potion": //물약의 설명 추가
-                //switch (1)
-                //{
-                //    default:
-                //        break;
-                //}
+                           //switch (1)
+                           //{
+                           //    default:
+                           //        break;
+                           //}
+                MakeSliderPan.gameObject.SetActive(true);
                 break;
             case "Stuff":
+                MakeSliderPan.gameObject.SetActive(true);
                 break;
-           case "Enhance":
+           case "Enhance":  //강화석
+                MakeSliderPan.gameObject.SetActive(true);
                 break;
             case "EtcProtect":
                 break;
@@ -246,23 +273,19 @@ public class ForgeController : GameController
         }
         MakeItemDesc.transform.GetComponent<Text>().text = Item_DescStr; //아이템 설명
 
-        int Stuff1_ID = Makeitem.Stuff1_ID;
-        int Stuff1_Count = Makeitem.Stuff1_Count;
-        int Stuff2_ID = Makeitem.Stuff2_ID;
-        int Stuff2_Count = Makeitem.Stuff2_Count;
-        int Stuff3_ID = Makeitem.Stuff3_ID;
-        int Stuff3_Count = Makeitem.Stuff3_Count;
-        
-        Debug.Log("Stuff1_ID=" + Stuff1_ID);
-        Debug.Log("Stuff1_Count=" + Stuff1_Count);
-        Debug.Log("Stuff2_ID=" + Stuff2_ID);
-        Debug.Log("Stuff2_Count=" + Stuff2_Count);
-        Debug.Log("Stuff3_ID=" + Stuff3_ID);
-        Debug.Log("Stuff3_Count=" + Stuff3_Count);
-        GameItemInfo Stuff1_itemInfo = DataController.Instance.gameitemDic[Stuff1_ID];
-        GameItemInfo Stuff2_itemInfo = DataController.Instance.gameitemDic[Stuff2_ID];
-        GameItemInfo Stuff3_itemInfo = DataController.Instance.gameitemDic[Stuff3_ID];
-        //  string Stuff1_ImgName =
+        #region [필요 / 소유 아이템, 골드 셋팅]
+        MakeStuff1_ID = Makeitem.Stuff1_ID;         //1번 재료의 ID
+        MakeStuff1_Cnt = Makeitem.Stuff1_Count;  //1번 재료의 필요 개수
+        MakeStuff2_ID = Makeitem.Stuff2_ID;         //2번 재료의 ID
+        MakeStuff2_Cnt = Makeitem.Stuff2_Count;     //2번 재료의 필요 개수
+        MakeStuff3_ID = Makeitem.Stuff3_ID;          //3번 재료의 ID
+        MakeStuff3_Cnt = Makeitem.Stuff3_Count;     //3번 재료의 필요 개수
+        MakeNeedGold = Makeitem.Making_Price;     //필요 골드
+
+        GameItemInfo Stuff1_itemInfo = DataController.Instance.gameitemDic[MakeStuff1_ID];
+        GameItemInfo Stuff2_itemInfo = DataController.Instance.gameitemDic[MakeStuff2_ID];
+        GameItemInfo Stuff3_itemInfo = DataController.Instance.gameitemDic[MakeStuff3_ID];
+
         Stuff1Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff1_itemInfo.Item_ImgName);
         Stuff2Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff2_itemInfo.Item_ImgName);
         Stuff3Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff3_itemInfo.Item_ImgName);
@@ -271,23 +294,113 @@ public class ForgeController : GameController
         Stuff2Name.transform.GetComponent<Text>().text = Stuff2_itemInfo.Item_Name.ToString();
         Stuff3Name.transform.GetComponent<Text>().text = Stuff3_itemInfo.Item_Name.ToString();
 
-        int Makeitemstuff1Cnt = Makeitem.Stuff1_Count;
-        int Makeitemstuff2Cnt = Makeitem.Stuff2_Count;
-        int Makeitemstuff3Cnt = Makeitem.Stuff3_Count;
+        PssItem pssStuff1 = DataController.Instance.pssitemDic[MakeStuff1_ID];
+        PssItem pssStuff2 = DataController.Instance.pssitemDic[MakeStuff2_ID];
+        PssItem pssStuff3 = DataController.Instance.pssitemDic[MakeStuff3_ID];
+        int pssStuff1Cnt = pssStuff1.Amount;  //1번 재료의 소유 개수
+        int pssStuff2Cnt = pssStuff2.Amount; //2번 재료의 소유 개수
+        int pssStuff3Cnt = pssStuff3.Amount; //3번 재료의 소유 개수
+        long pssGold = Convert.ToInt64(PC_Gold);  //소유 골드
 
-        PssItem pssStuff1 = DataController.Instance.pssitemDic[Stuff1_ID];
-        PssItem pssStuff2 = DataController.Instance.pssitemDic[Stuff2_ID];
-        PssItem pssStuff3 = DataController.Instance.pssitemDic[Stuff3_ID];
-        Debug.Log("pssStuff1=" + pssStuff1.Amount);
-        Debug.Log("pssStuff2=" + pssStuff2.Amount);
-        Debug.Log("pssStuff3=" + pssStuff3.Amount);
+        Stuff1Cnt.transform.GetComponent<Text>().text = pssStuff1Cnt.ToString() + " / " + MakeStuff1_Cnt.ToString();
+        Stuff2Cnt.transform.GetComponent<Text>().text = pssStuff2Cnt.ToString() + " / " + MakeStuff2_Cnt.ToString();
+        Stuff3Cnt.transform.GetComponent<Text>().text = pssStuff3Cnt.ToString() + " / " + MakeStuff3_Cnt.ToString();
+        GoldCnt.transform.GetComponent<Text>().text = fPC_Gold + " / " + MakeNeedGold.ToString();
 
-        //   Stuff1Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff1_Count.ToString();
-        ////    Stuff2Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff2_Count.ToString();
-        Stuff3Cnt.transform.GetComponent<Text>().text = Makeitem.Stuff3_Count.ToString();
+        #endregion
+        // 몇개까지 만들 수 있는지를 계산
+        if (pssStuff1Cnt >= MakeStuff1_Cnt * MakeitemCount &&
+            pssStuff2Cnt >= MakeStuff2_Cnt * MakeitemCount &&
+            pssStuff3Cnt >= MakeStuff3_Cnt * MakeitemCount &&
+            pssGold >= MakeNeedGold * MakeitemCount)
+        {
+            GoCheckPan.gameObject.SetActive(false);
+        }
+        else
+        {
+            GoCheckPan.gameObject.SetActive(true);
+        }
+    }
+    #endregion
 
+    #region [제조버튼 클릭]
+    public Button BtnGoMake;
+    public void btnGoMake()
+    {
+        Debug.Log("MakeStuff1_ID=" + MakeStuff1_ID);
+        Debug.Log("MakeStuff2_ID=" + MakeStuff2_ID);
+        Debug.Log("MakeStuff3_ID=" + MakeStuff3_ID);
+        Debug.Log("MakeStuff1_Cnt=" + MakeStuff1_Cnt);
+        Debug.Log("MakeStuff2_Cnt=" + MakeStuff2_Cnt);
+        Debug.Log("MakeStuff3_Cnt=" + MakeStuff3_Cnt);
+        Debug.Log("MakeNeedGold=" + MakeNeedGold);
+        Debug.Log("MakeitemCount=" + MakeitemCount);
 
-
+        //재료 정산
+        CalStuff(MakeStuff1_ID, MakeStuff1_Cnt * MakeitemCount);
+        CalStuff(MakeStuff2_ID, MakeStuff2_Cnt * MakeitemCount);
+        CalStuff(MakeStuff3_ID, MakeStuff3_Cnt * MakeitemCount);
+        //골드 정산 
+        CalGold(MakeNeedGold, MakeitemCount, "minus");
+        //아이템 생성
+        //Makeitemid
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        bool isHaveItem = false;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (Makeitemid == passitems[i].Item_ID)
+            {
+                passitems[i].Amount = passitems[i].Amount + MakeitemCount;
+                isHaveItem = true;
+                break;
+            }
+        }
+        if (isHaveItem == false)
+        {
+            //3. 여기서 MakeItemTypeName 에 따른 옵션 랜덤생성해서..넣기 일단. 임시
+            int tempOptType = 1; //힘
+            int tempOptPoint = 5;
+            //(소유아이템 ID, player_id,아아템타입,아이템아이디,개수,장착여부,강화도,옵션타입(힘:S, 체력:C, 민첩), 옵션 포인트)
+            passitems.Add(new PssItem(passitems.Count + 1, 1, MakeItemTypeName, Makeitemid, MakeitemCount, 0, 0, tempOptType, tempOptPoint));
+        }
+        SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
+        /*
+         * 체크사항
+         * 1. 제조 재료가 1~3개 체크(Making_Stat 값으로) 재조 재료 슬롯 초기화 드 
+         * 2. 각 필요재료 개수와 소유재료 개수를 가각 체크해서 최대 몇개까지 만들 수 있는지 체크해 슬라이드 벨류 결정(강화 아이템은 무조건 1개)
+         * --> 각각 4개 조건(골드포함) 각각 최소 생성 가능 개수가 전체 생성 가능개수로 결정 후 슬라이드 벨류로 결정
+         * 
+         */
+    }
+    //재료정산
+    private void CalStuff(int stuffid, int stuffcnt)
+    {
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_ID == stuffid)
+            {
+                if (passitems[i].Equip_Stat == 1)
+                {
+                    //장착 아이템은 판매 할 수 없음
+                }
+                else //판매
+                {
+                    if (passitems[i].Amount > stuffcnt) //판매개수만 빼기
+                    {
+                        passitems[i].Amount = passitems[i].Amount - stuffcnt;
+                    }
+                    else
+                    {
+                        passitems.RemoveAt(i);
+                    }
+                    PssItemInfoList pssiteminfolist = new PssItemInfoList();
+                    pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
+                    DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+                }
+                break;
+            }
+        }
     }
     #endregion
 
@@ -310,6 +423,9 @@ public class ForgeController : GameController
         Stuff1Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
         Stuff2Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
         Stuff3Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/RectButtonPressed");
+
+        GoCheckPan.gameObject.SetActive(true);
+        MakeSliderPan.gameObject.SetActive(false);
     }
     #endregion
 

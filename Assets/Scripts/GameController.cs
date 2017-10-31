@@ -28,7 +28,11 @@ public class GameController : MonoBehaviour {
     protected int PC_Dex;           //민첩
     protected float PC_MaxHP;        //MaxHP
     protected string PC_Gold;       //골드
+    protected string vPC_Gold = string.Empty;
+    protected string fPC_Gold = string.Empty;
     protected int PC_Dia;      //다이아
+    protected int vPC_Dia;
+    protected string fPC_Dia = string.Empty;
 
     protected int PssItem_ID;
     protected string GameItem_Type;
@@ -74,8 +78,8 @@ public class GameController : MonoBehaviour {
 #endif
     private void Awake()
     {
-        //   DataController.Instance.PlayerStatLoadResourcesDEV();
-        //    DataController.Instance.PssItemLoadResourcesDEV();
+       // DataController.Instance.PlayerStatLoadResourcesDEV();
+      //  DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
@@ -163,8 +167,7 @@ public class GameController : MonoBehaviour {
         LevelBarText.text = String.Format("{0}", Math.Round(LevelBarNum, 1)) + "%";
         LevelBarFill.gameObject.GetComponent<Image>().fillAmount = PC_Exp / (float)PC_UpExp; //현재 경험치바
         //string goldAmount = Convert.ToDecimal(PC_Gold);
-        string vPC_Gold = string.Empty;
-        int vPC_Dia;
+             
         if (Convert.ToDecimal(PC_Gold) > 99999999 )
         {
             vPC_Gold = "99999999";
@@ -181,8 +184,10 @@ public class GameController : MonoBehaviour {
         {
             vPC_Dia = PC_Dia;
         }
-        GoldText.text = String.Format("{0:n0}", Convert.ToDecimal(vPC_Gold));
-        DiaText.text = String.Format("{0:n0}", Convert.ToDecimal(vPC_Dia));
+        fPC_Gold = String.Format("{0:n0}", Convert.ToDecimal(vPC_Gold));
+        GoldText.text = fPC_Gold;
+        fPC_Dia = String.Format("{0:n0}", Convert.ToDecimal(vPC_Dia));
+        DiaText.text = fPC_Dia;
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
 
      }
@@ -234,7 +239,7 @@ public class GameController : MonoBehaviour {
     #endregion
 
     #region [골드정산(Plus , Minus)]
-    public void CalGold(int price, int amount, string caldiv)
+    public void CalGold(long price, int amount, string caldiv)
     {
         decimal appGold = price * amount;
         List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
@@ -343,7 +348,7 @@ public class GameController : MonoBehaviour {
                 {
                     equDesc = "회피 : " + item.Ace_Degree;
                 }
-                equDesc = equDesc + "\n강화 : +" + pssitem.Wpn_Ent;
+                equDesc = equDesc + "\n강화 : +" + pssitem.Item_Ent;
             }
             else
             {
@@ -382,7 +387,7 @@ public class GameController : MonoBehaviour {
         SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
     }
 
-    //아이템 팔기
+    //아이템 팔기 - 인벤토리 아이템 상세보기에서
     public void SellpssItem()
     {
         //소유 아이템에서 빼기
@@ -421,9 +426,7 @@ public class GameController : MonoBehaviour {
                 break;
             }
         }
-        SceneManager.LoadScene(SceneName, LoadSceneMode.Single);
-        //   ItemInfoBackPanel.gameObject.SetActive(false); //아이템 정보창 닫기
-        //   PlayerPssItemLoadALL();                              // 인벤 다시 로드
+        SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
     }
 
     //상세 Panel 닫기

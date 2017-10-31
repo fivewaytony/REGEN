@@ -57,7 +57,6 @@ public class HuntingController : GameController
 
         /* 기본 정보 로딩 매신마다 로딩*/
         FieldBGLoad(); //사냥터 배경로드
-
        
        // WeaponLoad(); //무기
         MonsterLoad();//몹로드
@@ -322,11 +321,10 @@ public class HuntingController : GameController
                     isHaveType = true;
                     passitems[j].Amount = passitems[j].Amount + 1;
                 }
-
             }
             if (isHaveType == false)
             {
-               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0,0));
+               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0, 0, 0, 0));
             }
             isHaveType = false;
 
