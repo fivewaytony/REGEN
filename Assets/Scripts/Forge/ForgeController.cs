@@ -123,7 +123,7 @@ public class ForgeController : GameController
                 }
                 break;
             case ItemGroup.Etc:
-                string[] arrEctType = { "약초", "광물", "보석", "기타" };
+                string[] arrEctType = { "사냥", "채광", "채집", "기타" };
                 for (int i = 0; i < arrEctType.Length; i++)
                 {
                     GameObject goButton = (GameObject)Instantiate(prefabTypeBtn);
@@ -156,22 +156,38 @@ public class ForgeController : GameController
         }
         ResetMakingPan();//제작 선택 아이템 정보 초기화
 
-        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
-        var exceptitemid = from exceptList in passitems
-                           where exceptList.Item_Type == "OWeapon" || exceptList.Item_Type == "TWeapon"
-                                 || exceptList.Item_Type == "Helmet" || exceptList.Item_Type == "Armor" || exceptList.Item_Type == "Gauntlet" || exceptList.Item_Type == "Boots"
-                                 || exceptList.Item_Type == "Earring" || exceptList.Item_Type == "Necklace" || exceptList.Item_Type == "Ring"
-                           select exceptList;
-       //소유아이템 중 강화 가능 아이템은 제조제외
-         List < GameItemInfo > itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
-       // 대상만 리스트로 추출
-        var typelist = from stype in itemList
-                       where stype.Item_Type == typeName
-                                && !(from exceptid in exceptitemid
-                                             select exceptid.Item_ID).Contains(stype.Item_ID)
-                       select stype;
+        List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
+        if (gName.ToString() == "Weapon" || gName.ToString() == "Protect" || gName.ToString() == "Acce") //무기 or 방어구 or 장신구
+        {
+            List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;    //소유아이템 중 강화 가능 아이템은 제조제외
+            var exceptitemid = from exceptList in passitems
+                               where exceptList.Item_Type == "OWeapon" || exceptList.Item_Type == "TWeapon"
+                                     || exceptList.Item_Type == "Helmet" || exceptList.Item_Type == "Armor" || exceptList.Item_Type == "Gauntlet" || exceptList.Item_Type == "Boots"
+                                     || exceptList.Item_Type == "Earring" || exceptList.Item_Type == "Necklace" || exceptList.Item_Type == "Ring"
+                               select exceptList;
+                
+           // 대상만 리스트로 추출
+            var typelist = from stype in itemList
+                           where stype.Item_Type == typeName
+                                    && !(from exceptid in exceptitemid
+                                         select exceptid.Item_ID).Contains(stype.Item_ID)
+                           select stype;
+            Showtypelist(typelist);
+         }
+        else if(gName.ToString() == "Etc" && typeName.ToString() == "Hunting")  //기타 - 사냥
+        {
+            var typelist = from stype in itemList
+                           where stype.Item_Type == "Stuff" && stype.Making_Stat > 0 && stype.Item_ID >= 100 && stype.Item_ID < 200
+                           select stype;
+            Showtypelist(typelist);
+        }
+     }
+    #endregion
 
-        foreach (var item in typelist)
+    #region [제조할 아이템 리스트 생성 공통 Method]
+    public void Showtypelist(IEnumerable<GameItemInfo> queries)
+    {
+        foreach (var item in queries)
         {
             GameObject goButton = (GameObject)Instantiate(prefabListBtn);
             goButton.transform.SetParent(ListParent, false);
@@ -181,9 +197,9 @@ public class ForgeController : GameController
             Button tempButton = goButton.GetComponent<Button>();
             tempButton.onClick.AddListener(() => ShowMakingPan(item.Item_ID));
         }
-     
     }
     #endregion
+
 
     #region [아이템 제작 Panel - 아이템 정보]
     public Image MakeItemImg, Stuff1Img, Stuff2Img, Stuff3Img;
@@ -199,11 +215,11 @@ public class ForgeController : GameController
     int MakeStuff1_ID=0, MakeStuff2_ID=0, MakeStuff3_ID=0;   //재료 1,2,3 id
     int MakeStuff1_Cnt=0, MakeStuff2_Cnt=0, MakeStuff3_Cnt=0; // 재료 1,23 필요 개수
     /* 제조버튼 클릭시 이용될 제조 전역 변수 */
-
-
+    
     private void ShowMakingPan(int itemid)
     {
         Makeitemid = itemid;  //제조할 아이템 ID
+        Debug.Log("Makeitemid=" + Makeitemid);
         GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid]; //전체 아이템 정보
         MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Makeitem.Item_ImgName);
 
@@ -231,7 +247,7 @@ public class ForgeController : GameController
                 Item_Name = "<color=white>" + Item_Name + "</color>";
                 break;
         }
-        int Item_Price = Makeitem.Item_Price;
+         int Item_Price = Makeitem.Item_Price;
         string Item_Group = Makeitem.Item_Group;
         string Item_DescStr = string.Empty;
         MakeItemName.transform.GetComponent<Text>().text = Item_Name.ToString();
@@ -363,6 +379,11 @@ public class ForgeController : GameController
             //(소유아이템 ID, player_id,아아템타입,아이템아이디,개수,장착여부,강화도,옵션타입(힘:S, 체력:C, 민첩), 옵션 포인트)
             passitems.Add(new PssItem(passitems.Count + 1, 1, MakeItemTypeName, Makeitemid, MakeitemCount, 0, 0, tempOptType, tempOptPoint));
         }
+
+        PssItemInfoList pssiteminfolist = new PssItemInfoList();
+        pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
+        DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
+
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
         /*
          * 체크사항

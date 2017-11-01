@@ -78,8 +78,8 @@ public class GameController : MonoBehaviour {
 #endif
     private void Awake()
     {
-       // DataController.Instance.PlayerStatLoadResourcesDEV();
-      //  DataController.Instance.PssItemLoadResourcesDEV();
+        DataController.Instance.PlayerStatLoadResourcesDEV();
+        DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
@@ -464,7 +464,7 @@ public class GameController : MonoBehaviour {
     //기타
     public enum EtcType
     {
-        Herb =1 , Mineral, Gem, Special
+        Hunting = 1, Mining, Foraging, Special
     }
     
     #endregion
