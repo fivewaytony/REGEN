@@ -141,6 +141,15 @@ public class DataController : MonoBehaviour
     }
     #endregion
 
+    #region [아이템 재조 Or  사냥 득 Or 상점 구매 후 소유아이템 파일 다시 읽기]
+    public PssItemInfoList GetPssItemInfoReload()
+    {
+        string filePath = Application.persistentDataPath + pssItemProjectFilePath;
+        pssiteminfolist = PssItemLoadDataPath();
+        return pssiteminfolist;
+    }
+    #endregion
+
     #region [플레이어 소유 아이템 -- DataPath에서 읽기 ] 
     public PssItemInfoList PssItemLoadDataPath()
     {
@@ -223,7 +232,7 @@ public class DataController : MonoBehaviour
 
         dataAsJson = JsonUtility.ToJson(pssiteminfolist);
         filePath = Application.persistentDataPath + pssItemProjectFilePath;
-
+        Debug.Log("dataAsJson=" + dataAsJson);
         File.WriteAllText(filePath, dataAsJson);
     }
     #endregion

@@ -2,7 +2,7 @@
 	"PssItemList": 
 	[
 		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"OWeapon","Item_ID":400,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Stuff","Item_ID":100,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Stuff","Item_ID":100,"Amount":9,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Stuff","Item_ID":101,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Stuff","Item_ID":102,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":5,"PC_ID":1,"Item_Type":"Stuff","Item_ID":103,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},

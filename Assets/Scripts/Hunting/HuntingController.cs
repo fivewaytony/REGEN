@@ -335,7 +335,6 @@ public class HuntingController : GameController
         PssItemInfoList pssiteminfolist = new PssItemInfoList();
         pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
         DataController.Instance.UpdateGameDataPssItem(pssiteminfolist);
-        
         PlayerPssItemLoad();
     }
     #endregion

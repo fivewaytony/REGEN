@@ -70,7 +70,6 @@ public class GameController : MonoBehaviour {
     public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
     public string SceneName = string.Empty;
     
-
 #if UNITY_IOS
     string gameId = "1537760";
 #elif UNITY_ANDROID
@@ -78,8 +77,8 @@ public class GameController : MonoBehaviour {
 #endif
     private void Awake()
     {
-        DataController.Instance.PlayerStatLoadResourcesDEV();
-        DataController.Instance.PssItemLoadResourcesDEV();
+        //DataController.Instance.PlayerStatLoadResourcesDEV();
+       // DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
