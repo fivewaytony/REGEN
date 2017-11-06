@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour {
     protected float PC_MaxHP;        //MaxHP
     protected string PC_Gold;       //골드
     protected string vPC_Gold = string.Empty;
-    protected string fPC_Gold = string.Empty;
+    protected string formatPC_Gold = string.Empty;
     protected int PC_Dia;      //다이아
     protected int vPC_Dia;
     protected string fPC_Dia = string.Empty;
@@ -77,7 +77,7 @@ public class GameController : MonoBehaviour {
 #endif
     private void Awake()
     {
-        //DataController.Instance.PlayerStatLoadResourcesDEV();
+       // DataController.Instance.PlayerStatLoadResourcesDEV();
        // DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
@@ -136,6 +136,7 @@ public class GameController : MonoBehaviour {
     #region [랜덤숫자 생성 -  공통]
     public int CommonRnd(int min, int max)
     {
+        //max - 1 까지만 생성됨
         System.Random r = new System.Random();
         int retVal = r.Next(min, max);
         return retVal;
@@ -183,13 +184,35 @@ public class GameController : MonoBehaviour {
         {
             vPC_Dia = PC_Dia;
         }
-        fPC_Gold = String.Format("{0:n0}", Convert.ToDecimal(vPC_Gold));
-        GoldText.text = fPC_Gold;
+        formatPC_Gold = String.Format("{0:n0}", Convert.ToDecimal(vPC_Gold));
+        GoldText.text = formatPC_Gold;
         fPC_Dia = String.Format("{0:n0}", Convert.ToDecimal(vPC_Dia));
         DiaText.text = fPC_Dia;
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
 
-     }
+        //소유아이템의 무기/방어구/악세살리의 옵션타입과 포인트 체크해서 플레이어 힘, 체력, 민첩에 계산하기
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
+        int itemStr = 0, itemCon = 0, itemDex = 0;  //아이템에 부여된 힘/체력/민첩 포인트
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_OptType==1) //힘옵션
+            {
+                itemStr = itemStr + passitems[i].Item_OptPoint;
+            }
+            if (passitems[i].Item_OptType == 2) //체력옵션
+            {
+                itemCon = itemCon + passitems[i].Item_OptPoint;
+            }
+            if (passitems[i].Item_OptType == 3) //민첩옵션
+            {
+                itemDex = itemDex + passitems[i].Item_OptPoint;
+            }
+        }
+        PC_Str = PC_Str + itemStr;          //플레이어  힘 + 아이템 힘
+        PC_Con = PC_Con + itemCon;      //플레이어  체력 + 아이템 체력
+        PC_Dex = PC_Dex + itemDex;    //플레이어  민첩 + 아이템 민첩
+
+    }
     #endregion
 
     #region [사냥터 선택 팝업]
@@ -335,7 +358,7 @@ public class GameController : MonoBehaviour {
             if (pssitem.Equip_Stat == 1) //장착아이템 (판매X))
             {
                 ItemInfoSellPanel.gameObject.SetActive(false);
-                if (pssitem.Item_Type == "Weapon")
+                if (pssitem.Item_Type == "OWeapon" || pssitem.Item_Type == "TWeapon")
                 {
                     equDesc = "공격 : " + item.Wpn_Attack;
                 }
@@ -363,6 +386,34 @@ public class GameController : MonoBehaviour {
             if (item.Item_Type == "Stuff")
             {
                 DescStr = DescStr + "\n아이템 제조의 재료로 필요합니다.";
+            }
+            else if (pssitem.Item_Type == "OWeapon" || pssitem.Item_Type == "TWeapon")
+            {
+                int optType = pssitem.Item_OptType;
+                string optPoint = pssitem.Item_OptPoint.ToString();
+                string strColor1 = string.Empty;
+                string strColor2 = strColor2 = "</color>"; ;
+                if (Convert.ToInt16(optPoint) < 0 )
+                {
+                    strColor1 = "<color=#ff0000>";
+                }
+                else
+                {
+                    strColor1 = "<color=#0000ff>";
+                    optPoint = "+" + optPoint;
+                }
+                switch (optType)
+                {
+                    case 1:
+                        DescStr = DescStr + "\n<color=#000000>힘 : </color>" + strColor1 + optPoint + strColor2;
+                        break;
+                    case 2:
+                        DescStr = DescStr + "\n<color=#000000>체력 : </color>" + strColor1 + optPoint + strColor2;
+                        break;
+                    default:
+                        DescStr = DescStr + "\n<color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
+                        break;
+                }
             }
             ItemInfoDescText.text = DescStr;
 
@@ -474,14 +525,11 @@ public class GameController : MonoBehaviour {
        ChoiceFieldID = cfd;  //선택한 필드 아이디 할당
        SceneManager.LoadScene("Hunting", LoadSceneMode.Single);
     }
-
-   
-
+    
     //상점 이동
     public void GoShop()
     {
-        Debug.Log("광고보여주기");
-        ShowRewardedVideo();
+       SceneManager.LoadScene("Shop", LoadSceneMode.Single);
     }
     
     //가방 이동

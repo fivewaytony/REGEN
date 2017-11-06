@@ -1,20 +1,45 @@
 {
 	"PssItemList": 
 	[
-		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"OWeapon","Item_ID":400,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Stuff","Item_ID":100,"Amount":9,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Stuff","Item_ID":101,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Stuff","Item_ID":102,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":5,"PC_ID":1,"Item_Type":"Stuff","Item_ID":103,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":6,"PC_ID":1,"Item_Type":"Stuff","Item_ID":104,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":7,"PC_ID":1,"Item_Type":"Stuff","Item_ID":105,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":8,"PC_ID":1,"Item_Type":"Stuff","Item_ID":106,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":9,"PC_ID":1,"Item_Type":"Stuff","Item_ID":107,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":10,"PC_ID":1,"Item_Type":"Stuff","Item_ID":108,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":11,"PC_ID":1,"Item_Type":"Stuff","Item_ID":109,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":12,"PC_ID":1,"Item_Type":"Stuff","Item_ID":204,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":13,"PC_ID":1,"Item_Type":"Stuff","Item_ID":207,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":14,"PC_ID":1,"Item_Type":"Stuff","Item_ID":213,"Amount":50,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":15,"PC_ID":1,"Item_Type":"Recipe","Item_ID":1000,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0}
+		{"PssItem_ID":1,"PC_ID":1,"Item_Type":"OWeapon","Item_ID":400,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":1,"Item_OptPoint":0},
+		{"PssItem_ID":2,"PC_ID":1,"Item_Type":"Potion","Item_ID":900,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":3,"PC_ID":1,"Item_Type":"Helmet","Item_ID":550,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":4,"PC_ID":1,"Item_Type":"Armor","Item_ID":600,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":5,"PC_ID":1,"Item_Type":"Gauntlet","Item_ID":650,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":6,"PC_ID":1,"Item_Type":"Boots","Item_ID":700,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":7,"PC_ID":1,"Item_Type":"Earring","Item_ID":750,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":8,"PC_ID":1,"Item_Type":"Necklace","Item_ID":800,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":9,"PC_ID":1,"Item_Type":"Ring","Item_ID":850,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":10,"PC_ID":1,"Item_Type":"Stuff","Item_ID":100,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":11,"PC_ID":1,"Item_Type":"Stuff","Item_ID":101,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":12,"PC_ID":1,"Item_Type":"Stuff","Item_ID":102,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":13,"PC_ID":1,"Item_Type":"Stuff","Item_ID":103,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":14,"PC_ID":1,"Item_Type":"Stuff","Item_ID":104,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":15,"PC_ID":1,"Item_Type":"Stuff","Item_ID":106,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":16,"PC_ID":1,"Item_Type":"Stuff","Item_ID":107,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":17,"PC_ID":1,"Item_Type":"Stuff","Item_ID":108,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":18,"PC_ID":1,"Item_Type":"Stuff","Item_ID":109,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":19,"PC_ID":1,"Item_Type":"Stuff","Item_ID":204,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":20,"PC_ID":1,"Item_Type":"Stuff","Item_ID":205,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":21,"PC_ID":1,"Item_Type":"Stuff","Item_ID":206,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":22,"PC_ID":1,"Item_Type":"Stuff","Item_ID":207,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":23,"PC_ID":1,"Item_Type":"Stuff","Item_ID":213,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":24,"PC_ID":1,"Item_Type":"Recipe","Item_ID":1000,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":25,"PC_ID":1,"Item_Type":"ETC","Item_ID":1151,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":26,"PC_ID":1,"Item_Type":"ETC","Item_ID":1152,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0}
 	]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

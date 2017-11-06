@@ -94,6 +94,17 @@ public class DataController : MonoBehaviour
         playerStatData = JsonUtility.FromJson<PlayerStatList>(PlayerStat.text);
         Debug.Log("PlayerStatLoadResourcesDEV");
         CreateGameData("pcstatData"); // DataPath에 파일생성
+
+        GetPssItemInfoReload();
+
+        TextAsset ItemDataJson = Resources.Load("MetaData/GameItem") as TextAsset;
+        // Debug.Log("ItemDataJson=" + ItemDataJson);
+        gameiteminfolist = JsonUtility.FromJson<GameItemInfoList>(ItemDataJson.text);
+        gameitemDic = new Dictionary<int, GameItemInfo>();
+        foreach (GameItemInfo item in gameiteminfolist.GameItemList)
+        {
+            gameitemDic.Add(item.Item_ID, item);
+        }
     }
     #endregion
 
@@ -157,7 +168,7 @@ public class DataController : MonoBehaviour
 
         string filePath = Application.persistentDataPath + pssItemProjectFilePath;
         string dataAsJson = File.ReadAllText(filePath);
-       // Debug.Log("DataPath 소유아이템 : " + dataAsJson);
+        Debug.Log("DataPath 소유아이템 : " + dataAsJson);
         DataPathPssItem = JsonUtility.FromJson<PssItemInfoList>(dataAsJson);
 
         pssitemDic = new Dictionary<int, PssItem>();
@@ -196,6 +207,17 @@ public class DataController : MonoBehaviour
         pssiteminfolist = JsonUtility.FromJson<PssItemInfoList>(PssItem.text);
         Debug.Log("PssItemLoadResourcesDEV");
         CreateGameData("pssItemData"); // DataPath에 파일생성
+
+        GetPssItemInfoReload();
+
+        TextAsset ItemDataJson = Resources.Load("MetaData/GameItem") as TextAsset;
+        // Debug.Log("ItemDataJson=" + ItemDataJson);
+        gameiteminfolist = JsonUtility.FromJson<GameItemInfoList>(ItemDataJson.text);
+        gameitemDic = new Dictionary<int, GameItemInfo>();
+        foreach (GameItemInfo item in gameiteminfolist.GameItemList)
+        {
+            gameitemDic.Add(item.Item_ID, item);
+        }
     }
     #endregion
 
@@ -293,8 +315,7 @@ public class DataController : MonoBehaviour
             {
                 gameitemDic.Add(item.Item_ID, item);
             }
-    
-          }
+        }
         return gameiteminfolist;
     }
     public Dictionary<int, GameItemInfo> gameitemDic;

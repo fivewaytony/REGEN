@@ -9,8 +9,9 @@ public class GameItemInfo
     public string Item_Group; 
     public string Item_Type;
     public string Item_Grade;
-    public string Item_Level;
+    public int Item_Level;
     public string Item_Name;
+    public string Item_Desc;
     public string Item_ImgName;
     public int Wpn_Attack;
     public int Wpn_AttackSec;
@@ -28,6 +29,7 @@ public class GameItemInfo
     public int EntGem_Count;
     public int Enchant_Price;
     public int Potion_Time;  //물약 지속시간 초
+    public int Box_ItemID; //재료상자안 아이템 ID
     public int Item_Price;  //아이템 판매가격
     public int Item_BuyPrice;  //아이템 구매가격
 }

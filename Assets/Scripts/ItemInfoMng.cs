@@ -11,6 +11,8 @@ public class ItemInfoMng : MonoBehaviour
     public void ShowItemInfo()
     {
         Debug.Log("ShowItemInfo");
+        Debug.Log("ItemID=" + ItemID);
+        Debug.Log("ItemAmount=" + ItemAmount);
         GameController.Instance.ShowItemInfoPanel(ItemID, ItemAmount);
     }
     

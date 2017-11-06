@@ -208,15 +208,25 @@ public class ForgeController : GameController
     public Text Stuff1Name, Stuff2Name, Stuff3Name;
     public Text Stuff1Cnt, Stuff2Cnt, Stuff3Cnt, GoldCnt;   //필요 소유 개수
     public GameObject GoCheckPan;   // [제조 버튼 Open Check Pan]
-    public GameObject MakeSliderPan; //제조 개수 슬라이드바
+
+    public GameObject MakeSliderPan; //제조 개수 슬라이드바 팬러
+    public Text MakeCnt;       //제조할 아이템개수 Text
+    public Slider MakeCountSlider; //아이템 개수 선택 슬라이더
+
+    int tempMaxMakeCount = 1; //최대 제조 가능 개수
+
     /* 제조버튼 클릭시 이용될 제조 전역 변수 */
-    int MakeitemCount = 1;  // 제조 아이템 개수
+    int MaxMakeitemCount = 1;  // 제조 가능 아이템 최대 개수
+    int MakeitemCount = 1; //재조 아이템 개수
     int Makeitemid;             //제조 할 아이템 id
     long MakeNeedGold;    //제조에 필요한 골드
     int MakeStuff1_ID=0, MakeStuff2_ID=0, MakeStuff3_ID=0;   //재료 1,2,3 id
-    int MakeStuff1_Cnt=0, MakeStuff2_Cnt=0, MakeStuff3_Cnt=0; // 재료 1,23 필요 개수
+    int MakeStuff1_Cnt=0, MakeStuff2_Cnt=0, MakeStuff3_Cnt=0; // 재료 1,2,3 필요 개수
+    int pssStuff1Cnt = 0, pssStuff2Cnt = 0, pssStuff3Cnt = 0;  // 소유 1,2,3 개수
+    int Making_Stat = 1;  //제조 재료 가지수 체크 변수
+    int Item_Level = 0;   //제조 포인트 부여 시 이용
     /* 제조버튼 클릭시 이용될 제조 전역 변수 */
-    
+
     private void ShowMakingPan(int itemid)
     {
         Makeitemid = itemid;  //제조할 아이템 ID
@@ -224,10 +234,11 @@ public class ForgeController : GameController
         GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid]; //전체 아이템 정보
         MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Makeitem.Item_ImgName);
 
-        string Item_Level = Makeitem.Item_Level;
+        string Item_Grade = Makeitem.Item_Grade;
+        Item_Level = Makeitem.Item_Level;  
         string Item_Name = Makeitem.Item_Name;
-        int Making_Stat = Makeitem.Making_Stat;  // 1:재료1개, 2 : 재료2개, 3 : 재료3개
-        switch (Item_Level)
+        Making_Stat = Makeitem.Making_Stat;  // 1:재료1개, 2 : 재료2개, 3 : 재료3개
+        switch (Item_Grade)
         {
             case "D":
                 Item_Name = "<color=white>" + Item_Name + "</color>";
@@ -290,19 +301,20 @@ public class ForgeController : GameController
         }
         MakeItemDesc.transform.GetComponent<Text>().text = Item_DescStr; //아이템 설명
 
-        #region [필요 / 소유 아이템, 골드 셋팅]
+         #region [필요 / 소유 아이템, 골드 셋팅]
         MakeStuff1_ID = Makeitem.Stuff1_ID;         //1번 재료의 ID
         MakeStuff1_Cnt = Makeitem.Stuff1_Count;  //1번 재료의 필요 개수
         MakeStuff2_ID = Makeitem.Stuff2_ID;         //2번 재료의 ID
         MakeStuff2_Cnt = Makeitem.Stuff2_Count;     //2번 재료의 필요 개수
         MakeStuff3_ID = Makeitem.Stuff3_ID;          //3번 재료의 ID
         MakeStuff3_Cnt = Makeitem.Stuff3_Count;     //3번 재료의 필요 개수
-        MakeNeedGold = Makeitem.Making_Price;     //필요 골드
+        MakeNeedGold = Makeitem.Making_Price;     //필요 골드 
 
         /*필요아이템 개수 따른 체크*/
         GameItemInfo Stuff1_itemInfo = DataController.Instance.gameitemDic[MakeStuff1_ID];
         Stuff1Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff1_itemInfo.Item_ImgName);
         Stuff1Name.transform.GetComponent<Text>().text = Stuff1_itemInfo.Item_Name.ToString();
+
         if (Making_Stat > 1)  //재료2개 필요
         {
             GameItemInfo Stuff2_itemInfo = DataController.Instance.gameitemDic[MakeStuff2_ID];
@@ -315,12 +327,32 @@ public class ForgeController : GameController
             Stuff3Img.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + Stuff3_itemInfo.Item_ImgName);
             Stuff3Name.transform.GetComponent<Text>().text = Stuff3_itemInfo.Item_Name.ToString();
         }
+                
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_ID == MakeStuff1_ID)//재료1 있으면   
+            {      
+                pssStuff1Cnt = passitems[i].Amount;    //1번 재료의 소유 개수
+            }
+            if (passitems[i].Item_ID == MakeStuff2_ID)//재료2 있으면   
+            {
+                pssStuff2Cnt = passitems[i].Amount;    //2번 재료의 소유 개수
+            }
+            if (passitems[i].Item_ID == MakeStuff3_ID)//재료3 있으면   
+            {
+                pssStuff3Cnt = passitems[i].Amount;    //3번 재료의 소유 개수
+            }
+        }
 
         bool chkmstat1 = true;  //1번재료 조건
-        PssItem pssStuff1 = DataController.Instance.pssitemDic[MakeStuff1_ID];
-        int pssStuff1Cnt = pssStuff1.Amount;  //1번 재료의 소유 개수
+        /* 최대 제조개수 1번재료*/
+        double MaxCntStuff1 = pssStuff1Cnt / MakeStuff1_Cnt;
+        int MaxMakeCount1 = Convert.ToInt32(MaxCntStuff1);
+        tempMaxMakeCount = MaxMakeCount1;
+
         Stuff1Cnt.transform.GetComponent<Text>().text = pssStuff1Cnt.ToString() + " / " + MakeStuff1_Cnt.ToString();
-        if (pssStuff1Cnt >= MakeStuff1_Cnt * MakeitemCount)
+        if (pssStuff1Cnt >= MakeStuff1_Cnt)
         {
             chkmstat1 = true;
         }
@@ -328,13 +360,20 @@ public class ForgeController : GameController
         {
             chkmstat1 = false;
         }
+
         bool chkmstat2 = true;  //2번재료 조건
         if (Making_Stat > 1) //재료2개 필요
         {
-            PssItem pssStuff2 = DataController.Instance.pssitemDic[MakeStuff2_ID];
-            int pssStuff2Cnt = pssStuff2.Amount; //2번 재료의 소유 개수
+        /* 최대 제조개수 2번재료*/
+            double MaxCntStuff2 = pssStuff2Cnt / MakeStuff2_Cnt;
+            int MaxMakeCount2 = Convert.ToInt32(MaxCntStuff2);
+            if (tempMaxMakeCount > MaxMakeCount2)
+            {
+                tempMaxMakeCount = MaxMakeCount2;
+            }
+
             Stuff2Cnt.transform.GetComponent<Text>().text = pssStuff2Cnt.ToString() + " / " + MakeStuff2_Cnt.ToString();
-            if (pssStuff2Cnt >= MakeStuff2_Cnt * MakeitemCount)
+            if (pssStuff2Cnt >= MakeStuff2_Cnt)
             {
                 chkmstat2 = true;
             }
@@ -346,10 +385,15 @@ public class ForgeController : GameController
         bool chkmstat3 = true;  //3번재료 조건
         if (Making_Stat > 2) //재료3개 필요
         {
-            PssItem pssStuff3 = DataController.Instance.pssitemDic[MakeStuff3_ID];
-            int pssStuff3Cnt = pssStuff3.Amount; //3번 재료의 소유 개수
+             /* 최대 제조개수 3번 재료*/
+            double MaxCntStuff3 = pssStuff3Cnt / MakeStuff3_Cnt;
+            int MaxMakeCount3 = Convert.ToInt32(MaxCntStuff3);
+            if (tempMaxMakeCount > MaxMakeCount3)
+            {
+                tempMaxMakeCount = MaxMakeCount3;
+            }
             Stuff3Cnt.transform.GetComponent<Text>().text = pssStuff3Cnt.ToString() + " / " + MakeStuff3_Cnt.ToString();
-            if (pssStuff3Cnt >= MakeStuff3_Cnt * MakeitemCount)
+            if (pssStuff3Cnt >= MakeStuff3_Cnt)
             {
                 chkmstat3 = true;
             }
@@ -358,9 +402,17 @@ public class ForgeController : GameController
                 chkmstat3 = false;
             }
         }
+       
         bool chkgold = true;
         long pssGold = Convert.ToInt64(PC_Gold);  //소유 골드
-        if (pssGold >= MakeNeedGold * MakeitemCount)
+        /*최대 제조개수 골드 Check */
+        double MaxCntGold = pssGold / MakeNeedGold;
+        int MaxMakeCountGold = Convert.ToInt32(MaxCntGold);
+        if (tempMaxMakeCount > MaxMakeCountGold)
+        {
+            tempMaxMakeCount = MaxMakeCountGold;
+        }
+        if (pssGold >= MakeNeedGold)
         {
             chkgold = true;
         }
@@ -368,10 +420,24 @@ public class ForgeController : GameController
         {
             chkgold = false;
         }
-        GoldCnt.transform.GetComponent<Text>().text = fPC_Gold + " / " + MakeNeedGold.ToString();
-
+        MaxMakeitemCount = tempMaxMakeCount; //최대 제조가능 개수 정의
+        if (MaxMakeitemCount == 0)
+        {
+            MaxMakeitemCount = 1;
+        }
+        string formatNeedGold = String.Format("{0:n0}", Convert.ToDecimal(MakeNeedGold));
+        GoldCnt.transform.GetComponent<Text>().text = formatPC_Gold + " / " + formatNeedGold;
+        
         #endregion
+
         // 몇개까지 만들 수 있는지를 계산
+        /*개수 Silder*/
+        MakeCountSlider.value = 1;
+        MakeCountSlider.minValue = 1;   //1개부터
+        MakeCountSlider.maxValue = MaxMakeitemCount;  //제조가능 개수
+        MakeCnt.text = MakeCountSlider.value.ToString();
+        MakeitemCount = Convert.ToInt16(MakeCnt.text);
+
         Debug.Log("chkmstat1=" + chkmstat1);
         Debug.Log("chkmstat2=" + chkmstat2);
         Debug.Log("chkmstat3=" + chkmstat3);
@@ -384,6 +450,25 @@ public class ForgeController : GameController
         {
             GoCheckPan.gameObject.SetActive(true);
         }
+    }
+    #endregion
+
+    #region [ 제조 아이템 개수 Silder 변경하면 개수 표시]
+    public void MakeItemCountSilderChange()
+    {
+        MakeCnt.text = MakeCountSlider.value.ToString();
+        MakeitemCount = Convert.ToInt16(MakeCnt.text);
+        Stuff1Cnt.transform.GetComponent<Text>().text = pssStuff1Cnt.ToString() + " / " + (MakeStuff1_Cnt * MakeitemCount).ToString();
+        if (Making_Stat > 1)
+        {
+            Stuff2Cnt.transform.GetComponent<Text>().text = pssStuff2Cnt.ToString() + " / " + (MakeStuff1_Cnt * MakeitemCount).ToString();
+        }
+        if (Making_Stat > 2)
+        {
+            Stuff3Cnt.transform.GetComponent<Text>().text = pssStuff3Cnt.ToString() + " / " + (MakeStuff1_Cnt * MakeitemCount).ToString();
+        }
+        string formatNeedGold = String.Format("{0:n0}", Convert.ToDecimal(MakeNeedGold * Convert.ToInt16(MakeCnt.text)));
+        GoldCnt.transform.GetComponent<Text>().text = formatPC_Gold + " / " + formatNeedGold;
     }
     #endregion
     
@@ -421,10 +506,15 @@ public class ForgeController : GameController
         }
         if (isHaveItem == false)                //소유하지 않은 아이템은 생성
         {
-            //3. 여기서 MakeItemTypeName 에 따른 옵션 랜덤생성해서..넣기 일단. 임시
+            // 옵션 랜덤생성
             int tempOptType = 0; //힘(1),체력(2),민첩(3)
-            int tempOptPoint = 0; //Point (1,2,3,4,5)
-            //(소유아이템 ID, player_id,아아템타입,아이템아이디,개수,장착여부,강화도,옵션타입(힘:S, 체력:C, 민첩), 옵션 포인트)
+            int tempOptPoint = 0; //Point (-3 ~ 5)
+            if (MakeItemGroupName == "Weapon" || MakeItemGroupName == "Protect"  || MakeItemGroupName == "Acce")
+            {
+                tempOptType = CommonRnd(1, 4);
+                tempOptPoint = CommonRnd(-3, 6);
+            }
+            //(소유아이템 ID, player_id,아아템타입,아이템아이디,개수,장착여부,강화도,옵션타입(힘:1, 체력:2, 민첩3), 옵션 포인트)
             passitems.Add(new PssItem(passitems.Count + 1, 1, MakeItemTypeName, Makeitemid, MakeitemCount, 0, 0, tempOptType, tempOptPoint));
         }
 
@@ -433,12 +523,21 @@ public class ForgeController : GameController
         DataController.Instance.UpdateGameDataPssItem(pssiteminfolist); //소유 아이템 파일 다시 쓰기
         DataController.Instance.GetPssItemInfoReload();  // 소유 아이템 파일 다시 읽기
 
+        //플레이어 제조레벨 Update
+        List<PlayerStat> playerstats = DataController.Instance.GetPlayerStatInfo().StatList;
+        foreach (var ps in playerstats)
+        {
+            ps.PC_MakingLevel = ps.PC_MakingLevel + (Item_Level * 5);
+        }
+        PlayerStatList playerstatlist = new PlayerStatList();
+        playerstatlist.SetPlayerStatList = playerstats;
+        DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
+        PlayerStatLoad();
+
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
         /*
          * 체크사항
-         * 1. 제조 재료가 1~3개 체크(Making_Stat 값으로) 재조 재료 슬롯 초기화 드 
-         * 2. 각 필요재료 개수와 소유재료 개수를 가각 체크해서 최대 몇개까지 만들 수 있는지 체크해 슬라이드 벨류 결정(강화 아이템은 무조건 1개)
-         * --> 각각 4개 조건(골드포함) 각각 최소 생성 가능 개수가 전체 생성 가능개수로 결정 후 슬라이드 벨류로 결정
+         //제조포인트 업그레이드
          * 
          */
     }
@@ -458,10 +557,6 @@ public class ForgeController : GameController
                 {
                     passitems.RemoveAt(i);
                 }
-                PssItemInfoList pssiteminfolist = new PssItemInfoList();
-                pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
-                DataController.Instance.UpdateGameDataPssItem(pssiteminfolist); // 소유 아이템 파일 다시 쓰기
-                DataController.Instance.GetPssItemInfoReload();  // 소유 아이템 파일 다시 읽기
                 break;
             }
         }

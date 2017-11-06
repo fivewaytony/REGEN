@@ -17,8 +17,6 @@ public class InventoryController : GameController
     public Text EquItemINfoNameText, EquItemInfoDescText;
     public GameObject EquItemInfoBackPanel;    //장착 아이템 상세보기 panel
         
-
-    private int pssItemID;
     public static InventoryController invenInstance;
 
     private void Awake()
@@ -46,7 +44,14 @@ public class InventoryController : GameController
             {
                 if (passitems[i].Item_ID == item.Item_ID)
                 {
-                    if (item.Item_Type == "Weapon" && passitems[i].Equip_Stat == 1)
+                    if (item.Item_Type == "OWeapon" && passitems[i].Equip_Stat == 1)
+                    {
+                        Weapon.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
+                        Weapon.transform.GetChild(1).GetComponent<Text>().text = "+" + passitems[i].Item_Ent;
+                        AtcNum = AtcNum + passitems[i].Item_Ent + item.Wpn_Attack; //공격력
+                        Weapon.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => ShowEquItemInfoPanel(item.Item_ID));
+                    }
+                    if (item.Item_Type == "TWeapon" && passitems[i].Equip_Stat == 1)
                     {
                         Weapon.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/" + item.Item_ImgName);
                         Weapon.transform.GetChild(1).GetComponent<Text>().text = "+" + passitems[i].Item_Ent;
@@ -114,12 +119,12 @@ public class InventoryController : GameController
         AtcNum = AtcNum + PC_Str; //공격력
         PrtNum = PrtNum + PC_Con; //방어력
         AvoNum = AvoNum + PC_Dex;    //민첩
-        PlayerInfoTextBG.transform.GetChild(0).GetComponent<Text>().text = StrNum.ToString();
-        PlayerInfoTextBG.transform.GetChild(1).GetComponent<Text>().text = ConNum.ToString();
-        PlayerInfoTextBG.transform.GetChild(2).GetComponent<Text>().text = DexNum.ToString();
-        PlayerInfoTextBG.transform.GetChild(3).GetComponent<Text>().text = AtcNum.ToString();
-        PlayerInfoTextBG.transform.GetChild(4).GetComponent<Text>().text = PrtNum.ToString();
-        PlayerInfoTextBG.transform.GetChild(5).GetComponent<Text>().text = AvoNum.ToString();
+        PlayerInfoTextBG.transform.GetChild(0).GetComponent<Text>().text = "<color=#0000ff>" + StrNum.ToString() + "</color>";
+        PlayerInfoTextBG.transform.GetChild(1).GetComponent<Text>().text = "<color=#0000ff>" + ConNum.ToString() + "</color>";
+        PlayerInfoTextBG.transform.GetChild(2).GetComponent<Text>().text = "<color=#0000ff>" + DexNum.ToString() + "</color>";
+        PlayerInfoTextBG.transform.GetChild(3).GetComponent<Text>().text = "<color=#0000ff>" + AtcNum.ToString() + "</color>";
+        PlayerInfoTextBG.transform.GetChild(4).GetComponent<Text>().text = "<color=#0000ff>" + PrtNum.ToString() + "</color>";
+        PlayerInfoTextBG.transform.GetChild(5).GetComponent<Text>().text = "<color=#0000ff>" + AvoNum.ToString() + "</color>";
     }
     #endregion
     
