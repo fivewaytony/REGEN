@@ -13,8 +13,7 @@ public class ForgeController : GameController
     public GameObject btnWeapon, btnProtect, btnAcce, btnPotion, btnEtc;
     public RectTransform TypeParent, ListParent;
     public GameObject prefabTypeBtn, prefabListBtn;
-    public Text MakingLevel;
-
+    
     
     private string MakeItemGroupName;//생성할 아이템 GroupName 전역변수(Weapon,  Protect, Acce...)
     private string MakeItemTypeName;//생성할 아이템 TypeName 전역변수(OWeapon,  TWeapon,  Helmet,,Armor, Stuff...)
@@ -34,8 +33,8 @@ public class ForgeController : GameController
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
         ClickGroupBtn(); //아이템 그룹 선택
-        MakingLevel.text = "[제조 LV. "+PC_MakingLevel.ToString()+"]";  //제조 레벨
-     }
+        MakingLevel.text = "[제조 LV. " + PC_MakingLevel.ToString() + "]";  //제조 레벨
+    }
         
     #region [아이템 그룹 버튼 클릭]
     public void ClickGroupBtn()
@@ -124,7 +123,7 @@ public class ForgeController : GameController
                 }
                 break;
             case ItemGroup.Etc:
-                string[] arrEctType = { "사냥", "채광", "채집", "기타" };
+                string[] arrEctType = { "사냥", "채광", "기타" };
                 for (int i = 0; i < arrEctType.Length; i++)
                 {
                     GameObject goButton = (GameObject)Instantiate(prefabTypeBtn);
@@ -176,6 +175,27 @@ public class ForgeController : GameController
                            select stype;
             Showtypelist(typelist);
          }
+        else if (gName.ToString() == "Potion" && typeName.ToString() == "Hunting")  //물약 - 사냥
+        {
+            var typelist = from stype in itemList
+                           where stype.Making_Stat > 0 && stype.Item_Type == "HPotion"
+                           select stype;
+            Showtypelist(typelist);
+        }
+        else if (gName.ToString() == "Potion" && typeName.ToString() == "Mining")  //물약 - 채광
+        {
+            var typelist = from stype in itemList
+                           where stype.Making_Stat > 0 && stype.Item_Type == "MPotion"
+                           select stype;
+            Showtypelist(typelist);
+        }
+        else if (gName.ToString() == "Potion" && typeName.ToString() == "Foraging")  //물약 - 채집
+        {
+            var typelist = from stype in itemList
+                           where stype.Item_Type == "FPotion"
+                           select stype;
+            Showtypelist(typelist);
+        }
         else if(gName.ToString() == "Etc" && typeName.ToString() == "Hunting")  //기타 - 사냥
         {
             var typelist = from stype in itemList
@@ -183,7 +203,21 @@ public class ForgeController : GameController
                            select stype;
             Showtypelist(typelist);
         }
-     }
+        else if (gName.ToString() == "Etc" && typeName.ToString() == "Mining")  //기타 - 채광
+        {
+            var typelist = from stype in itemList
+                           where stype.Item_Type == "Stuff" && stype.Making_Stat > 0 && stype.Item_ID >= 200 && stype.Item_ID <300
+                           select stype;
+            Showtypelist(typelist);
+        }
+        else if (gName.ToString() == "Etc" && typeName.ToString() == "Special")  //기타 - 기타(강화석)
+        {
+            var typelist = from stype in itemList
+                           where stype.Making_Stat > 0 && stype.Item_ID >= 1050 && stype.Item_ID < 1100
+                           select stype;
+            Showtypelist(typelist);
+        }
+    }
     #endregion
 
     #region [제조할 아이템 리스트 생성 공통 Method]
@@ -270,11 +304,11 @@ public class ForgeController : GameController
                 MakeSliderPan.gameObject.SetActive(false); 
                 break;
             case "Protect":
-                Item_DescStr = "방어력 : " + Makeitem.Prt_Degree + "\n옵션 : 체력 ?";
+                Item_DescStr = "방어력 : " + Makeitem.Prt_Degree + "\n옵션 : 힘 ?,체력 ?";
                 MakeSliderPan.gameObject.SetActive(false);
                 break;
             case "Acce":
-                Item_DescStr = "회피력 : " + Makeitem.Ace_Degree + "\n옵션 : 민첩 ?";
+                Item_DescStr = "회피력 : " + Makeitem.Ace_Degree + "\n옵션 : 힘 ?,체력 ?";
                 MakeSliderPan.gameObject.SetActive(false);
                 break;
             case "Potion": //물약의 설명 추가
@@ -515,7 +549,7 @@ public class ForgeController : GameController
                 tempOptPoint = CommonRnd(-3, 6);
             }
             //(소유아이템 ID, player_id,아아템타입,아이템아이디,개수,장착여부,강화도,옵션타입(힘:1, 체력:2, 민첩3), 옵션 포인트)
-            passitems.Add(new PssItem(passitems.Count + 1, 1, MakeItemTypeName, Makeitemid, MakeitemCount, 0, 0, tempOptType, tempOptPoint));
+            passitems.Add(new PssItem(passitems.Count + 1, 1, MakeItemGroupName, MakeItemTypeName, Makeitemid, MakeitemCount, 0, 0, tempOptType, tempOptPoint));
         }
 
         PssItemInfoList pssiteminfolist = new PssItemInfoList();

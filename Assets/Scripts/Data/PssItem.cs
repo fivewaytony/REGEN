@@ -7,6 +7,7 @@ public class PssItem
 {
     public int PssItem_ID = 1;
     public int PC_ID = 1;
+    public string Item_Group;
     public string Item_Type;
     public int Item_ID = 1;
     public int Amount;
@@ -15,10 +16,11 @@ public class PssItem
     public int Item_OptType;
     public int Item_OptPoint;
 
-    public PssItem(int pss_id, int pc_id, string gi_type,  int item_id, int amount, int equip_stat, int item_ent, int item_opttype, int item_optpoint)
+    public PssItem(int pss_id, int pc_id, string item_group, string gi_type,  int item_id, int amount, int equip_stat, int item_ent, int item_opttype, int item_optpoint)
     {
         PssItem_ID = pss_id;
         PC_ID = pc_id;
+        Item_Group = item_group;
         Item_Type = gi_type;
         Item_ID = item_id;
         Amount = amount;

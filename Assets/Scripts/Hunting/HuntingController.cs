@@ -324,7 +324,7 @@ public class HuntingController : GameController
             }
             if (isHaveType == false)
             {
-               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0, 0, 0, 0));
+               passitems.Add(new PssItem(passitems.Count + 1, 1, "Stuff", "Stuff", Convert.ToInt32(arrDropItemID[i]), 1, 0, 0, 0, 0));
             }
             isHaveType = false;
 

@@ -1845,7 +1845,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 17, y: -14}
+  m_AnchoredPosition: {x: 24.3, y: -15.9}
   m_SizeDelta: {x: 35, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &385688925
@@ -7597,6 +7597,7 @@ MonoBehaviour:
   LevelBarFill: {fileID: 1112799236}
   GoldText: {fileID: 929808622}
   DiaText: {fileID: 43665893}
+  MakingLevel: {fileID: 0}
   FieldChoiceBack: {fileID: 0}
   FieldChoiceContent: {fileID: 0}
   ChoiceFieldID: 0
@@ -7609,6 +7610,7 @@ MonoBehaviour:
   ItemCountBarFill: {fileID: 0}
   ItemCountTxt: {fileID: 593429819}
   ItemCountSilder: {fileID: 1440489872}
+  EntTxt: {fileID: 0}
   SceneName: 
   Weapon: {fileID: 1394796727}
   Helmet: {fileID: 773799739}

@@ -24,6 +24,7 @@ public class ShopController : GameController
         // Retrieve the name of this scene.
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
+        MakingLevel.text = "[제조 LV. " + PC_MakingLevel.ToString() + "]";  //제조 레벨
     }
 
     // Update is called once per frame

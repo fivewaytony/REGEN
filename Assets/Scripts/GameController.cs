@@ -34,6 +34,8 @@ public class GameController : MonoBehaviour {
     protected int vPC_Dia;
     protected string fPC_Dia = string.Empty;
 
+    public Text MakingLevel; //제조레벨
+
     protected int PssItem_ID;
     protected string GameItem_Type;
     protected int Amount;
@@ -68,6 +70,8 @@ public class GameController : MonoBehaviour {
     public Image ItemCountBarFill;  //아이템 개수 설정 bar
     public Text ItemCountTxt;       //아이템개수 Text
     public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
+    public Text EntTxt;  //강화도 표시
+    /// </summary>
     public string SceneName = string.Empty;
     
 #if UNITY_IOS
@@ -78,7 +82,7 @@ public class GameController : MonoBehaviour {
     private void Awake()
     {
        // DataController.Instance.PlayerStatLoadResourcesDEV();
-       // DataController.Instance.PssItemLoadResourcesDEV();
+        //DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
@@ -211,7 +215,7 @@ public class GameController : MonoBehaviour {
         PC_Str = PC_Str + itemStr;          //플레이어  힘 + 아이템 힘
         PC_Con = PC_Con + itemCon;      //플레이어  체력 + 아이템 체력
         PC_Dex = PC_Dex + itemDex;    //플레이어  민첩 + 아이템 민첩
-
+      
     }
     #endregion
 
@@ -334,6 +338,11 @@ public class GameController : MonoBehaviour {
                         ecolor.a = 1f;
                         slots[i].transform.GetChild(2).GetComponent<Image>().color = ecolor;
                         slots[i].transform.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/equline");
+                    }
+                    //강화도 표시
+                    if (passitems[i].Item_Group== "Weapon" || passitems[i].Item_Group == "Protect" || passitems[i].Item_Group == "Acce")
+                    {
+                        slots[i].transform.GetChild(3).GetComponent<Text>().text = "+"+passitems[i].Item_Ent.ToString();
                     }
                     break;
                 }
@@ -514,7 +523,7 @@ public class GameController : MonoBehaviour {
     //기타
     public enum EtcType
     {
-        Hunting = 1, Mining, Foraging, Special
+        Hunting = 1, Mining, Special
     }
     
     #endregion
