@@ -1080,6 +1080,7 @@ MonoBehaviour:
   ItemCountBarFill: {fileID: 0}
   ItemCountTxt: {fileID: 424061116}
   ItemCountSilder: {fileID: 1032192279}
+  EntTxt: {fileID: 0}
   SceneName: 
 --- !u!1 &539444283
 GameObject:
@@ -3551,7 +3552,7 @@ GameObject:
   - component: {fileID: 1590445190}
   - component: {fileID: 1590445189}
   m_Layer: 5
-  m_Name: SlotsScroll View
+  m_Name: SlotsScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

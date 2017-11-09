@@ -558,8 +558,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 109523816}
   m_HandleRect: {fileID: 0}
   m_Direction: 2
-  m_Value: 0.9999931
-  m_Size: 0.96797067
+  m_Value: 0.99999654
+  m_Size: 0.9679707
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5931,7 +5931,7 @@ GameObject:
   - component: {fileID: 1264165010}
   - component: {fileID: 1264165009}
   m_Layer: 5
-  m_Name: SlotsScroll View
+  m_Name: SlotsScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7295,6 +7295,7 @@ MonoBehaviour:
   ItemCountBarFill: {fileID: 0}
   ItemCountTxt: {fileID: 412010382}
   ItemCountSilder: {fileID: 1078620952}
+  EntTxt: {fileID: 0}
   SceneName: 
   btnWeapon: {fileID: 1391310114}
   btnProtect: {fileID: 175053127}
@@ -7840,7 +7841,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -307.1}
+  m_AnchoredPosition: {x: 0, y: -306}
   m_SizeDelta: {x: 0, y: 430.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1640049312
@@ -8563,7 +8564,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 3
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.88812095
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

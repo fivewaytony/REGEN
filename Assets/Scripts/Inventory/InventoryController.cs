@@ -14,9 +14,11 @@ public class InventoryController : GameController
     public GameObject PlayerInfoTextBG;  //플레이어 스텟 
     private int StrNum, ConNum, DexNum, AtcNum, PrtNum, AvoNum;
 
-    public Text EquItemINfoNameText, EquItemInfoDescText;
+    public Text EquItemInfoNameText, EquItemInfoDescText;
     public GameObject EquItemInfoBackPanel;    //장착 아이템 상세보기 panel
-        
+    public GameObject EnchantBG; //장착 아이템 강화하기 panel
+    private int EnchantItemID;  //강화 아이템 ID 전역
+
     public static InventoryController invenInstance;
 
     private void Awake()
@@ -140,25 +142,53 @@ public class InventoryController : GameController
             PssItem pssitem = DataController.Instance.pssitemDic[EquItemID];
             GameItemInfo item = DataController.Instance.gameitemDic[EquItemID];                //전체 아이템 정보
             string equDesc = string.Empty;
-            if (pssitem.Item_Type == "Weapon")
+            if (pssitem.Item_Group == "Weapon")
             {
                 equDesc = "공격 : " + item.Wpn_Attack;
             }
-            if (pssitem.Item_Type == "Helmet" || pssitem.Item_Type == "Armor" || pssitem.Item_Type == "Boots" || pssitem.Item_Type == "Gauntlet")
+            if (pssitem.Item_Group== "Protect")
             {
                 equDesc = "방어 : " + item.Prt_Degree;
             }
-            if (pssitem.Item_Type == "Necklace" || pssitem.Item_Type == "Earring" || pssitem.Item_Type == "Ring")
+            if (pssitem.Item_Group == "Acce")
             {
                 equDesc = "회피 : " + item.Ace_Degree;
             }
             equDesc = equDesc + "\n강화 : +" + pssitem.Item_Ent;
 
-            EquItemINfoNameText.text = item.Item_Name;
+            EquItemInfoNameText.text = item.Item_Name;
             string DescStr = string.Empty;
-            EquItemInfoDescText.text = equDesc + "\n판매가격 : " + item.Item_Price.ToString() + "골드"+ "\n\n[강화하기]";
-           
-         //강화는 인벤토리에서 바로 진행
+            /** 옵션 표시**/
+            int optType = pssitem.Item_OptType;
+            string optPoint = pssitem.Item_OptPoint.ToString();
+            string strColor1 = string.Empty;
+            string strColor2 = strColor2 = "</color>"; ;
+            if (Convert.ToInt16(optPoint) < 0)
+            {
+                strColor1 = "<color=#ff0000>";
+            }
+            else
+            {
+                strColor1 = "<color=#0000ff>";
+                optPoint = "+" + optPoint;
+            }
+            switch (optType)
+            {
+                case 1:
+                    DescStr = DescStr + "\n<color=#000000>힘 : </color>" + strColor1 + optPoint + strColor2;
+                    break;
+                case 2:
+                    DescStr = DescStr + "\n<color=#000000>체력 : </color>" + strColor1 + optPoint + strColor2;
+                    break;
+                default:
+                    DescStr = DescStr + "\n<color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
+                    break;
+            }
+
+            equDesc = equDesc + DescStr;
+            EquItemInfoDescText.text = equDesc + "\n판매가격 : " + item.Item_Price.ToString() + "G";
+
+            EnchantItemID = item.Item_ID;//강화 아이템 아이디 전역변수
         }
     }
 
@@ -167,6 +197,21 @@ public class InventoryController : GameController
     {
         EquItemInfoBackPanel.gameObject.SetActive(false);
     }
+
+    //장착 아이템 강화 Panel 열기
+    public void ShowEnchantBG()
+    {
+        EquItemInfoBackPanel.gameObject.SetActive(false);
+        EnchantBG.gameObject.SetActive(true);
+        Debug.Log("EnchantItemID=" + EnchantItemID);
+    }
+
+    //장착 아이템 강화 Panel 닫기
+    public void CloseEnchantBG()
+    {
+        EnchantBG.gameObject.SetActive(false);
+    }
+
     #endregion
 
     //#region [인벤토리 아이템 상세보기 패널]
@@ -175,7 +220,7 @@ public class InventoryController : GameController
     //    base.ShowItemInfoPanel(ItemID, ItemAmount);
     //}
     //#endregion
-    
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

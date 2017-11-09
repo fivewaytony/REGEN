@@ -66,6 +66,7 @@ public class GameController : MonoBehaviour {
 
     public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
     public GameObject ItemInfoSellPanel;    //아이템 팔기 panel
+  //  public GameObject EquipPanel;            // 아이템 장착하기 Panel
     public Text ItemInfoNameText, ItemInfoDescText; //아이템 정보
     public Image ItemCountBarFill;  //아이템 개수 설정 bar
     public Text ItemCountTxt;       //아이템개수 Text
@@ -82,7 +83,7 @@ public class GameController : MonoBehaviour {
     private void Awake()
     {
        // DataController.Instance.PlayerStatLoadResourcesDEV();
-        //DataController.Instance.PssItemLoadResourcesDEV();
+       // DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
@@ -294,7 +295,7 @@ public class GameController : MonoBehaviour {
          sv.gameObject.SetActive(true);
         */
         Debug.Log("invenslot");
-        GameObject sv = GameObject.Find("SlotsScroll View");
+        GameObject sv = GameObject.Find("SlotsScrollView");
         sv.gameObject.SetActive(false);
 
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
@@ -364,39 +365,43 @@ public class GameController : MonoBehaviour {
             PssItem pssitem = DataController.Instance.pssitemDic[ItemID];
             GameItemInfo item = DataController.Instance.gameitemDic[ItemID];                //전체 아이템 정보
             string equDesc = string.Empty;
-            if (pssitem.Equip_Stat == 1) //장착아이템 (판매X))
+            if (pssitem.Item_Group == "Weapon" || pssitem.Item_Group == "Protect" || pssitem.Item_Group == "Acce")
             {
-                ItemInfoSellPanel.gameObject.SetActive(false);
-                if (pssitem.Item_Type == "OWeapon" || pssitem.Item_Type == "TWeapon")
+                if (pssitem.Item_Group == "Weapon")
                 {
                     equDesc = "공격 : " + item.Wpn_Attack;
                 }
-                if (pssitem.Item_Type == "Helmet" || pssitem.Item_Type == "Armor" || pssitem.Item_Type == "Boots" || pssitem.Item_Type == "Gauntlet")
+                if (pssitem.Item_Group == "Protect")
                 {
                     equDesc = "방어 : " + item.Prt_Degree;
                 }
-                if (pssitem.Item_Type == "Necklace" || pssitem.Item_Type == "Earring" || pssitem.Item_Type == "Ring")
+                if (pssitem.Item_Group == "Acce")
                 {
                     equDesc = "회피 : " + item.Ace_Degree;
                 }
-                equDesc = equDesc + "\n강화 : +" + pssitem.Item_Ent;
+                equDesc = equDesc + "  강화 : +" + pssitem.Item_Ent;
+                if (pssitem.Equip_Stat == 1) //장착아이템 (판매X))
+                {
+                    ItemInfoSellPanel.gameObject.SetActive(false);
+                  //      EquipPanel.gameObject.SetActive(false);
+                }
+                else
+                {
+                    //장착하기 링크 만들기
+                //    EquipPanel.gameObject.SetActive(true);
+                    ItemInfoSellPanel.gameObject.SetActive(true);
+                }
             }
-            else
-            {
-                //장착하기 링크 만들기
-
-                ItemInfoSellPanel.gameObject.SetActive(true);
-            }
-
             ItemInfoNameText.text = item.Item_Name;
-            string DescStr = string.Empty;
-            DescStr = equDesc + "\n판매가격 : " + item.Item_Price.ToString() + "골드";
+
+            string DescStr = string.Empty;    
 
             if (item.Item_Type == "Stuff")
             {
                 DescStr = DescStr + "\n아이템 제조의 재료로 필요합니다.";
+                ItemInfoSellPanel.gameObject.SetActive(true);
             }
-            else if (pssitem.Item_Type == "OWeapon" || pssitem.Item_Type == "TWeapon")
+            else if (pssitem.Item_Group == "Weapon" || pssitem.Item_Group == "Protect" || pssitem.Item_Group == "Acce")
             {
                 int optType = pssitem.Item_OptType;
                 string optPoint = pssitem.Item_OptPoint.ToString();
@@ -414,16 +419,17 @@ public class GameController : MonoBehaviour {
                 switch (optType)
                 {
                     case 1:
-                        DescStr = DescStr + "\n<color=#000000>힘 : </color>" + strColor1 + optPoint + strColor2;
+                        DescStr = DescStr + "  <color=#000000>힘 : </color>" + strColor1 + optPoint + strColor2;
                         break;
                     case 2:
-                        DescStr = DescStr + "\n<color=#000000>체력 : </color>" + strColor1 + optPoint + strColor2;
+                        DescStr = DescStr + "  <color=#000000>체력 : </color>" + strColor1 + optPoint + strColor2;
                         break;
                     default:
-                        DescStr = DescStr + "\n<color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
+                        DescStr = DescStr + "  <color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
                         break;
                 }
             }
+            DescStr = equDesc+ DescStr + "\n판매가격 : " + item.Item_Price.ToString() + "G";
             ItemInfoDescText.text = DescStr;
 
             /*개수 Silder*/
