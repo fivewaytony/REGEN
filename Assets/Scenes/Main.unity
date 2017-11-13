@@ -356,6 +356,14 @@ Prefab:
       propertyPath: m_Text
       value: OK
       objectReference: {fileID: 0}
+    - target: {fileID: 1600911542002506, guid: 48ae01f53fc419d4597bd41508e44803, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1252611988637216, guid: 48ae01f53fc419d4597bd41508e44803, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 48ae01f53fc419d4597bd41508e44803, type: 2}
   m_IsPrefabParent: 0
@@ -1180,6 +1188,7 @@ MonoBehaviour:
   LevelBarFill: {fileID: 423447869}
   GoldText: {fileID: 856150934}
   DiaText: {fileID: 1639386331}
+  MakingLevel: {fileID: 0}
   FieldChoiceBack: {fileID: 1963135224}
   FieldChoiceContent: {fileID: 1744417748}
   ChoiceFieldID: 0
@@ -1187,12 +1196,16 @@ MonoBehaviour:
   slots: []
   ItemInfoBackPanel: {fileID: 0}
   ItemInfoSellPanel: {fileID: 0}
+  EquipPanel: {fileID: 0}
   ItemInfoNameText: {fileID: 0}
   ItemInfoDescText: {fileID: 0}
   ItemCountBarFill: {fileID: 0}
   ItemCountTxt: {fileID: 0}
   ItemCountSilder: {fileID: 0}
+  EntTxt: {fileID: 0}
+  btnEqu: {fileID: 0}
   SceneName: 
+  SellConfirmPan: {fileID: 0}
 --- !u!4 &621366579
 Transform:
   m_ObjectHideFlags: 0

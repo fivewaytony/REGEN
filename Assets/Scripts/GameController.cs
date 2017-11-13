@@ -36,11 +36,11 @@ public class GameController : MonoBehaviour {
 
     public Text MakingLevel; //제조레벨
 
-    protected int PssItem_ID;
-    protected string GameItem_Type;
-    protected int Amount;
-
-    protected int pssHP_Count; //소유 물약 개수
+    /* 소유 아이템 전역 변수 */
+    //protected int PssItem_ID; //?사용안함?
+    //protected string GameItem_Type; //?사용안함?
+    //protected int Amount;
+    protected int pssHP_Count; //소유 물약 개수(?)
 
     private float LevelBarNum;
 
@@ -66,12 +66,18 @@ public class GameController : MonoBehaviour {
 
     public GameObject ItemInfoBackPanel;    //아이템 상세보기 panel
     public GameObject ItemInfoSellPanel;    //아이템 팔기 panel
-  //  public GameObject EquipPanel;            // 아이템 장착하기 Panel
+    public GameObject EquipPanel;            // 아이템 장착하기 Panel
     public Text ItemInfoNameText, ItemInfoDescText; //아이템 정보
     public Image ItemCountBarFill;  //아이템 개수 설정 bar
     public Text ItemCountTxt;       //아이템개수 Text
     public Slider ItemCountSilder; //아이템 개수 선택 슬라이더
     public Text EntTxt;  //강화도 표시
+
+    public Button btnEqu; //장착하기 버튼
+
+    //공격력,방어력, 회피력 전역변수
+    public int AtcNum, PrtNum, AvoNum;
+
     /// </summary>
     public string SceneName = string.Empty;
     
@@ -195,20 +201,20 @@ public class GameController : MonoBehaviour {
         DiaText.text = fPC_Dia;
         //PC_FieldLevel =  //사냥필드레벨 -->출입제한없음
 
-        //소유아이템의 무기/방어구/악세살리의 옵션타입과 포인트 체크해서 플레이어 힘, 체력, 민첩에 계산하기
+        //소유아이템의 무기/방어구/장신구의 옵션타입과 포인트 체크해서 플레이어 힘, 체력, 민첩에 계산하기
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
         int itemStr = 0, itemCon = 0, itemDex = 0;  //아이템에 부여된 힘/체력/민첩 포인트
         for (int i = 0; i < passitems.Count; i++)
         {
-            if (passitems[i].Item_OptType==1) //힘옵션
+            if (passitems[i].Item_OptType==1 && passitems[i].Equip_Stat == 1) //힘옵션
             {
                 itemStr = itemStr + passitems[i].Item_OptPoint;
             }
-            if (passitems[i].Item_OptType == 2) //체력옵션
+            if (passitems[i].Item_OptType == 2 && passitems[i].Equip_Stat == 1) //체력옵션
             {
                 itemCon = itemCon + passitems[i].Item_OptPoint;
             }
-            if (passitems[i].Item_OptType == 3) //민첩옵션
+            if (passitems[i].Item_OptType == 3 && passitems[i].Equip_Stat == 1) //민첩옵션
             {
                 itemDex = itemDex + passitems[i].Item_OptPoint;
             }
@@ -216,7 +222,6 @@ public class GameController : MonoBehaviour {
         PC_Str = PC_Str + itemStr;          //플레이어  힘 + 아이템 힘
         PC_Con = PC_Con + itemCon;      //플레이어  체력 + 아이템 체력
         PC_Dex = PC_Dex + itemDex;    //플레이어  민첩 + 아이템 민첩
-      
     }
     #endregion
 
@@ -286,7 +291,29 @@ public class GameController : MonoBehaviour {
         DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
     }
     #endregion
-    
+
+    #region [재료정산]
+    public void CalStuff(int stuffid, int stuffcnt)
+    {
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_ID == stuffid)
+            {
+                if (passitems[i].Amount > stuffcnt) //사용개수만 빼기(소유재료개수 > 사용재료개수)
+                {
+                    passitems[i].Amount = passitems[i].Amount - stuffcnt;
+                }
+                else
+                {
+                    passitems.RemoveAt(i);
+                }
+                break;
+            }
+        }
+    }
+#endregion
+
     #region [플레이어 소유(인벤) 아이템 전체 로드]
     protected void PlayerPssItemLoadALL()
     {
@@ -352,7 +379,7 @@ public class GameController : MonoBehaviour {
                 
     }
     #endregion
-
+    
     #region [아이템 정보 Panel Show / Close]
     public void ShowItemInfoPanel(int ItemID, int ItemAmount)
     {
@@ -369,45 +396,28 @@ public class GameController : MonoBehaviour {
             {
                 if (pssitem.Item_Group == "Weapon")
                 {
-                    equDesc = "공격 : " + item.Wpn_Attack;
+                    equDesc = "공격 : " + Convert.ToInt32(item.Wpn_Attack + (pssitem.Item_Ent * 10));
                 }
                 if (pssitem.Item_Group == "Protect")
                 {
-                    equDesc = "방어 : " + item.Prt_Degree;
+                    equDesc = "방어 : " + Convert.ToInt32(item.Prt_Degree + pssitem.Item_Ent);
                 }
                 if (pssitem.Item_Group == "Acce")
                 {
-                    equDesc = "회피 : " + item.Ace_Degree;
+                    equDesc = "회피 : " + Convert.ToInt32(item.Ace_Degree + pssitem.Item_Ent);
                 }
                 equDesc = equDesc + "  강화 : +" + pssitem.Item_Ent;
-                if (pssitem.Equip_Stat == 1) //장착아이템 (판매X))
-                {
-                    ItemInfoSellPanel.gameObject.SetActive(false);
-                  //      EquipPanel.gameObject.SetActive(false);
-                }
-                else
-                {
-                    //장착하기 링크 만들기
-                //    EquipPanel.gameObject.SetActive(true);
-                    ItemInfoSellPanel.gameObject.SetActive(true);
-                }
             }
             ItemInfoNameText.text = item.Item_Name;
 
-            string DescStr = string.Empty;    
-
-            if (item.Item_Type == "Stuff")
-            {
-                DescStr = DescStr + "\n아이템 제조의 재료로 필요합니다.";
-                ItemInfoSellPanel.gameObject.SetActive(true);
-            }
-            else if (pssitem.Item_Group == "Weapon" || pssitem.Item_Group == "Protect" || pssitem.Item_Group == "Acce")
+            string DescStr = string.Empty;  //옵션 Point 
+            if (pssitem.Item_Group == "Weapon" || pssitem.Item_Group == "Protect" || pssitem.Item_Group == "Acce")
             {
                 int optType = pssitem.Item_OptType;
                 string optPoint = pssitem.Item_OptPoint.ToString();
                 string strColor1 = string.Empty;
                 string strColor2 = strColor2 = "</color>"; ;
-                if (Convert.ToInt16(optPoint) < 0 )
+                if (Convert.ToInt16(optPoint) < 0)
                 {
                     strColor1 = "<color=#ff0000>";
                 }
@@ -428,6 +438,27 @@ public class GameController : MonoBehaviour {
                         DescStr = DescStr + "  <color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
                         break;
                 }
+                if (pssitem.Equip_Stat == 1) //장착아이템 (판매X,장착X))
+                {
+                    EquipPanel.gameObject.SetActive(false);
+                    ItemInfoSellPanel.gameObject.SetActive(false);
+                }
+                else
+                {
+                    //장착하기 링크 만들기
+                    EquipPanel.gameObject.SetActive(true);
+                    ItemInfoSellPanel.gameObject.SetActive(true);
+                }
+             }
+            else 
+            {
+                DescStr = DescStr + "\n" + item.Item_Desc;
+                ItemInfoSellPanel.gameObject.SetActive(true);
+                EquipPanel.gameObject.SetActive(false);
+                if (pssitem.Equip_Stat == 1) //장착아이템 (판매X,장착X))
+                {
+                    ItemInfoSellPanel.gameObject.SetActive(false);
+                }
             }
             DescStr = equDesc+ DescStr + "\n판매가격 : " + item.Item_Price.ToString() + "G";
             ItemInfoDescText.text = DescStr;
@@ -442,18 +473,61 @@ public class GameController : MonoBehaviour {
             SelectItemID = ItemID;
             SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
             SelectItemPrice = item.Item_Price; //단가(골드)
+
+            Button btn = btnEqu.GetComponent<Button>();
+            btn.onClick.AddListener(() => ProcEquip(ItemID,pssitem.Item_Type)); //장착하기 호출
         }
     }
 
-    //Silder 변경하면 개수 표시
+    #region [인벤토리에서 아이템 장착하기]
+    public void ProcEquip(int item_id, string item_type)
+    {
+        Debug.Log("item_id=" + item_id);
+        Debug.Log("item_type=" + item_type);
+
+        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
+        for (int i = 0; i < passitems.Count; i++)
+        {
+            if (passitems[i].Item_Type == item_type)
+            {
+                passitems[i].Equip_Stat = 0;
+            }
+            if (passitems[i].Item_ID == item_id)
+            {
+                passitems[i].Equip_Stat = 1;
+            }
+        }
+        PssItemInfoList pssiteminfolist = new PssItemInfoList();
+        pssiteminfolist.SetPssItemList = passitems;             //소유 아이템 업데이트
+        DataController.Instance.UpdateGameDataPssItem(pssiteminfolist); //소유 아이템 파일 다시 쓰기
+        DataController.Instance.GetPssItemInfoReload();  // 소유 아이템 파일 다시 읽기
+        PlayerStatLoad();
+        SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
+    }
+    #endregion
+
+    #region [인베토리 아이템 정보보기 - Silder 변경하면 개수숫자 표시 ]
     public void ItemCountSilderChange()
     {
         ItemCountTxt.text = ItemCountSilder.value.ToString();
         SelectItemAmount = Convert.ToInt32(ItemCountTxt.text); //선택 개수
     }
+    #endregion
 
-    //아이템 팔기 - 인벤토리 아이템 상세보기에서
-    public void SellpssItem()
+    #region [ 아이템 팔기 - 인벤토리 아이템 상세보기에서]
+    public GameObject SellConfirmPan;
+    //판매하시겠습니까? 확인
+    public void SellpssItemConfirm()
+    {
+       SellConfirmPan.gameObject.SetActive(true);
+    }
+    //[NO] 선택
+    public void SellpssItemNO()
+    {
+        SellConfirmPan.gameObject.SetActive(false);
+    }
+    //[YES] 선택
+    public void SellpssItemYES()
     {
         //소유 아이템에서 빼기
         //Gold 더하기 : 판매할 아이템 단가 구하기
@@ -461,7 +535,6 @@ public class GameController : MonoBehaviour {
         Debug.Log("SelectItemID=" + SelectItemID);
         Debug.Log("SelectItemAmount=" + SelectItemAmount);
         Debug.Log("SelectItemPrice=" + SelectItemPrice);
-
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
         for (int i = 0; i < passitems.Count; i++)
         {
@@ -491,16 +564,19 @@ public class GameController : MonoBehaviour {
                 break;
             }
         }
+        SellConfirmPan.gameObject.SetActive(false);
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
+       
     }
+    #endregion
 
-    //상세 Panel 닫기
+    //아이템 상세보기 Panel 닫기
     public void CloseItemInfoPanel()
     {
         ItemInfoBackPanel.gameObject.SetActive(false);
     }
     #endregion
-
+    
     #region [아이템 그룹정의 & 아이템 리스트 - enum 정의]
     public enum ItemGroup
     {
@@ -601,12 +677,12 @@ public class GameController : MonoBehaviour {
     }
 #endregion
 
-#region [인앱결제]
+    #region [인앱결제]
     public void PurchaseComplete(Product p)
     {
         Debug.Log(p.metadata.localizedTitle + " purchase success!");
     }
-#endregion
+    #endregion
 
 
 }

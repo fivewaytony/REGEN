@@ -263,6 +263,7 @@ public class ForgeController : GameController
 
     private void ShowMakingPan(int itemid)
     {
+        ResetMakingPan();//제작 선택 아이템 정보 초기화
         Makeitemid = itemid;  //제조할 아이템 ID
         Debug.Log("Makeitemid=" + Makeitemid);
         GameItemInfo Makeitem = DataController.Instance.gameitemDic[itemid]; //전체 아이템 정보
@@ -569,33 +570,8 @@ public class ForgeController : GameController
         PlayerStatLoad();
 
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
-        /*
-         * 체크사항
-         //제조포인트 업그레이드
-         * 
-         */
     }
-    //재료정산
-    private void CalStuff(int stuffid, int stuffcnt)
-    {
-        List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList;
-        for (int i = 0; i < passitems.Count; i++)
-        {
-            if (passitems[i].Item_ID == stuffid)
-            {
-                if (passitems[i].Amount > stuffcnt) //사용개수만 빼기(소유재료개수 > 사요재료개수)
-                {
-                    passitems[i].Amount = passitems[i].Amount - stuffcnt;
-                }
-                else
-                {
-                    passitems.RemoveAt(i);
-                }
-                break;
-            }
-        }
-    }
-    #endregion
+   #endregion
 
     #region [제작 선택 아이템 정보 초기화]
     public void ResetMakingPan()
@@ -603,6 +579,11 @@ public class ForgeController : GameController
         MakeItemImg.transform.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Inventory/BoxBg");
         MakeItemName.transform.GetComponent<Text>().text ="";
         MakeItemDesc.transform.GetComponent<Text>().text = "";
+
+        // 소유 1,2,3 개수
+        pssStuff1Cnt = 0;
+        pssStuff2Cnt = 0;
+        pssStuff3Cnt = 0;  
 
         Stuff1Name.transform.GetComponent<Text>().text = "";
         Stuff2Name.transform.GetComponent<Text>().text = "";

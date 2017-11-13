@@ -3,7 +3,7 @@
 	[
 		{"PssItem_ID":1,"PC_ID":1,"Item_Group":"Weapon","Item_Type":"OWeapon","Item_ID":400,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":1,"Item_OptPoint":1},
 		{"PssItem_ID":2,"PC_ID":1,"Item_Group":"Potion","Item_Type":"HPotion","Item_ID":900,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":3,"PC_ID":1,"Item_Group":"Protect","Item_Type":"Helmet","Item_ID":550,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":2,"Item_OptPoint":-3},
+		{"PssItem_ID":3,"PC_ID":1,"Item_Group":"Protect","Item_Type":"Helmet","Item_ID":550,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":2,"Item_OptPoint":0},
 		{"PssItem_ID":4,"PC_ID":1,"Item_Group":"Protect","Item_Type":"Armor","Item_ID":600,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":2,"Item_OptPoint":0},
 		{"PssItem_ID":5,"PC_ID":1,"Item_Group":"Protect","Item_Type":"Gauntlet","Item_ID":650,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":2,"Item_OptPoint":0},
 		{"PssItem_ID":6,"PC_ID":1,"Item_Group":"Protect","Item_Type":"Boots","Item_ID":700,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":2,"Item_OptPoint":0},
@@ -29,7 +29,9 @@
 		{"PssItem_ID":26,"PC_ID":1,"Item_Group":"ETC","Item_Type":"ETC","Item_ID":1152,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":27,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1050,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":28,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1051,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":29,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1052,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0}
+		{"PssItem_ID":29,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1052,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":30,"PC_ID":1,"Item_Group":"Recipe","Item_Type":"Recipe","Item_ID":1001,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":31,"PC_ID":1,"Item_Group":"Recipe","Item_Type":"Recipe","Item_ID":1002,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0}
 	]
 }
 
