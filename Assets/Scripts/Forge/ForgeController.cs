@@ -243,10 +243,10 @@ public class ForgeController : GameController
     public Text Stuff1Cnt, Stuff2Cnt, Stuff3Cnt, GoldCnt;   //필요 소유 개수
     public GameObject GoCheckPan;   // [제조 버튼 Open Check Pan]
 
-    public GameObject MakeSliderPan; //제조 개수 슬라이드바 팬러
+    public GameObject MakeSliderPan; //제조 개수 슬라이드바 팬널
     public Text MakeCnt;       //제조할 아이템개수 Text
     public Slider MakeCountSlider; //아이템 개수 선택 슬라이더
-
+    public GameObject ParticleMakePanel; //제조 파티클 팬널
     int tempMaxMakeCount = 1; //최대 제조 가능 개수
 
     /* 제조버튼 클릭시 이용될 제조 전역 변수 */
@@ -509,16 +509,33 @@ public class ForgeController : GameController
     
     #region [제조버튼 클릭]
     public Button BtnGoMake;
-    public void btnGoMake()
+    //제조 파티클
+    public GameObject ParticleMake;
+
+    //제조처리 파티클 노출
+    private void btnGoMake()
     {
-        Debug.Log("MakeStuff1_ID=" + MakeStuff1_ID);
-        Debug.Log("MakeStuff2_ID=" + MakeStuff2_ID);
-        Debug.Log("MakeStuff3_ID=" + MakeStuff3_ID);
-        Debug.Log("MakeStuff1_Cnt=" + MakeStuff1_Cnt);
-        Debug.Log("MakeStuff2_Cnt=" + MakeStuff2_Cnt);
-        Debug.Log("MakeStuff3_Cnt=" + MakeStuff3_Cnt);
-        Debug.Log("MakeNeedGold=" + MakeNeedGold);
-        Debug.Log("MakeitemCount=" + MakeitemCount);
+        ParticleMakePanel.gameObject.SetActive(true);
+        StartCoroutine(ProcMake());
+    }
+
+    //제조처리
+    IEnumerator ProcMake()
+    {
+        Vector3 pos = Vector3.zero;
+        pos.y = 2f;
+        pos.x = 0f;
+        Instantiate(ParticleMake, pos, ParticleMake.transform.rotation);
+        yield return new WaitForSecondsRealtime(3f);   //3초
+
+        //Debug.Log("MakeStuff1_ID=" + MakeStuff1_ID);
+        //Debug.Log("MakeStuff2_ID=" + MakeStuff2_ID);
+        //Debug.Log("MakeStuff3_ID=" + MakeStuff3_ID);
+        //Debug.Log("MakeStuff1_Cnt=" + MakeStuff1_Cnt);
+        //Debug.Log("MakeStuff2_Cnt=" + MakeStuff2_Cnt);
+        //Debug.Log("MakeStuff3_Cnt=" + MakeStuff3_Cnt);
+        //Debug.Log("MakeNeedGold=" + MakeNeedGold);
+        //Debug.Log("MakeitemCount=" + MakeitemCount);
 
         //재료 정산
         CalStuff(MakeStuff1_ID, MakeStuff1_Cnt * MakeitemCount);
@@ -569,6 +586,7 @@ public class ForgeController : GameController
         DataController.Instance.UpdateGameDataPlayerStat(playerstatlist);
         PlayerStatLoad();
 
+        ParticleMakePanel.gameObject.SetActive(false);
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
     }
    #endregion

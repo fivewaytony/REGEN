@@ -27,9 +27,9 @@
 		{"PssItem_ID":24,"PC_ID":1,"Item_Group":"Recipe","Item_Type":"Recipe","Item_ID":1000,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":25,"PC_ID":1,"Item_Group":"ETC","Item_Type":"ETC","Item_ID":1151,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":26,"PC_ID":1,"Item_Group":"ETC","Item_Type":"ETC","Item_ID":1152,"Amount":1,"Equip_Stat":1,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":27,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1050,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":28,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1051,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
-		{"PssItem_ID":29,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1052,"Amount":10,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":27,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1050,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":28,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1051,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
+		{"PssItem_ID":29,"PC_ID":1,"Item_Group":"Enhance","Item_Type":"Enhance","Item_ID":1052,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":30,"PC_ID":1,"Item_Group":"Recipe","Item_Type":"Recipe","Item_ID":1001,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0},
 		{"PssItem_ID":31,"PC_ID":1,"Item_Group":"Recipe","Item_Type":"Recipe","Item_ID":1002,"Amount":100,"Equip_Stat":0,"Item_Ent":0,"Item_OptType":0,"Item_OptPoint":0}
 	]

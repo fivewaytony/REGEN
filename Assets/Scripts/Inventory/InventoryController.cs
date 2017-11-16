@@ -9,6 +9,7 @@ using System.Linq;
 
 public class InventoryController : GameController
 {
+
     /* 상단 장착 아이템 */
     public Image Weapon, Helmet, Armor, Boots, Gauntlet, Necklace, Earring, Ring;
     public GameObject PlayerInfoTextBG;  //플레이어 스텟 
@@ -26,6 +27,7 @@ public class InventoryController : GameController
         PlayerStatLoad();
         PlayerPssItemLoadALL(); //전체 소유 아이템 로드
         PlayerEquItemLoad();    //장착아이템
+        
     }
 
     void Start () {
@@ -34,7 +36,9 @@ public class InventoryController : GameController
         // Retrieve the name of this scene.
         Scene currentScene = SceneManager.GetActiveScene();
         SceneName = currentScene.name;
-     }
+             
+
+    }
 
     #region [상단 장착 아이템 슬롯 & 플레이어 능력치]
     public void PlayerEquItemLoad() {
@@ -136,7 +140,8 @@ public class InventoryController : GameController
     public void ShowEquItemInfoPanel(int EquItemID)
     {
         Debug.Log("ItemID=" + EquItemID);
-
+       
+        
         if (EquItemID != 0)
         {
             EquItemInfoBackPanel.gameObject.SetActive(true);
@@ -207,13 +212,14 @@ public class InventoryController : GameController
     public Text GoldCnt,GemCnt;   //필요 소유 개수
     public Button GoEnchant;
     public GameObject CheckEntPan; //강화가능Check Pan
-
+    public GameObject EntAlertText; //+5에서 강화시 show
+    public GameObject ParticlePanel;// 파티클 패널
     //장착 아이템 강화 Panel 열기
     public void ShowEnchantBG()
     {
         EquItemInfoBackPanel.gameObject.SetActive(false);
-        EnchantBG.gameObject.SetActive(true);
-        
+        EnchantBG.gameObject.SetActive(true);        
+
         PssItem pssitem = DataController.Instance.pssitemDic[EnchantItemID];                               //소유아이템
         GameItemInfo gameitem = DataController.Instance.gameitemDic[EnchantItemID];                // 아이템 정보
 
@@ -256,19 +262,41 @@ public class InventoryController : GameController
         }
         GemCnt.transform.GetComponent<Text>().text = PssGemCnt + " / " + NeedGemCnt;
 
-        if ((isEnt == true) && (pssitem.Item_Ent < 5))  //강화도가 5미만일때만: 강화는 +5까지만
+        if (pssitem.Item_Ent == 5)  //강화 +5에서 안내문구 노출
+        {
+            EntAlertText.gameObject.SetActive(true);
+        }
+        else
+        {
+            EntAlertText.gameObject.SetActive(false);
+        }
+
+        if ((isEnt == true) && (pssitem.Item_Ent < 6))  //강화도가 6미만일때만: 강화는 +5까지만
         {
             CheckEntPan.gameObject.SetActive(false);
         }
         Button btn = GoEnchant.GetComponent<Button>();
-        btn.onClick.AddListener(() => ProcEnchant(EnchantItemID, EntGem_ID));
-        //  Ring.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => ShowEquItemInfoPanel(item.Item_ID));
+        btn.onClick.AddListener(() => EnchantParticle(EnchantItemID, EntGem_ID));
+    }
+    //강화파티클
+    public GameObject ParticleEnchant;
+
+    //강화처리 파티클 노출
+    private void EnchantParticle(int entitem_id, int gem_id)
+    {
+        ParticlePanel.gameObject.SetActive(true);
+        StartCoroutine(ProcEnchant(entitem_id, gem_id));
     }
 
     //강화하기 처리
-    private void ProcEnchant(int entitem_id, int gem_id)
+    IEnumerator ProcEnchant(int entitem_id, int gem_id)
     {
-        /*******애니메이션 넣기********/
+        Vector3 pos = Vector3.zero;
+        pos.y = 3f;
+        pos.x = 0f;
+        Instantiate(ParticleEnchant, pos, ParticleEnchant.transform.rotation);
+        yield return new WaitForSecondsRealtime(3f);   //3초
+        
         GameItemInfo gameitem = DataController.Instance.gameitemDic[entitem_id];                // 아이템 정보
         //골드 정산 
         CalGold(gameitem.Enchant_Price, 1, "minus");
@@ -281,7 +309,23 @@ public class InventoryController : GameController
         {
             if (passitems[i].Item_ID == entitem_id)
             {
-                passitems[i].Item_Ent++;
+                if (passitems[i].Item_Ent == 5) //+5에서 강화시도
+                {
+                    int rndEntNum = CommonRnd(1, 4);
+                    int rndchance = CommonRnd(1, 3);
+                    if (rndchance == 1) //강화성공 50%
+                    {
+                        passitems[i].Item_Ent = passitems[i].Item_Ent + rndEntNum;
+                    }
+                    else                    //실패 -1
+                    {
+                        passitems[i].Item_Ent = passitems[i].Item_Ent - 1;
+                    }
+                 }
+                else
+                {
+                    passitems[i].Item_Ent = passitems[i].Item_Ent + 1;
+                }
                 break;
             }
         }
@@ -290,6 +334,7 @@ public class InventoryController : GameController
         DataController.Instance.UpdateGameDataPssItem(pssiteminfolist); //소유 아이템 파일 다시 쓰기
         DataController.Instance.GetPssItemInfoReload();  // 소유 아이템 파일 다시 읽기
 
+        ParticlePanel.gameObject.SetActive(false);
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);  //현재씬 다시로드(가방, 대장간, 상점)
     }
     //장착 아이템 강화 Panel 닫기

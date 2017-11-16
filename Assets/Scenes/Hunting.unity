@@ -142,7 +142,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -62.3, y: 0.42493}
+  m_AnchoredPosition: {x: -62.3, y: 0.42492998}
   m_SizeDelta: {x: 99.2, y: 69.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &32001877
@@ -218,7 +218,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -25.7}
+  m_AnchoredPosition: {x: 0, y: -25.700012}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &44429748
@@ -674,6 +674,7 @@ MonoBehaviour:
   LevelBarFill: {fileID: 719194036}
   GoldText: {fileID: 1464153349}
   DiaText: {fileID: 32001878}
+  MakingLevel: {fileID: 0}
   FieldChoiceBack: {fileID: 0}
   FieldChoiceContent: {fileID: 0}
   ChoiceFieldID: 0
@@ -681,12 +682,19 @@ MonoBehaviour:
   slots: []
   ItemInfoBackPanel: {fileID: 0}
   ItemInfoSellPanel: {fileID: 0}
+  EquipPanel: {fileID: 0}
   ItemInfoNameText: {fileID: 0}
   ItemInfoDescText: {fileID: 0}
   ItemCountBarFill: {fileID: 0}
   ItemCountTxt: {fileID: 0}
   ItemCountSilder: {fileID: 0}
+  EntTxt: {fileID: 0}
+  btnEqu: {fileID: 0}
+  AtcNum: 0
+  PrtNum: 0
+  AvoNum: 0
   SceneName: 
+  SellConfirmPan: {fileID: 0}
   FieldImage: {fileID: 68994152}
   FieldName: {fileID: 2043706540}
   MainCamera: {fileID: 1887410207}
@@ -873,7 +881,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 205, y: -67.850006}
+  m_AnchoredPosition: {x: 205, y: -67.85001}
   m_SizeDelta: {x: 130, y: 124.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &405935618
@@ -1685,7 +1693,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 53.1}
+  m_AnchoredPosition: {x: 0, y: 53.1}
   m_SizeDelta: {x: 550, y: 620}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &913429080
@@ -2065,8 +2073,8 @@ Canvas:
   m_GameObject: {fileID: 1193172722}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1887410207}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2175,7 +2183,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 51.3, y: 1.1}
+  m_AnchoredPosition: {x: 51.3, y: 1.0999999}
   m_SizeDelta: {x: 207.1, y: 2.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1354264959
@@ -2925,7 +2933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4.9, y: 0}
+  m_AnchoredPosition: {x: 4.8999996, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1604045296
@@ -3126,7 +3134,7 @@ Camera:
   m_GameObject: {fileID: 1887410203}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -3137,7 +3145,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
