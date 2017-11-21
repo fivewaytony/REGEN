@@ -44,9 +44,15 @@ public class GameController : MonoBehaviour {
 
     private float LevelBarNum;
 
+    /* 필드선택 팝업 --> 이동 */
     public GameObject FieldChoiceBack;
-    public Transform FieldChoiceContent; //필드선택 사냥터 - 부모
-    public int ChoiceFieldID;  //선택한 사냥터 ID(Level)
+    public string ChoiceFieldType;  //선택한 타입 N:사냥 U:던전 M:광산 G:채집
+    public int ChoiceFieldID;  //선택한 필드 ID
+    public Text FieldChoiceTitle;   //선택할 필드 타이틀
+    public GameObject prefabFieldInfo;  // 프리펩 필드 정보
+    public RectTransform ChoiceParent;
+    public GameObject CheckLimitLevel;// 필드제한 레벨 Panel
+
 
     /* 밸러스 조정용 수치*/
     protected float wpn_attrate;
@@ -88,14 +94,15 @@ public class GameController : MonoBehaviour {
 #endif
     private void Awake()
     {
-       // DataController.Instance.PlayerStatLoadResourcesDEV();
-       // DataController.Instance.PssItemLoadResourcesDEV();
+        //DataController.Instance.PlayerStatLoadResourcesDEV();
+        //DataController.Instance.PssItemLoadResourcesDEV();
         PlayerStatLoad();
     }
 
     public static GameController Instance; //GameController 접근하기 위해
     void Start ()
     {
+        Instance = this;     //GameController 접근하기 위해
         if (Advertisement.isSupported)
         {
             Advertisement.Initialize(gameId, true);
@@ -105,7 +112,6 @@ public class GameController : MonoBehaviour {
         {
             Debug.LogError("Ad is not supported");
         }
-        Instance = this;     //GameController 접근하기 위해
     }
     // Update is called once per frame
     void Update()
@@ -183,6 +189,10 @@ public class GameController : MonoBehaviour {
         {
             vPC_Gold = "99999999";
         }
+        else if(Convert.ToDecimal(PC_Gold) < 0)
+        {
+            vPC_Gold = "0";
+        }
         else
         {
             vPC_Gold = PC_Gold;
@@ -190,6 +200,10 @@ public class GameController : MonoBehaviour {
         if (Convert.ToDecimal(PC_Dia) > 99999)
         {
             vPC_Dia = 99999;
+        }
+        else if (Convert.ToDecimal(PC_Dia) < 0)
+        {
+            vPC_Dia = 0;
         }
         else
         {
@@ -226,29 +240,58 @@ public class GameController : MonoBehaviour {
     #endregion
 
     #region [사냥터 선택 팝업]
-    public void FieldChoicePop()
+    public void FieldChoicePop(string fieldType)
     {
+        Debug.Log("fieldType=" + fieldType);
+        string cTitle = string.Empty;
+        ChoiceFieldType = fieldType;
+        switch (fieldType)
+        {
+            case "N":
+                cTitle = "사냥터 선택";
+                break;
+            case "U":
+                cTitle = "던전 사냥터 선택";
+                break;
+            case "M":
+                cTitle = "광산지역 선택";
+                break;
+            case "G":
+                cTitle = "채집지역 선택";
+                break;
+            default:
+                cTitle = "사냥터 선택";
+                break;
+                // DescStr = DescStr + "  <color=#000000>민첩 : </color>" + strColor1 + optPoint + strColor2;
+        }
+        FieldChoiceTitle.GetComponent<Text>().text = cTitle;  //필드선택 타이틀
+
         FieldChoiceBack.gameObject.SetActive(true);
         List<FieldInfo> fieldchoices = DataController.Instance.GetFieldInfo().FieldList;
-        int i = 0;
 
-        foreach (FieldInfo fielditem in fieldchoices)
+        foreach (var fielditem in fieldchoices)
         {
-            GameObject FieldInfo = Resources.Load("Prefabs/FieldInfo") as GameObject;  //프리팹으로 등록된 정보 불러옴
-            GameObject obj = Instantiate(FieldInfo, FieldChoiceContent);   //자식 오브젝트
+            //입장레벨 제한
+            if (PC_Level >= fielditem.Field_LimitLevel)
+            {
+                CheckLimitLevel.gameObject.SetActive(false);
+            }
+            else
+            {
+                CheckLimitLevel.gameObject.SetActive(true);
+            }
+            GameObject goButton = (GameObject)Instantiate(prefabFieldInfo);
+            goButton.transform.SetParent(ChoiceParent, false);
+            goButton.transform.localScale = new Vector3(1, 1, 1);
 
-            RectTransform rt = obj.GetComponent<RectTransform>(); //FieldInfo
-            rt.anchoredPosition = new Vector2(0f, -40f + (i * -80f));       // 자식 오브젝트를 위치를 잡고 그린다
-
-            Text[] texts = obj.GetComponentsInChildren<Text>();         //자식 오브젝트중 Text 동적으로 변경
+            Text[] texts = goButton.GetComponentsInChildren<Text>();         //자식 오브젝트중 Text 동적으로 변경
             foreach (Text text in texts)
             {
                 if (text.tag == "FieldName")                                       //지정된 Tag로 정의 
                 {
                     int FieldLevel = fielditem.Field_Level;
                     string FieldName = fielditem.Field_Name;
-
-                    // if (PC_FieldLevel >= FieldLevel)  //플레이어의 입장 가능 사냥터 레벨제한 없음
+                 
                     String strFieldName = String.Format("Lv. {0}  {1}", FieldLevel, FieldName);
                     text.text = strFieldName;
                 }
@@ -258,15 +301,26 @@ public class GameController : MonoBehaviour {
                     String strItemName = String.Format("{0}", ItemName);
                     text.text = strItemName;
                 }
-                Button[] btns = obj.GetComponentsInChildren<Button>();
-                foreach (Button btn in btns)
+                if (text.tag == "unlocklevel")
                 {
-                    btn.onClick.AddListener(() => GoHunting(fielditem.Field_Level));
+                    int LimitLevel = fielditem.Field_LimitLevel;
+                    String strLimitLevel = String.Format("{0}", LimitLevel);
+                    text.text = "Lv. "+strLimitLevel;
                 }
             }
-            i++;
+            Button[] btns = goButton.GetComponentsInChildren<Button>();
+            foreach (Button btn in btns)
+            {
+                btn.onClick.AddListener(() => GoHunting(fielditem.Field_ID)); //선택 필드(사냥, 채광, 채집, 던전)로 이동
+            }
+       
         }
+     }
 
+    //사냥터 팝업 닫기
+    public void CloseFieldChoiceBack()
+    {
+        FieldChoiceBack.gameObject.SetActive(false);
     }
     #endregion
 
@@ -326,6 +380,7 @@ public class GameController : MonoBehaviour {
         sv.gameObject.SetActive(false);
 
         List<PssItem> passitems = DataController.Instance.GetPssItemInfo().PssItemList; //소유 아이템
+        passitems.Sort((x, y) => string.Compare(y.Equip_Stat.ToString(), x.Equip_Stat.ToString()));
         List<GameItemInfo> itemList = DataController.Instance.GetGameItemInfo().GameItemList;  //전체 게임 아이템
 
         /* 슬롯 그리기 */
@@ -642,11 +697,10 @@ public class GameController : MonoBehaviour {
     }
 
     #region [광고 보여주기]
-    void ShowRewardedVideo()
+    public void ShowRewardedVideo()
     {
         if (Advertisement.IsReady("rewardedVideo"))
         {
-
             var options = new ShowOptions();
             options.resultCallback = HandleShowResult;
 
@@ -657,8 +711,8 @@ public class GameController : MonoBehaviour {
             Debug.LogError("Ready Fail");
         }
     }
-
-    void HandleShowResult(ShowResult result)
+    //보상 주기
+    public void HandleShowResult(ShowResult result)
     {
         if (result == ShowResult.Finished)
         {
@@ -675,7 +729,7 @@ public class GameController : MonoBehaviour {
             Debug.LogError("Video failed to show" + result.ToString());
         }
     }
-#endregion
+    #endregion
 
     #region [인앱결제]
     public void PurchaseComplete(Product p)

@@ -51,12 +51,13 @@ public class HuntingController : GameController
         /* DataPath 에서 기본 정보 로딩 매신마다 로딩*/
 
         BalanceInfoLoad(); // 밸런싱 수치 정보 
-        PlayerStatLoad();   
+        PlayerStatLoad();
+        FieldBGLoad(); //사냥터 배경로드
         PlayerPssItemLoad(); // 소유 아이템 로딩 
-        CurHP_Count.text = pssHP_Count.ToString() + "개"; //물약개수 로딩
+       // CurHP_Count.text = pssHP_Count.ToString() + "개"; //물약개수 로딩
 
         /* 기본 정보 로딩 매신마다 로딩*/
-        FieldBGLoad(); //사냥터 배경로드
+        
        
        // WeaponLoad(); //무기
         MonsterLoad();//몹로드
@@ -65,6 +66,22 @@ public class HuntingController : GameController
         // StartCoroutine(UpdateGameData()); //게임 데이터(PC 상태, 소유 아이템) --> 지금은 사용 안함 : 처음 시작 한번하고 계속 루프에 이용
     }
 
+    #region [필드 로딩]
+    private void FieldBGLoad()
+    {
+        List<FieldInfo> fieldinfos = DataController.Instance.GetFieldInfo().FieldList;
+        int bgNum = CommonRnd(1, 3);
+        foreach (FieldInfo fielditem in fieldinfos)
+        {
+            if (Instance.ChoiceFieldID == fielditem.Field_ID) //선택 사냥터
+            {
+                FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
+                FieldName.text = fielditem.Field_Name;
+            }
+        }
+    }
+    #endregion
+
     #region [플레이어 소유 아이템 로드 - 무기/HP 물약]
     protected void PlayerPssItemLoad()
     {
@@ -72,7 +89,7 @@ public class HuntingController : GameController
         int pWpnID = 0;
         for (int i = 0; i < passitems.Count; i++)
         {
-            if (passitems[i].Item_Type == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
+            if (passitems[i].Item_Group == "Weapon" && passitems[i].Equip_Stat == 1) //장착한 무기
             {
                 pWpnID = passitems[i].Item_ID;
                 break;
@@ -96,21 +113,7 @@ public class HuntingController : GameController
     }
     #endregion
     
-    #region [필드 로딩]
-    private void FieldBGLoad()
-    {
-        List<FieldInfo> fieldinfos = DataController.Instance.GetFieldInfo().FieldList;
-        int bgNum = Instance.CommonRnd(1, 4);
-        foreach (FieldInfo fielditem in fieldinfos)
-        {
-            if (Instance.ChoiceFieldID == fielditem.Field_Level) //선택 사냥터
-            {
-                FieldImage.sprite = Resources.Load<Sprite>("Sprites/FieldBackGround/" + fielditem.Field_ImgName + bgNum.ToString());
-                FieldName.text = fielditem.Field_Name;
-            }
-        }
-    }
-    #endregion
+   
     
     #region [몬스터 로딩]
     private void MonsterLoad()
@@ -118,7 +121,7 @@ public class HuntingController : GameController
         MonsterBG.gameObject.SetActive(true);
         List<MonsterInfo> monsterinfos = DataController.Instance.GetMonsterInfo().MonsterList;
         List<MonsterInfo> courMonster = new List<MonsterInfo>();
-        int MonNum = MonNumberLoad(Instance.CommonRnd(0, 100));
+        int MonNum = MonNumberLoad(CommonRnd(0, 100));
         isMonOnLoad = true;
         for (int i = 0; i < monsterinfos.Count; i++)
         {

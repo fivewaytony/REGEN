@@ -676,8 +676,12 @@ MonoBehaviour:
   DiaText: {fileID: 32001878}
   MakingLevel: {fileID: 0}
   FieldChoiceBack: {fileID: 0}
-  FieldChoiceContent: {fileID: 0}
+  ChoiceFieldType: 
   ChoiceFieldID: 0
+  FieldChoiceTitle: {fileID: 0}
+  prefabFieldInfo: {fileID: 0}
+  ChoiceParent: {fileID: 0}
+  CheckLimitLevel: {fileID: 0}
   SlotsParentContent: {fileID: 0}
   slots: []
   ItemInfoBackPanel: {fileID: 0}
@@ -1545,10 +1549,10 @@ RectTransform:
   m_Father: {fileID: 913429079}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 249.29999}
-  m_SizeDelta: {x: 0, y: 500}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -60.700012}
+  m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &719194033
 GameObject:
@@ -1655,7 +1659,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 27.825012}
+  m_AnchoredPosition: {x: 0, y: 27.824951}
   m_SizeDelta: {x: 0, y: 55.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &913429078
@@ -1693,7 +1697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 53.1}
+  m_AnchoredPosition: {x: 0.024994, y: 0.00012206999}
   m_SizeDelta: {x: 550, y: 620}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &913429080
@@ -3186,13 +3190,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ebda6b84116be664e9b02554cf72e39d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 100
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

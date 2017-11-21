@@ -140,8 +140,7 @@ public class InventoryController : GameController
     public void ShowEquItemInfoPanel(int EquItemID)
     {
         Debug.Log("ItemID=" + EquItemID);
-       
-        
+           
         if (EquItemID != 0)
         {
             EquItemInfoBackPanel.gameObject.SetActive(true);
@@ -270,13 +269,14 @@ public class InventoryController : GameController
         {
             EntAlertText.gameObject.SetActive(false);
         }
-
+        Button btn = GoEnchant.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
         if ((isEnt == true) && (pssitem.Item_Ent < 6))  //강화도가 6미만일때만: 강화는 +5까지만
         {
             CheckEntPan.gameObject.SetActive(false);
+            btn.onClick.AddListener(() => EnchantParticle(EnchantItemID, EntGem_ID));
         }
-        Button btn = GoEnchant.GetComponent<Button>();
-        btn.onClick.AddListener(() => EnchantParticle(EnchantItemID, EntGem_ID));
+         
     }
     //강화파티클
     public GameObject ParticleEnchant;
@@ -291,6 +291,7 @@ public class InventoryController : GameController
     //강화하기 처리
     IEnumerator ProcEnchant(int entitem_id, int gem_id)
     {
+        Debug.Log("ProcEnchant entitem_id=" + entitem_id);
         Vector3 pos = Vector3.zero;
         pos.y = 3f;
         pos.x = 0f;

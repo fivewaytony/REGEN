@@ -221,7 +221,7 @@ public class ForgeController : GameController
     #endregion
 
     #region [제조할 아이템 리스트 생성 공통 Method]
-    public void Showtypelist(IEnumerable<GameItemInfo> queries)
+    public void Showtypelist(IEnumerable<GameItemInfo> queries)   //List 파라메터로 넘기기
     {
         foreach (var item in queries)
         {
